@@ -1,24 +1,24 @@
-// src/components/HeaderImports.ts
-
-// React
 import React, { useState, useEffect, useRef } from "react";
 
-// Next.js
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
-// Icons
-import { HiMenu, HiX, HiSearch, HiArrowRight } from "react-icons/hi";
+import { HiMenu, HiX, HiSearch } from "react-icons/hi";
 import { TbLogout } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
 import { BiBriefcase } from "react-icons/bi";
 import { IoSettingsOutline } from "react-icons/io5";
+import { HiArrowLeft } from "react-icons/hi2";
+import { FaRegBell } from "react-icons/fa";
+import { FiMapPin } from "react-icons/fi";
+import { CiLinkedin } from "react-icons/ci";
+import { PiYoutubeLogo } from "react-icons/pi";
+import { TbSend } from "react-icons/tb";
+import { PiInstagramLogoLight } from "react-icons/pi";
 
-// Supabase
 import { supabase } from "@/lib/supabaseClient";
 
-// Types
 import type { User, NavLink } from "@/Types/types";
 
 export {
@@ -33,7 +33,7 @@ export {
   HiMenu,
   HiX,
   HiSearch,
-  HiArrowRight,
+  HiArrowLeft,
   TbLogout,
   CgProfile,
   BiBriefcase,
@@ -41,4 +41,13 @@ export {
   supabase,
   type User,
   type NavLink,
+};
+
+export {
+  FaRegBell,
+  FiMapPin,
+  CiLinkedin,
+  PiYoutubeLogo,
+  TbSend,
+  PiInstagramLogoLight,
 };

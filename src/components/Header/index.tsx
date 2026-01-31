@@ -52,10 +52,11 @@ const Header: H.React.FC = () => {
   const searchBarRef = H.useRef<HTMLDivElement | null>(null);
 
   const NAV_LINKS: H.NavLink[] = [
-    { href: "/", label: "خانه" },
-    { href: "/explore", label: "کاوش" },
-    { href: "/help", label: "راهنمایی و پشتیبانی " },
-    { href: "/about", label: "درباره ما" },
+    { href: "/", label: "نوبت دهی مطب" },
+    { href: "/Services", label: "خدمات" },
+    { href: "/Online consultation", label: "مشاوره آنلاین" },
+    { href: "/Health Magazine", label: "مجله سلامت" },
+    { href: "/Charity", label: "نیکوکاری" },
   ];
 
   // Fetch user session
@@ -179,7 +180,7 @@ const Header: H.React.FC = () => {
         <div className="max-w-7xl mx-auto flex items-center justify-between px-4 h-16 md:h-20">
           <H.Link href="/">
             <H.Image
-              src="/Vector.svg"
+              src="Default.svg"
               alt="logo"
               width={25}
               height={25}
@@ -199,14 +200,14 @@ const Header: H.React.FC = () => {
   }
 
   return (
-    <nav className="top-0 left-0 right-0 bg-gradient-to-r from-[#fff7f0] to-[#fffdf9] z-50 border-b border-gray-100">
-      <div className="max-w-screen-xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16 md:h-20">
+    <nav className="border-b border-gray-200">
+      <div className="max-w-7xl mx-auto flex items-center justify-between px-4 sm:px-6 lg:px-8 h-16 md:h-20">
         <H.Link href="/">
           <H.Image
-            src="/Vector.svg"
+            src="Default.svg"
             alt="logo"
-            width={25}
-            height={25}
+            width={150}
+            height={150}
             priority
           />
         </H.Link>
@@ -216,10 +217,8 @@ const Header: H.React.FC = () => {
               key={link.href}
               href={link.href}
               onClick={() => setActiveLink(link.href)}
-              className={`text-sm font-medium relative transition-all after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-red-500 after:transition-all ${
-                activeLink === link.href
-                  ? "text-red-500 after:w-full"
-                  : "text-gray-700 hover:text-red-500 after:w-0 hover:after:w-full"
+              className={`text-sm font-medium transition-colors ${
+                activeLink === link.href ? "active" : "link"
               }`}
             >
               {link.label}
@@ -290,17 +289,12 @@ const Header: H.React.FC = () => {
             </div>
           ) : (
             <div className="flex gap-2 sm:gap-3">
+              <H.FaRegBell className="text-3xl text-[#757575]" />
               <H.Link
                 href="/auth/login"
-                className="px-4 py-1.5 border border-red-500 text-red-500 rounded-full text-sm font-medium hover:bg-red-50 transition"
+                className="px-3 py-1.5 border bg-[#1F7168] text-white rounded-md text-sm font-medium hover:bg-emerald-700 transition"
               >
-                ورود
-              </H.Link>
-              <H.Link
-                href="/auth/signup"
-                className="px-4 py-1.5 border border-red-500 bg-red-500 text-white rounded-full text-sm font-medium hover:bg-red-700 transition"
-              >
-                ثبت‌نام
+                ورود/ثبت نام
               </H.Link>
             </div>
           )}
@@ -317,117 +311,90 @@ const Header: H.React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Search */}
-      {isSearchOpen && (
-        <div
-          ref={searchBarRef}
-          className="md:hidden px-4 pb-3 pt-1 border-b border-gray-200 bg-white"
-        >
-          <div className="relative">
-            <H.HiSearch
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
-              size={20}
-            />
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full border border-gray-300 rounded-xl pl-10 pr-10 py-2.5 text-sm focus:outline-none focus:ring-1 focus:ring-[#5b4bff] transition-all"
-            />
-            <button
-              onClick={() => setIsSearchOpen(false)}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 p-1"
-            >
-              <H.HiX size={20} />
-            </button>
-          </div>
+      <div
+        className="border  items-center justify-between px-4 hidden sm:flex"
+        dir="ltr"
+      >
+        {/* سمت راست: متن‌ها */}
+        <div className="flex items-center gap-6 text-[#757575]">
+          <p className="flex items-center gap-1 ml-16">
+            انتخاب آدرس + <H.FiMapPin className="text-lg" />
+          </p>
+          <p>سوالات متداول</p>
+          <p>تماس با ما</p>
+          <p>درباره ما</p>
         </div>
-      )}
-      {isMenuOpen && (
-        <div
-          ref={mobileMenuRef}
-          className="md:hidden fixed inset-0 bg-white z-40 p-4 overflow-y-auto"
-        >
-          <div className="flex justify-between items-center h-16 border-b border-gray-200 mb-6">
-            <H.Link href="/" onClick={() => setIsMenuOpen(false)}>
-              <H.Image
-                src="/Vector.svg"
-                alt="logo"
-                width={40}
-                height={40}
-                className="w-auto h-10"
-                priority
-              />
+
+        {/* سمت چپ: آیکن‌ها */}
+        <div className="flex items-center gap-4 mr-32 text-3xl text-[#757575]">
+          <H.CiLinkedin className="text-xl cursor-pointer" />
+          <H.PiYoutubeLogo className="text-xl cursor-pointer" />
+          <H.TbSend className="text-xl cursor-pointer" />
+          <H.PiInstagramLogoLight className="text-xl cursor-pointer" />
+        </div>
+      </div>
+
+      {/* Mobile Search */}
+      {/* Backdrop */}
+      <div
+        className={`fixed inset-0 bg-black/30 z-40 md:hidden transition-opacity ${
+          isMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+        }`}
+        onClick={() => setIsMenuOpen(false)}
+      />
+
+      {/* Mobile Slide Menu */}
+      <div
+        className={`
+    fixed top-0 right-0 h-full w-80 max-w-[85%]
+    bg-white z-50 md:hidden
+    transform transition-transform duration-300 ease-in-out
+    ${isMenuOpen ? "translate-x-0" : "translate-x-full"}
+  `}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between px-4 h-16 border-b">
+          <span className="font-semibold text-emerald-700">منو</span>
+          <button onClick={() => setIsMenuOpen(false)}>
+            <H.HiX size={26} className="text-black" />
+          </button>
+        </div>
+
+        {/* Links */}
+        <nav className="flex flex-col gap-1 p-4">
+          {NAV_LINKS.map((link) => (
+            <H.Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setIsMenuOpen(false)}
+              className="flex items-center justify-between px-3 py-3 rounded-lg text-gray-700 hover:bg-emerald-50"
+            >
+              {link.label}
+              <H.HiArrowLeft className="text-gray-400" />
             </H.Link>
-            <div className="flex items-center gap-4">
-              <H.HiSearch
-                size={24}
-                className="text-gray-700 cursor-pointer"
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  setIsSearchOpen(true);
-                }}
-              />
-              <button onClick={() => setIsMenuOpen(false)}>
-                <H.HiX size={26} />
-              </button>
-            </div>
-          </div>
-          <nav className="flex flex-col gap-1 border-b border-gray-200 pb-8">
-            {NAV_LINKS.map((link) => (
-              <H.Link
-                key={link.href}
-                href={link.href}
-                onClick={() => {
-                  setActiveLink(link.href);
-                  setIsMenuOpen(false);
-                }}
-                className={`text-sm font-medium relative transition-all after:absolute after:bottom-[-4px] after:left-0 after:h-[2px] after:bg-red-500 after:transition-all ${
-                  activeLink === link.href
-                    ? "text-red-500 after:w-full"
-                    : "text-gray-700 hover:text-red-500 after:w-0 hover:after:w-full"
-                }`}
-              >
-                {link.label}
-                <H.HiArrowRight size={20} className="text-gray-400" />
-              </H.Link>
-            ))}
-          </nav>
+          ))}
+        </nav>
+
+        {/* Auth */}
+        <div className="p-4 mt-auto">
           {!user ? (
-            <div className="px-4 flex flex-col gap-3 mt-8">
-              <H.Link
-                href="/auth/login"
-                className="px-4 py-3 bg-[#f2f0ff] text-[#5b4bff] rounded-xl text-base font-medium text-center"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Login
-              </H.Link>
-              <H.Link
-                href="/auth/signup"
-                className="px-4 py-3 bg-[#5b4bff] text-white rounded-xl text-base font-medium text-center hover:bg-[#493ae0]"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Register
-              </H.Link>
-            </div>
+            <H.Link
+              href="/auth/login"
+              onClick={() => setIsMenuOpen(false)}
+              className="block text-center bg-emerald-600 text-white py-3 rounded-xl"
+            >
+              ورود | ثبت‌نام
+            </H.Link>
           ) : (
-            <div className="px-4 flex flex-col gap-3 mt-8">
-              <H.Link
-                href="/dashboard"
-                className="px-4 py-3 bg-[#f2f0ff] text-[#5b4bff] rounded-xl text-base font-medium text-center"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                My Profile
-              </H.Link>
-              <button
-                onClick={handleLogout}
-                className="px-4 py-3 bg-red-50 text-red-600 rounded-xl text-base font-medium text-center hover:bg-red-100"
-              >
-                Log Out
-              </button>
-            </div>
+            <button
+              onClick={handleLogout}
+              className="w-full bg-red-50 text-red-600 py-3 rounded-xl"
+            >
+              خروج
+            </button>
           )}
         </div>
-      )}
+      </div>
     </nav>
   );
 };
