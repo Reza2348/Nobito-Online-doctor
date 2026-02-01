@@ -1,4 +1,9 @@
 // signupImports.ts
+
+// ===== React + Hooks =====
+import React, { useState, useRef, useEffect, JSX } from "react"; // JSX را اضافه کردیم
+
+// ===== Libraries =====
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -9,13 +14,17 @@ import "react-toastify/dist/ReactToastify.css";
 import { supabase } from "@/lib/supabaseClient";
 import Link from "next/link";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useState, useRef, useEffect } from "react";
 
-// تایپ‌ها
-import type { User, NavLink } from "@/Types/types";
+// ===== Types =====
+import type { SignUpFormData } from "@/Types/types";
 
-// export مقادیر واقعی (کامپوننت‌ها و توابع)
+// ===== Export همه چیز =====
 export {
+  React,
+  useState,
+  useRef,
+  useEffect,
+  // اضافه شد
   useForm,
   zodResolver,
   z,
@@ -27,10 +36,7 @@ export {
   Link,
   FaEye,
   FaEyeSlash,
-  useState,
-  useRef,
-  useEffect,
 };
 
-// export type جداگانه برای type-only ها
-export type { SubmitHandler, User, NavLink };
+// Export type-only
+export type { SubmitHandler, SignUpFormData, JSX };

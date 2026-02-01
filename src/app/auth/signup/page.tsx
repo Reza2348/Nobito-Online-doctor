@@ -2,31 +2,24 @@
 
 import * as S from "@/Imports/signupImports/signupImports";
 
-export default function SignUpPage(): JSX.Element {
+export default function SignUpPage(): S.JSX.Element {
   const router = S.useRouter();
   const [showPassword, setShowPassword] = S.useState<boolean>(false);
   const timerRef = S.useRef<NodeJS.Timeout | null>(null);
-  const { t, ready } = S.useTranslation();
-  const [mounted, setMounted] = S.useState<boolean>(false);
 
-  S.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const getSignUpSchema = (t: S.TFunction) =>
-    S.z.object({
-      firstName: S.z.string().min(1, t("first_name_required")),
-      lastName: S.z.string().min(1, t("last_name_required")),
-      email: S.z.string().email(t("invalid_email")),
-      password: S.z.string().min(6, t("password_min_length")),
-    });
+  const getSignUpSchema = S.z.object({
+    firstName: S.z.string().min(1, "First name is required"),
+    lastName: S.z.string().min(1, "Last name is required"),
+    email: S.z.string().email("Invalid email"),
+    password: S.z.string().min(6, "Password must be at least 6 characters"),
+  });
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = S.useForm<S.SignUpFormData>({
-    resolver: mounted ? S.zodResolver(getSignUpSchema(t)) : undefined,
+    resolver: S.zodResolver(getSignUpSchema),
   });
 
   const onSubmit: S.SubmitHandler<S.SignUpFormData> = async (data) => {
@@ -42,7 +35,7 @@ export default function SignUpPage(): JSX.Element {
 
       if (authError) throw authError;
       const user = signUpData.user;
-      if (!user) throw new Error(t("signup_failed"));
+      if (!user) throw new Error("Sign up failed");
 
       const { error: profileError } = await S.supabase.from("profiles").insert([
         {
@@ -53,31 +46,26 @@ export default function SignUpPage(): JSX.Element {
         },
       ]);
 
-      if (profileError) throw new Error(t("profile_creation_failed"));
+      if (profileError) throw new Error("Profile creation failed");
 
-      S.toast.success(t("registration_success"));
+      S.toast.success("Registration successful");
       timerRef.current = setTimeout(() => router.push("/"), 2000);
     } catch (err: unknown) {
-      const errorMessage =
-        err instanceof Error ? err.message : t("unknown_error");
+      const errorMessage = err instanceof Error ? err.message : "Unknown error";
       S.toast.error(errorMessage);
     }
   };
 
   S.useEffect(() => {
     return () => {
-      if (timerRef.current) S.clearTimeout(timerRef.current);
+      if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, []);
 
-  if (!mounted || !ready) return null;
-
   return (
-    <div className="min-h-screen flex items-start justify-center pt-16 bg-white dark:bg-gray-900">
-      <div className="max-w-sm w-full bg-white dark:bg-gray-900 px-8">
-        <h1 className="text-xl font-normal text-center mb-6 dark:text-white">
-          {t("create_account")}
-        </h1>
+    <div className="min-h-screen flex items-start justify-center pt-16 bg-white">
+      <div className="max-w-sm w-full bg-white px-8">
+        <h1 className="text-xl font-normal text-center mb-6">Create Account</h1>
 
         <div className="text-center">
           <h2 className="text-3xl font-bold text-purple-700 mb-4 tracking-wider">
@@ -96,7 +84,7 @@ export default function SignUpPage(): JSX.Element {
 
         <div className="flex items-center my-6">
           <hr className="flex-grow border-gray-300" />
-          <span className="mx-4 text-gray-500 text-sm">{t("or")}</span>
+          <span className="mx-4 text-gray-500 text-sm">or</span>
           <hr className="flex-grow border-gray-300" />
         </div>
 
@@ -105,16 +93,16 @@ export default function SignUpPage(): JSX.Element {
           <div>
             <label
               htmlFor="firstName"
-              className="block text-sm font-medium mb-1 dark:text-white"
+              className="block text-sm font-medium mb-1"
             >
-              {t("first_name")}
+              First Name
             </label>
             <input
               id="firstName"
               type="text"
               {...register("firstName")}
-              placeholder={t("enter_first_name")}
-              className="w-full border border-[#8D75F7] px-3 py-2 rounded-md dark:text-white"
+              placeholder="Enter first name"
+              className="w-full border border-[#8D75F7] px-3 py-2 rounded-md"
             />
             {errors.firstName && (
               <p className="text-red-500 text-xs mt-1">
@@ -127,16 +115,16 @@ export default function SignUpPage(): JSX.Element {
           <div>
             <label
               htmlFor="lastName"
-              className="block text-sm font-medium mb-1 dark:text-white"
+              className="block text-sm font-medium mb-1"
             >
-              {t("last_name")}
+              Last Name
             </label>
             <input
               id="lastName"
               type="text"
               {...register("lastName")}
-              placeholder={t("enter_last_name")}
-              className="w-full border border-[#8D75F7] px-3 py-2 rounded-md dark:text-white"
+              placeholder="Enter last name"
+              className="w-full border border-[#8D75F7] px-3 py-2 rounded-md"
             />
             {errors.lastName && (
               <p className="text-red-500 text-xs mt-1">
@@ -147,20 +135,19 @@ export default function SignUpPage(): JSX.Element {
 
           {/* Email */}
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium mb-1 dark:text-white"
-            >
-              {t("emailAddress")}
+            <label htmlFor="email" className="block text-sm font-medium mb-1">
+              Email Address
             </label>
             <input
               id="email"
               type="email"
               {...register("email")}
-              placeholder={t("emailAddress")}
-              className="w-full border border-[#8D75F7] px-3 py-2 rounded-md dark:text-white"
+              placeholder="Enter your email"
+              className="w-full border border-[#8D75F7] px-3 py-2 rounded-md"
             />
-            <p className="text-[#644FC1] text-xs mt-1">{t("email_note")}</p>
+            <p className="text-[#644FC1] text-xs mt-1">
+              We'll never share your email.
+            </p>
             {errors.email && (
               <p className="text-red-500 text-xs mt-1">
                 {errors.email.message}
@@ -172,17 +159,16 @@ export default function SignUpPage(): JSX.Element {
           <div className="relative">
             <label
               htmlFor="password"
-              className="block text-sm font-medium mb-1 dark:text-white"
+              className="block text-sm font-medium mb-1"
             >
-              {t("password")}
+              Password
             </label>
             <input
               id="password"
               type={showPassword ? "text" : "password"}
               {...register("password")}
-              placeholder={t("passwordPlaceholder")}
-              defaultValue=""
-              className="w-full border border-[#8D75F7] px-3 py-2 rounded-md pr-10 dark:text-white"
+              placeholder="Enter your password"
+              className="w-full border border-[#8D75F7] px-3 py-2 rounded-md pr-10"
             />
             {showPassword ? (
               <S.FaEyeSlash
@@ -199,11 +185,11 @@ export default function SignUpPage(): JSX.Element {
               href="/auth/Forgotpassword"
               className="text-xs text-purple-700 hover:underline mt-2 inline-block"
             >
-              {t("forgotPassword")}
+              Forgot Password?
             </S.Link>
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">
-                {t(errors.password.message || "")}
+                {errors.password.message}
               </p>
             )}
           </div>
@@ -218,19 +204,19 @@ export default function SignUpPage(): JSX.Element {
                 : "bg-purple-700 hover:bg-purple-800"
             }`}
           >
-            {isSubmitting ? t("signing_up") : t("continue")}
+            {isSubmitting ? "Signing up..." : "Continue"}
           </button>
         </form>
 
         {/* Login link */}
-        <p className="text-center mt-6 text-sm dark:text-white">
-          {t("already_have_account")}
+        <p className="text-center mt-6 text-sm">
+          Already have an account?
           <span className="mr-1">
             <S.Link
               href="/auth/login"
               className="text-purple-700 ml-1 hover:underline font-medium"
             >
-              {t("login")}
+              Login
             </S.Link>
           </span>
         </p>
