@@ -1,6 +1,6 @@
 "use client";
 
-import * as H from "../HeaderImports/HeaderImports";
+import * as H from "@/Imports/HeaderImports/HeaderImports";
 
 const MenuItem: H.React.FC<{
   icon: H.React.ReactNode;
@@ -294,7 +294,7 @@ const Header: H.React.FC = () => {
                 href="/auth/login"
                 className="px-3 py-1.5 border bg-[#1F7168] text-white rounded-md text-sm font-medium hover:bg-emerald-700 transition"
               >
-                ورود/ثبت نام
+                ورود / ثبت‌نام
               </H.Link>
             </div>
           )}
@@ -383,7 +383,7 @@ const Header: H.React.FC = () => {
               onClick={() => setIsMenuOpen(false)}
               className="block text-center bg-emerald-600 text-white py-3 rounded-xl"
             >
-              ورود | ثبت‌نام
+              ورود / ثبت‌نام
             </H.Link>
           ) : (
             <button
