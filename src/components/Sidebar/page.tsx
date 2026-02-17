@@ -1,3 +1,5 @@
+// فایل اول: components/Sidebar/page.tsx
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -11,10 +13,17 @@ import {
   HiOutlineLogout,
   HiOutlinePencilAlt,
   HiOutlineUserAdd,
+  HiOutlineMenu,
+  HiOutlineX,
 } from "react-icons/hi";
 import { supabase } from "@/lib/supabaseClient";
 
-const UserSidebar = () => {
+interface SidebarProps {
+  sidebarOpen: boolean;
+  setSidebarOpen: (open: boolean) => void;
+}
+
+const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const [userData, setUserData] = useState({
     phone: "در حال بارگذاری...",
     name: "نام کاربر",
@@ -31,12 +40,7 @@ const UserSidebar = () => {
         if (error) throw error;
 
         if (user) {
-          // اگر کاربر با موبایل ثبت نام کرده، شماره موبایل رو استفاده کن
-          const phone =
-            user.phone ||
-            user.user_metadata?.phone ||
-            user.user_metadata?.full_name?.phone ||
-            "بدون شماره";
+          const phone = user.phone || user.user_metadata?.phone || "بدون شماره";
 
           const name =
             user.user_metadata?.full_name ||
@@ -69,69 +73,117 @@ const UserSidebar = () => {
     window.location.href = "/";
   };
 
-  return (
-    <div
-      className="w-full max-w-[320px] bg-white rounded-[2.5rem] border border-gray-100 shadow-sm overflow-hidden font-[vazir]"
-      dir="rtl"
-    >
-      <div className="relative flex flex-col items-center">
-        <div className="w-full h-28 bg-[#2d7d74] relative">
-          <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
-        </div>
+  const handleMenuClick = (title: string) => {
+    if (title === "خروج از حساب کاربری") {
+      handleLogout();
+    } else {
+      setSidebarOpen(false);
+    }
+  };
 
-        <div className="absolute top-12">
-          <div className="w-24 h-24 bg-white rounded-full border-[6px] border-white shadow-lg flex items-center justify-center">
-            <HiOutlineUserAdd className="text-[#2d7d74] text-5xl opacity-80" />
+  return (
+    <>
+      {/* دکمه همبرگر — فقط در موبایل */}
+      <button
+        onClick={() => setSidebarOpen(!sidebarOpen)}
+        className="md:hidden fixed top-4 right-4 z-50 bg-[#2d7d74] text-white p-2 rounded-xl shadow-lg"
+      >
+        {sidebarOpen ? (
+          <HiOutlineX className="text-2xl" />
+        ) : (
+          <HiOutlineMenu className="text-2xl" />
+        )}
+      </button>
+
+      {/* پس‌زمینه تاریک — فقط در موبایل وقتی باز است */}
+      {sidebarOpen && (
+        <div
+          className="md:hidden fixed inset-0 bg-black/40 z-30"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* سایدبار */}
+      <aside
+        dir="rtl"
+        className={`
+          fixed top-0 right-0 h-full z-40 
+          w-[280px] bg-white shadow-xl
+          transition-transform duration-300 ease-in-out
+          ${sidebarOpen ? "translate-x-0" : "translate-x-full"}
+          md:static md:translate-x-0 md:h-screen
+          md:w-[300px] md:shadow-none md:border-l md:border-gray-100
+          flex flex-col overflow-y-auto
+        `}
+      >
+        {/* هدر پروفایل */}
+        <div className="relative flex flex-col items-center">
+          <div className="w-full h-28 bg-[#2d7d74] relative flex-shrink-0">
+            <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
+          </div>
+
+          <div className="absolute top-12">
+            <div className="w-24 h-24 bg-white rounded-full border-[6px] border-white shadow-lg flex items-center justify-center">
+              <HiOutlineUserAdd className="text-[#2d7d74] text-5xl opacity-80" />
+            </div>
+          </div>
+
+          <div className="mt-14 mb-4 text-center w-full px-6 relative">
+            <button className="absolute right-8 top-1 text-gray-400 hover:text-[#2d7d74] transition-colors">
+              <HiOutlinePencilAlt size={20} />
+            </button>
+            <h2 className="text-xl font-bold text-gray-800 truncate">
+              {userData.name}
+            </h2>
+            <p className="text-gray-400 text-sm mt-1 tabular-nums">
+              {userData.phone}
+            </p>
           </div>
         </div>
 
-        <div className="mt-14 mb-4 text-center w-full px-6 relative">
-          <button className="absolute right-8 top-1 text-gray-400 hover:text-[#2d7d74]">
-            <HiOutlinePencilAlt size={20} />
-          </button>
-          <h2 className="text-xl font-bold text-gray-800">{userData.name}</h2>
-
-          {/* شماره تماس داینامیک */}
-          <p className="text-gray-400 text-sm mt-1 tabular-nums">
-            {userData.phone}
-          </p>
+        <div className="px-8 mb-2">
+          <div className="h-px bg-gray-100 w-full" />
         </div>
-      </div>
 
-      <div className="px-8 mb-2">
-        <div className="h-1 bg-gray-100 w-full"></div>
-      </div>
-
-      <nav className="flex flex-col px-3 pb-8">
-        {menuItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <button
-              key={item.id}
-              onClick={
-                item.title === "خروج از حساب کاربری" ? handleLogout : undefined
-              }
-              className={`relative flex items-center gap-4 px-5 py-4 rounded-2xl transition-all ${
-                item.active
-                  ? "text-[#2d7d74] font-bold"
-                  : "text-gray-500 hover:bg-gray-50"
-              }`}
-            >
-              {item.active && (
-                <div className="absolute right-0 w-1.5 h-10 bg-[#2d7d74] rounded-l-full" />
-              )}
-              <Icon
-                className={`text-2xl ${
-                  item.active ? "text-[#2d7d74]" : "text-gray-400"
-                }`}
-              />
-              <span className="text-[15px]">{item.title}</span>
-            </button>
-          );
-        })}
-      </nav>
-    </div>
+        {/* منو */}
+        <nav className="flex flex-col px-3 pb-8 flex-1">
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleMenuClick(item.title)}
+                className={`
+                  relative flex items-center gap-4 px-5 py-4 rounded-2xl 
+                  transition-all text-right w-full
+                  ${
+                    item.active
+                      ? "text-[#2d7d74] font-bold bg-[#f0faf9]"
+                      : "text-gray-500 hover:bg-gray-50"
+                  }
+                  ${
+                    item.title === "خروج از حساب کاربری"
+                      ? "hover:text-red-500 hover:bg-red-50 mt-auto"
+                      : ""
+                  }
+                `}
+              >
+                {item.active && (
+                  <div className="absolute right-0 w-1.5 h-10 bg-[#2d7d74] rounded-l-full" />
+                )}
+                <Icon
+                  className={`text-2xl flex-shrink-0 ${
+                    item.active ? "text-[#2d7d74]" : "text-gray-400"
+                  }`}
+                />
+                <span className="text-[15px]">{item.title}</span>
+              </button>
+            );
+          })}
+        </nav>
+      </aside>
+    </>
   );
 };
 
-export default UserSidebar;
+export default Sidebar;
