@@ -88,7 +88,7 @@ function Newsletter({
     <div
       className={`flex flex-col gap-3 text-right ${mobile ? "w-full pt-8 pb-4" : "w-full"}`}
     >
-      <h3 className="font-bold text-gray-800 text-[16px]">خبرنامه</h3>
+      <h3 className="text-gray-800 text-[16px]">خبرنامه</h3>
       <p className="text-[12px] text-gray-500 leading-relaxed">
         برای اینکه از جدیدترین اخبار نوبیتو جا نمونید...
       </p>
@@ -178,7 +178,7 @@ export default function Footer() {
           <ul className="space-y-3 text-sm text-gray-600">
             <li>
               <F.Link
-                href="#"
+                href="/FAQ"
                 className="hover:text-[#1F7168] transition-colors"
               >
                 سوالات متداول
@@ -186,7 +186,7 @@ export default function Footer() {
             </li>
             <li>
               <F.Link
-                href="#"
+                href="/Contactus"
                 className="hover:text-[#1F7168] transition-colors"
               >
                 تماس با ما
@@ -202,7 +202,7 @@ export default function Footer() {
             </li>
             <li>
               <F.Link
-                href="/about"
+                href="/About"
                 className="hover:text-[#1F7168] transition-colors"
               >
                 درباره ما
@@ -333,35 +333,32 @@ export default function Footer() {
       </div>
 
       {/* بخش اطلاعات تماس و مجوزها */}
-      <div className="max-w-7xl mx-auto px-6 py-10 border-t border-gray-200 flex flex-col md:flex-row-reverse justify-between items-start gap-8 md:gap-12">
+      <div className="max-w-7xl mx-auto px-6 py-10  flex flex-col md:flex-row justify-between items-start gap-8 md:gap-12">
         {/* ستون راست: اطلاعات تماس */}
         <div className="flex flex-col gap-5 text-right w-full md:w-auto">
-          <div className="flex items-center justify-end gap-3 text-gray-700 group cursor-pointer">
+          <div className="flex items-start  gap-3 text-gray-700 group cursor-pointer">
+            <F.TbPhoneCall
+              size={20}
+              className="text-[#1F7168] group-hover:scale-110 transition-transform "
+            />
             <span className="font-medium text-sm">
               تماس با پشتیبانی: ۰۲۱-۱۲۳۴۵۶۷۸ | ۰۲۱-۱۲۳۴۵۶۷۸
             </span>
-            <F.TbPhoneCall
-              size={20}
-              className="text-[#1F7168] group-hover:scale-110 transition-transform flex-shrink-0"
-            />
           </div>
-          <div className="flex items-center justify-end gap-3 text-gray-700 group cursor-pointer">
+          <div className="flex items-start  gap-3 text-gray-700 group cursor-pointer">
+            <F.CiMail
+              size={20}
+              className="text-[#1F7168] group-hover:scale-110 transition-transform"
+            />
             <span className="font-medium text-sm">
               نشانی پست الکترونیکی: smartix@yahoo.com
             </span>
-            <F.CiMail
-              size={20}
-              className="text-[#1F7168] group-hover:scale-110 transition-transform flex-shrink-0"
-            />
           </div>
-          <div className="flex items-center justify-end gap-3 text-gray-700">
+          <div className="flex items-start  gap-3 text-gray-700">
+            <F.FaRegBuilding size={20} className="text-[#1F7168]" />
             <span className="leading-6 text-sm">
               نشانی: تهران - میدان آرژانتین - خیابان لاله - کوچه صاد - پلاک ۱۸
             </span>
-            <F.FaRegBuilding
-              size={20}
-              className="text-[#1F7168] flex-shrink-0"
-            />
           </div>
         </div>
 
@@ -370,7 +367,7 @@ export default function Footer() {
           <div className="flex flex-wrap justify-center md:justify-start gap-4">
             <div className="p-3 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-all">
               <F.Image
-                src="/samandehi.png"
+                src="/"
                 width={55}
                 height={55}
                 alt="نماد ساماندهی"
@@ -379,7 +376,7 @@ export default function Footer() {
             </div>
             <div className="p-3 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-all">
               <F.Image
-                src="/enamad.png"
+                src="/"
                 width={55}
                 height={55}
                 alt="نماد اعتماد الکترونیکی"
@@ -388,7 +385,7 @@ export default function Footer() {
             </div>
             <div className="p-3 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-all">
               <F.Image
-                src="/etehadieh.png"
+                src="/"
                 width={55}
                 height={55}
                 alt="اتحادیه کسب‌وکارهای مجازی"
@@ -397,7 +394,7 @@ export default function Footer() {
             </div>
             <div className="p-3 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition-all">
               <F.Image
-                src="/iso.png"
+                src="/"
                 width={55}
                 height={55}
                 alt="ISO"
@@ -414,9 +411,15 @@ export default function Footer() {
       </div>
 
       {/* فوتر نهایی: شبکه های اجتماعی و کپی‌رایت */}
-      <div className="bg-white py-6 border-t border-gray-100">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-4">
+      <div className="bg-white py-6 border-t">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row-reverse justify-between items-center gap-4">
           {/* شبکه‌های اجتماعی */}
+          <div className="flex items-center gap-2 text-[13px] text-gray-500 font-medium order-first md:order-last">
+            <span className="text-lg leading-none">©</span>
+            <span>تمامی حقوق این وب‌سایت متعلق به شرکت نوبیتو است</span>
+          </div>
+
+          {/* متن حقوقی */}
           <div className="flex gap-5 text-gray-400 order-last md:order-first">
             <a
               href="#"
@@ -446,12 +449,6 @@ export default function Footer() {
             >
               <F.FaLinkedin size={22} />
             </a>
-          </div>
-
-          {/* متن حقوقی */}
-          <div className="flex items-center gap-2 text-[13px] text-gray-500 font-medium order-first md:order-last">
-            <span className="text-lg leading-none">©</span>
-            <span>تمامی حقوق این وب‌سایت متعلق به شرکت نوبیتو است</span>
           </div>
         </div>
       </div>

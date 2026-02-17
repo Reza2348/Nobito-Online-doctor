@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-
+// Header icon
 import { HiMenu, HiX, HiSearch } from "react-icons/hi";
 import { TbLogout } from "react-icons/tb";
 import { CgProfile } from "react-icons/cg";
@@ -16,6 +16,15 @@ import { CiLinkedin } from "react-icons/ci";
 import { PiYoutubeLogo } from "react-icons/pi";
 import { TbSend } from "react-icons/tb";
 import { PiInstagramLogoLight } from "react-icons/pi";
+import { IoChevronDown } from "react-icons/io5";
+// Header Components
+export { default as DesktopNav } from "@/components/Header/DesktopNav/DesktopNav";
+export { default as MobileMenu } from "@/components/Header/MobileMenu/MobileMenu";
+export { default as UserMenu } from "@/components/Header/UserMenu/UserMenu";
+export { default as SubHeader } from "@/components/Header/SubHeader/SubHeader";
+
+// Hooks
+export { useAuthUser } from "@/hooks/useAuthUser";
 
 import { supabase } from "@/lib/supabaseClient";
 
@@ -34,6 +43,7 @@ export {
   HiX,
   HiSearch,
   HiArrowLeft,
+  IoChevronDown,
   TbLogout,
   CgProfile,
   BiBriefcase,

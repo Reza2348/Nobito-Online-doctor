@@ -38,3 +38,19 @@ export interface LoginFormData {
   email: string;
   password: string;
 }
+
+// src/types/formData.ts
+export type FormData = {
+  firstName: string;
+  lastName: string;
+  nationalId: string;
+  phoneNumber: string;
+  country: string;
+  state: string;
+};
+
+// اگر هنوز تعریف نشده
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
