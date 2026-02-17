@@ -45,7 +45,7 @@ const Header: H.React.FC = () => {
       </div>
 
       {/* بخش ساب‌هدر */}
-      <div className="hidden lg:block bg-gray-50/50">
+      <div className="hidden lg:block bg-[#C0C0C0]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
           <H.SubHeader />
         </div>

@@ -202,7 +202,7 @@ export default function Footer() {
             </li>
             <li>
               <F.Link
-                href="/About"
+                href="/aboutus"
                 className="hover:text-[#1F7168] transition-colors"
               >
                 درباره ما
