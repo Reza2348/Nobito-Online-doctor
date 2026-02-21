@@ -37,7 +37,7 @@ export default function Contact() {
           Accept: "application/json",
         },
         body: JSON.stringify({
-          access_key: "YOUR_ACCESS_KEY",
+          access_key: "a526f686-a039-477b-9c1a-71f470a7ba94",
           ...data,
         }),
       });
@@ -177,7 +177,7 @@ export default function Contact() {
                 لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ،
               </p>
               <button
-                type="button"
+                type="submit"
                 className="bg-[#1F7168] text-white text-sm md:text-base px-3 md:px-6 py-1 md:py-2 rounded hover:bg-blue-700 transition w-full md:w-auto"
               >
                 ارسال پیغام
@@ -189,42 +189,40 @@ export default function Contact() {
           <img src="/card1.png" alt="contact" className="w-full rounded-2xl" />
         </div>
       </div>
+      <div className="space-y-16 mt-6">
+        {/* شبکه های اجتماعی */}
+        <div className="flex flex-col items-center text-2xl space-y-6">
+          <p className="text-center text-black">
+            ما را در شبکه‌ها اجتماعی دنبال کنید...
+          </p>
 
-      <div className="flex flex-col items-center text-2xl justify-center h-screen space-y-4">
-        <p className="text-center text-black">
-          ما را در شبکه‌ها اجتماعی دنبال کنید...
-        </p>
-        <div className="flex space-x-60 mt-[63px]">
-          <C.PiInstagramLogoLight className="text-[#1F7168] text-3xl" />
-          <C.FiPhoneCall className="text-[#1F7168] text-3xl" />
-          <C.TbSend className="text-[#1F7168] text-3xl" />
-          <C.PiYoutubeLogo className="text-[#1F7168] text-3xl" />
-        </div>
-      </div>
-
-      <div className="flex flex-col items-center text-2xl justify-center h-screen space-y-4">
-        <div className="flex space-x-5">
-          <div className="flex flex-col items-center justify-center border  border-[#000000] rounded-lg p-4 space-y-2">
-            <C.IoLocationOutline className="text-[#1F7168] text-3xl" />
-            <p className="text-center text-black"> نشانی : تهران _ میدان</p>
-            <p className="text-center text-black ">
-              آرژانتین _ خیابان لاله _ کوچه صاد _ پلاک 18
-            </p>
-          </div>
-
-          <div className="flex flex-col items-center justify-center border  border-[#000000] rounded-lg p-4 space-y-2">
-            <C.MdOutlineMailOutline className="text-[#1F7168] text-3xl" />
-            <p className="text-center text-black">
-              نشانی پست الکترونیک : smartix@yahoo.com
-            </p>
-          </div>
-
-          <div className="flex flex-col items-center justify-center border  border-[#000000] rounded-lg p-4 space-y-2">
+          <div className="flex gap-12 mt-4">
+            <C.PiInstagramLogoLight className="text-[#1F7168] text-3xl" />
             <C.FiPhoneCall className="text-[#1F7168] text-3xl" />
-            <p className="text-center text-black">تماس با پشتیبانی :</p>
-            <p className="text-center text-black ">
-              ۱۲۳۴۵۶۷۸-۰۲۱ | ۱۲۳۴۵۶۷۸-۰۲۱
-            </p>
+            <C.TbSend className="text-[#1F7168] text-3xl" />
+            <C.PiYoutubeLogo className="text-[#1F7168] text-3xl" />
+          </div>
+        </div>
+
+        <div className="flex flex-col md:flex-row md:justify-center md:items-center gap-6">
+          {/* 📞 PHONE */}
+          <div className="flex flex-col items-center justify-center border border-black rounded-lg p-4 space-y-2">
+            <C.FiPhoneCall className="text-[#1f7168]" />
+            <p className="text-black">تماس با پشتیبانی</p>
+            <p className="text-black">۱۲۳۴۵۶۷۸-۰۲۱ | ۱۲۳۴۵۶۷۸-۰۲۱</p>
+          </div>
+
+          {/* 📧 EMAIL */}
+          <div className="flex flex-col items-center justify-center border border-black rounded-lg p-4 space-y-2">
+            <C.MdOutlineMailOutline className="text-[#1f7168]" />
+            <p className="text-black">smartix@yahoo.com</p>
+          </div>
+
+          {/* 📍 LOCATION */}
+          <div className="flex flex-col items-center justify-center border border-black rounded-lg p-4 space-y-2">
+            <C.IoLocationOutline className="text-[#1f7168]" />
+            <p className="text-black">تهران - میدان آرژانتین</p>
+            <p className="text-black">خیابان لاله - کوچه صاد - پلاک 18</p>
           </div>
         </div>
       </div>

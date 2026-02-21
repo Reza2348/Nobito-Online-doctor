@@ -1,42 +1,67 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+"use client";
+
+import { useState, useEffect, useCallback, useRef } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useRouter } from "next/navigation";
 import { User } from "@supabase/supabase-js";
 
-export function useUser(idleTime = 20000) {
+export function useUser(idleTime = 5 * 60 * 1000) {
+  // پیش‌فرض 5 دقیقه
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<{
+    id: string;
+    email: string;
+    username: string;
+  } | null>(null);
   const [status, setStatus] = useState<
     "loading" | "authenticated" | "unauthenticated"
   >("loading");
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
+  // تابع امن برای فرمت user
+  const formatUser = (user: User) => ({
+    id: user.id,
+    email: user.email ?? "",
+    username:
+      (user.user_metadata?.username as string) ||
+      user.email?.split("@")[0] ||
+      "US",
+  });
+
+  // reset تایمر idle
   const resetTimer = useCallback(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
-    if (status !== "authenticated") {
-      timerRef.current = setTimeout(() => {
-        router.push("/auth/signup");
-      }, idleTime);
-    }
+    if (status === "authenticated") return;
+
+    timerRef.current = setTimeout(() => {
+      router.push("/auth/signup"); // redirect بعد از idle
+    }, idleTime);
   }, [status, idleTime, router]);
 
+  // load initial user و listener تغییرات auth
   useEffect(() => {
     let isMounted = true;
 
-    async function loadUser() {
-      const { data } = await supabase.auth.getUser();
-      if (!isMounted) return;
+    const loadUser = async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (!isMounted) return;
 
-      if (data.user) {
-        setUser(data.user);
-        setStatus("authenticated");
-        if (timerRef.current) clearTimeout(timerRef.current);
-      } else {
+        if (data.session?.user) {
+          setUser(formatUser(data.session.user));
+          setStatus("authenticated");
+        } else {
+          setUser(null);
+          setStatus("unauthenticated");
+          resetTimer();
+        }
+      } catch (error) {
+        console.error("Error fetching session:", error);
         setUser(null);
         setStatus("unauthenticated");
         resetTimer();
       }
-    }
+    };
 
     loadUser();
 
@@ -45,9 +70,8 @@ export function useUser(idleTime = 20000) {
         if (!isMounted) return;
 
         if (session?.user) {
-          setUser(session.user);
+          setUser(formatUser(session.user));
           setStatus("authenticated");
-          if (timerRef.current) clearTimeout(timerRef.current);
         } else {
           setUser(null);
           setStatus("unauthenticated");
@@ -63,6 +87,7 @@ export function useUser(idleTime = 20000) {
     };
   }, [resetTimer]);
 
+  // مدیریت activity user برای reset timer
   useEffect(() => {
     if (status === "authenticated") return;
 

@@ -15,6 +15,8 @@ export default function RootLayout({
         <QueryProvider>
           <Header />
           {children}
+          <link rel="icon" href="/logo1.svg" />
+          <title>پزشک آنلاین نوبیتو</title>
           <Footer />
         </QueryProvider>
       </body>

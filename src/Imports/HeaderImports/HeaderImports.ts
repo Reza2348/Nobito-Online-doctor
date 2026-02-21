@@ -17,6 +17,7 @@ import { PiYoutubeLogo } from "react-icons/pi";
 import { TbSend } from "react-icons/tb";
 import { PiInstagramLogoLight } from "react-icons/pi";
 import { IoChevronDown } from "react-icons/io5";
+import { FaChevronDown } from "react-icons/fa";
 // Header Components
 export { default as DesktopNav } from "@/components/Header/DesktopNav/DesktopNav";
 export { default as MobileMenu } from "@/components/Header/MobileMenu/MobileMenu";
@@ -39,6 +40,7 @@ export {
   Link,
   usePathname,
   useRouter,
+  FaChevronDown,
   HiMenu,
   HiX,
   HiSearch,

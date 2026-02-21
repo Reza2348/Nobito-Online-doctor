@@ -1,23 +1,26 @@
 "use client";
 
-import * as S from "@/Imports/signupImports/signupImports";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import * as S from "@/Imports/signupImports/signupImports"; // zod, toast, useForm, Image
+import { supabase } from "@/lib/supabaseClient";
 
 const loginSchema = S.z.object({
   identifier: S.z
     .string()
-    .min(1, "لطفا ایمیل یا شماره موبایل را وارد کنید")
-    .refine((val) => val.includes("@") || /^[0]?[0-9]{10,11}$/.test(val), {
-      message: "ایمیل یا شماره موبایل معتبر وارد کنید",
-    }),
+    .min(1, "لطفا ایمیل یا شماره موبایل خود را وارد کنید")
+    .refine((val) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const phoneRegex = /^[0-9]{10,15}$/;
+      return emailRegex.test(val) || phoneRegex.test(val);
+    }, "لطفا ایمیل یا شماره موبایل معتبر وارد کنید"),
 });
 
 type LoginFormData = S.z.infer<typeof loginSchema>;
 
-export default function LoginPage() {
-  const router = S.useRouter();
-  const [mounted, setMounted] = S.useState(false);
-  const [isSubmitting, setIsSubmitting] = S.useState(false);
-  const timerRef = S.useRef<NodeJS.Timeout | null>(null);
+export default function MagicLinkPage() {
+  const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     register,
@@ -27,82 +30,53 @@ export default function LoginPage() {
   } = S.useForm<LoginFormData>({
     resolver: S.zodResolver(loginSchema),
     mode: "onChange",
-    reValidateMode: "onChange",
   });
 
-  S.useEffect(() => {
-    setMounted(true);
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, []);
-
-  const onSubmit: S.SubmitHandler<LoginFormData> = async (data) => {
-    const identifier = data.identifier.trim();
+  const onSubmit = async (data: LoginFormData) => {
     setIsSubmitting(true);
+
+    const identifier = data.identifier.trim();
 
     try {
       const isEmail = identifier.includes("@");
-      let formattedIdentifier = identifier;
+      let response;
 
-      if (!isEmail && formattedIdentifier.startsWith("0")) {
-        formattedIdentifier = "+98" + formattedIdentifier.slice(1);
-      }
-
-      // فعلاً فقط ایمیل پشتیبانی میشه
-      if (!isEmail) {
-        S.toast.error("در حال حاضر فقط ورود با ایمیل امکان‌پذیر است");
-        setIsSubmitting(false);
-        return;
-      }
-
-      // ثبت‌نام خودکار
-      const { data: signUpData, error: signUpError } =
-        await S.supabase.auth.signUp({
-          email: formattedIdentifier,
-          password: formattedIdentifier + "_auto_pass_2024",
+      if (isEmail) {
+        // ارسال Magic Link برای ایمیل
+        response = await supabase.auth.signInWithOtp({
+          email: identifier.toLowerCase(),
+          options: { shouldCreateUser: true },
         });
-
-      if (signUpError && signUpError.message !== "User already registered") {
-        throw signUpError;
+      } else {
+        // ارسال OTP برای شماره موبایل
+        response = await supabase.auth.signInWithOtp({
+          phone: identifier,
+          options: { shouldCreateUser: true },
+        });
       }
 
-      // اگه کاربر قبلاً ثبت‌نام کرده بود لاگین کن
-      if (
-        signUpError?.message === "User already registered" ||
-        signUpData?.user?.identities?.length === 0
-      ) {
-        const { error: signInError } = await S.supabase.auth.signInWithPassword(
-          {
-            email: formattedIdentifier,
-            password: formattedIdentifier + "_auto_pass_2024",
-          },
-        );
-        if (signInError) throw signInError;
-      }
+      if (response.error) throw response.error;
 
-      // آپدیت پروفایل بعد از لاگین
-      const { data: userData } = await S.supabase.auth.getUser();
-      if (userData?.user) {
-        await S.supabase
-          .from("profiles")
-          .update({ email: formattedIdentifier })
-          .eq("id", userData.user.id);
-      }
+      // ذخیره identifier در localStorage برای صفحه بعد
+      localStorage.setItem("otp_identifier", identifier);
 
-      S.toast.success("ورود موفقیت‌آمیز!");
+      S.toast.success(
+        isEmail
+          ? "لینک ورود به ایمیل شما ارسال شد. لطفا ایمیل خود را چک کنید."
+          : "کد ورود به شماره شما ارسال شد. لطفا پیامک خود را بررسی کنید.",
+      );
+
       reset();
 
-      timerRef.current = setTimeout(() => router.push("/dashboard"), 1000);
+      // هدایت به صفحه تایید بدون نمایش ایمیل در URL
+      setTimeout(() => router.push("/auth/verify"), 1000);
     } catch (err: any) {
       console.error(err);
-      S.toast.error(err.message || "خطای غیرمنتظره");
+      S.toast.error(err.message || "خطا در ارسال لینک/کد تایید");
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  if (!mounted) return null;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F2F2F2] font-[tahoma]">
@@ -114,11 +88,9 @@ export default function LoginPage() {
           height={100}
           priority
         />
-
         <h1 className="text-2xl font-bold mt-3 mb-2 text-[#414141]">
-          ورود / ثبت‌ نام
+          ورود/ ثبت نام
         </h1>
-
         <p className="text-sm text-[#757575] mb-6 text-center">
           لطفا شماره موبایل یا ایمیل خود را وارد کنید
         </p>
@@ -132,19 +104,12 @@ export default function LoginPage() {
             {...register("identifier")}
             placeholder="ایمیل یا شماره موبایل"
             disabled={isSubmitting}
-            dir="rtl"
-            className="w-full px-4 py-4 rounded-xl border border-gray-300 bg-white focus:outline-none text-black focus:ring-2 focus:ring-[#347469] text-right placeholder:text-gray-400"
+            dir="ltr"
+            className="w-full px-4 py-4 rounded-xl text-right border border-gray-300 bg-white focus:outline-none text-black focus:ring-2 focus:ring-[#347469]"
           />
-
           {errors.identifier && (
-            <p className="text-red-500 text-sm text-right">
-              {errors.identifier.message}
-            </p>
+            <p className="text-red-500 text-sm">{errors.identifier.message}</p>
           )}
-
-          <p className="text-sm text-[#1F7168] text-right">
-            لطفا این قسمت را خالی نگذارید
-          </p>
 
           <button
             type="submit"
@@ -155,7 +120,7 @@ export default function LoginPage() {
                 : "bg-[#347469] hover:bg-[#2a5d54]"
             }`}
           >
-            {isSubmitting ? "در حال ورود..." : "ورود / ثبت‌ نام"}
+            {isSubmitting ? "در حال ارسال..." : "ارسال لینک/کد تایید"}
           </button>
         </form>
 

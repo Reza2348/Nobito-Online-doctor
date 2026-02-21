@@ -2,7 +2,6 @@
 
 import * as H from "@/Imports/HeaderImports/HeaderImports";
 
-// گسترش نوع User برای دسترسی به user_metadata
 interface MyUser extends H.User {
   user_metadata?: {
     phone?: string;
@@ -30,8 +29,26 @@ const MobileMenu: H.React.FC<Props> = ({
   NAV_LINKS = DEFAULT_NAV_LINKS,
 }) => {
   const [isOpen, setIsOpen] = H.useState(false);
+  const [openDropdown, setOpenDropdown] = H.useState(false);
 
-  // مدیریت overflow صفحه وقتی منو باز است
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+    setOpenDropdown(false);
+  };
+
+  // تابع کمکی برای کلیک روی لینک
+  const handleLinkClick = (href: string) => {
+    setIsOpen(false);
+    setOpenDropdown(false);
+    window.location.href = href;
+  };
+
+  const handleLogout = () => {
+    setOpenDropdown(false);
+    setIsOpen(false);
+    logout();
+  };
+
   H.useEffect(() => {
     document.body.style.overflow = isOpen ? "hidden" : "";
     return () => {
@@ -39,11 +56,9 @@ const MobileMenu: H.React.FC<Props> = ({
     };
   }, [isOpen]);
 
-  const toggleMenu = () => setIsOpen(!isOpen);
-
   return (
     <>
-      {/* Hamburger Button */}
+      {/* Hamburger */}
       <div className="md:hidden">
         <button onClick={toggleMenu}>
           <H.HiMenu size={26} className="text-gray-700" />
@@ -58,12 +73,12 @@ const MobileMenu: H.React.FC<Props> = ({
         }`}
       />
 
-      {/* Slide Drawer */}
+      {/* Drawer */}
       <div
         className={`fixed top-0 right-0 h-full w-80 max-w-[85%] bg-white z-50 md:hidden
-          transform transition-transform duration-300 ease-in-out ${
-            isOpen ? "translate-x-0" : "translate-x-full"
-          }`}
+        transform transition-transform duration-300 ease-in-out ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        }`}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-4 h-16 border-b">
@@ -81,55 +96,85 @@ const MobileMenu: H.React.FC<Props> = ({
           </button>
         </div>
 
-        {/* Main Links */}
+        {/* Links */}
         <nav className="flex flex-col gap-2 p-4">
           {NAV_LINKS.map((link) => (
-            <H.Link
+            <button
               key={link.href}
-              href={link.href}
-              onClick={toggleMenu}
-              className="flex items-center justify-between px-3 py-3 rounded-lg text-[#757575] hover:bg-emerald-50 transition-colors"
+              onClick={() => handleLinkClick(link.href)}
+              className="flex items-center justify-between px-3 py-3 rounded-lg text-[#757575] hover:bg-emerald-50 transition-colors text-left"
             >
               {link.label}
-            </H.Link>
+            </button>
           ))}
         </nav>
 
         {/* Auth Section */}
-        <div className="p-4 border-t">
+        <div className="p-4 border-t relative">
           {!user ? (
-            <H.Link
-              href="/auth/signup"
-              onClick={toggleMenu}
-              className="block text-center bg-emerald-600  text-white py-3 rounded-xl"
+            <button
+              onClick={() => handleLinkClick("/auth/signup")}
+              className="w-full block text-center bg-emerald-600 text-white py-3 rounded-xl"
             >
               ورود / ثبت‌نام
-            </H.Link>
-          ) : (
-            <button
-              onClick={() => {
-                toggleMenu();
-                logout();
-              }}
-              className="w-full bg-red-50 text-red-600 py-3 rounded-xl"
-            >
-              {/* نمایش شماره موبایل یا ایمیل کاربر */}
-              {user.user_metadata?.phone || user.email || "کاربر"}
             </button>
+          ) : (
+            <div className="relative">
+              {/* Dashboard Button */}
+              <button
+                onClick={() => setOpenDropdown(!openDropdown)}
+                className="w-full flex items-center justify-center gap-2 bg-emerald-600 text-white py-3 rounded-xl"
+              >
+                داشبورد
+                <H.FaChevronDown
+                  className={`transition-transform duration-300 ${
+                    openDropdown ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+
+              {/* Dropdown */}
+              {openDropdown && (
+                <div className="mt-2 bg-white shadow-lg rounded-xl border overflow-hidden">
+                  <button
+                    onClick={() => handleLinkClick("/dashboard")}
+                    className="w-full text-center py-3 text-black hover:bg-gray-50 transition"
+                  >
+                    ورود به داشبورد
+                  </button>
+
+                  <button
+                    onClick={handleLogout}
+                    className="w-full text-center py-3 text-red-600 hover:bg-red-50 transition"
+                  >
+                    خروج از حساب
+                  </button>
+                </div>
+              )}
+            </div>
           )}
 
-          {/* About / Contact / FAQ */}
-          <div className="mt-4">
-            <ul className="flex flex-col gap-2 text-[#757575] text-sm font-medium">
-              <li className="hover:text-[#1F7168] cursor-pointer transition-colors">
+          {/* Extra Links */}
+          <div className="mt-6">
+            <ul className="flex flex-col gap-3 text-[#757575] text-sm font-medium">
+              <button
+                onClick={() => handleLinkClick("/aboutus")}
+                className="text-right hover:text-black transition-colors"
+              >
                 درباره ما
-              </li>
-              <li className="hover:text-[#1F7168] cursor-pointer transition-colors">
+              </button>
+              <button
+                onClick={() => handleLinkClick("/Contactus")}
+                className="text-right hover:text-black transition-colors"
+              >
                 تماس با ما
-              </li>
-              <li className="hover:text-[#1F7168] cursor-pointer transition-colors">
-                سوالات متداول
-              </li>
+              </button>
+              <button
+                onClick={() => handleLinkClick("/FAQ")}
+                className="text-right hover:text-black transition-colors"
+              >
+                سوال های متداول
+              </button>
             </ul>
           </div>
         </div>

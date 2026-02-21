@@ -1,61 +1,24 @@
-// DashboardPage.jsx
+"use client";
 import React from "react";
-import DashboardLayout from "./layout";
 
-export default function DashboardPage() {
+const DashboardContentPage = () => {
   return (
-    <DashboardLayout>
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div className="bg-white p-6 rounded shadow">
-          <h2 className="text-gray-500">Users</h2>
-          <p className="text-2xl font-bold">1,245</p>
-        </div>
-        <div className="bg-white p-6 rounded shadow">
-          <h2 className="text-gray-500">Revenue</h2>
-          <p className="text-2xl font-bold">$12,430</p>
-        </div>
-        <div className="bg-white p-6 rounded shadow">
-          <h2 className="text-gray-500">Orders</h2>
-          <p className="text-2xl font-bold">324</p>
-        </div>
-      </div>
+    <div className="p-4 bg-white rounded-xl shadow-inner min-h-[60vh]">
+      <h3 className="text-xl font-bold text-gray-800 mb-4">
+        خوش آمدید! محتوای اصلی صفحه
+      </h3>
+      <p className="text-gray-600">
+        این بخش توسط فایل app/dashboard/page.tsx رندر شده است و در داخل تگ main
+        در layout.tsx قرار دارد.
+      </p>
 
-      {/* Table */}
-      <div className="bg-white p-6 rounded shadow overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-6 py-3 text-left text-gray-500 uppercase">
-                Name
-              </th>
-              <th className="px-6 py-3 text-left text-gray-500 uppercase">
-                Email
-              </th>
-              <th className="px-6 py-3 text-left text-gray-500 uppercase">
-                Role
-              </th>
-              <th className="px-6 py-3 text-left text-gray-500 uppercase">
-                Status
-              </th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            <tr>
-              <td className="px-6 py-4">John Doe</td>
-              <td className="px-6 py-4">john@example.com</td>
-              <td className="px-6 py-4">Admin</td>
-              <td className="px-6 py-4">Active</td>
-            </tr>
-            <tr>
-              <td className="px-6 py-4">Jane Smith</td>
-              <td className="px-6 py-4">jane@example.com</td>
-              <td className="px-6 py-4">Editor</td>
-              <td className="px-6 py-4">Inactive</td>
-            </tr>
-          </tbody>
-        </table>
+      <div className="mt-6 p-4 border border-gray-200 rounded-lg bg-indigo-50/50">
+        <p className="text-sm font-medium text-indigo-700">
+          برای دیدن صفحات دیگر، روی لینک‌های سایدبار کلیک کنید.
+        </p>
       </div>
-    </DashboardLayout>
+    </div>
   );
-}
+};
+
+export default DashboardContentPage;

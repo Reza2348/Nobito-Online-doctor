@@ -1,45 +1,54 @@
 "use client";
 
-import * as H from "@/Imports/HeaderImports/HeaderImports";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { supabase } from "@/lib/supabaseClient";
 
 export const useAuthUser = () => {
-  const [user, setUser] = H.useState<H.User | null>(null);
+  const [user, setUser] = useState<{
+    id: string;
+    email: string;
+    username: string;
+  } | null>(null);
+  const router = useRouter();
 
-  H.useEffect(() => {
+  // فرمت امن user
+  const formatUser = (user: any) => ({
+    id: user.id,
+    email: user.email ?? "",
+    username:
+      (user.user_metadata?.username as string) ||
+      user.email?.split("@")[0] ||
+      "US",
+  });
+
+  useEffect(() => {
+    let isMounted = true;
+
     const fetchUser = async () => {
-      const { data } = await H.supabase.auth.getSession();
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (!isMounted) return;
 
-      if (data.session?.user) {
-        const username =
-          (data.session.user.user_metadata?.username as string) ||
-          data.session.user.email?.split("@")[0] ||
-          "US";
-
-        setUser({
-          id: data.session.user.id,
-          username,
-          email: data.session.user.email || "",
-        });
-      } else {
+        if (data.session?.user) {
+          setUser(formatUser(data.session.user));
+        } else {
+          setUser(null);
+        }
+      } catch (error) {
+        console.error("Error fetching session:", error);
         setUser(null);
       }
     };
 
     fetchUser();
 
-    const { data: listener } = H.supabase.auth.onAuthStateChange(
+    const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
-        if (session?.user) {
-          const username =
-            (session.user.user_metadata?.username as string) ||
-            session.user.email?.split("@")[0] ||
-            "US";
+        if (!isMounted) return;
 
-          setUser({
-            id: session.user.id,
-            username,
-            email: session.user.email || "",
-          });
+        if (session?.user) {
+          setUser(formatUser(session.user));
         } else {
           setUser(null);
         }
@@ -47,13 +56,20 @@ export const useAuthUser = () => {
     );
 
     return () => {
+      isMounted = false;
       listener.subscription.unsubscribe();
     };
   }, []);
 
+  // تابع logout با مدیریت خطا
   const logout = async () => {
-    await H.supabase.auth.signOut();
-    H.useRouter().push("/");
+    try {
+      await supabase.auth.signOut();
+      setUser(null);
+      router.push("/");
+    } catch (error) {
+      console.error("Logout error:", error);
+    }
   };
 
   return { user, logout };
