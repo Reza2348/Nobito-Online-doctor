@@ -54,3 +54,19 @@ export interface FAQItem {
   question: string;
   answer: string;
 }
+
+export interface SearchBoxProps {
+  search: string;
+  setSearch: (value: string) => void;
+  city: string;
+  setCity: (value: string) => void;
+}
+export interface Doctor {
+  id: number;
+  name: string;
+  photo_url: string | null;
+  specialty: string;
+  patients_satisfied: number;
+  address: string;
+  fields: string[];
+}
