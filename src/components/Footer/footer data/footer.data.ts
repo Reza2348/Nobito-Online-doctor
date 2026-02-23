@@ -6,14 +6,14 @@ export const FOOTER_NAV: FooterSection[] = [
     links: [
       { name: "سوالات متداول", href: "/FAQ" },
       { name: "تماس با ما", href: "/Contactus" },
-      { name: "میثاق‌نامه", href: "#" },
+      { name: "میثاق‌نامه", href: "/MedicalCharter" },
       { name: "درباره ما", href: "/aboutus" },
     ],
   },
   {
     title: "خدمات",
     links: [
-      { name: "خدمات پزشکی در منزل", href: "#" },
+      { name: "خدمات پزشکی در منزل", href: "/ServiceHome" },
       { name: "مشاوره غیرحضوری", href: "#" },
       { name: "مراکز درمانی", href: "#" },
       { name: "نوبت‌دهی", href: "#" },
@@ -33,7 +33,6 @@ export const FOOTER_NAV: FooterSection[] = [
       { name: "شبکه‌های اجتماعی", href: "#" },
       { name: "واحد انفورماتیک", href: "#" },
       { name: "حریم شخصی", href: "#" },
-      { name: "تماس با ما", href: "#" },
     ],
   },
 ];

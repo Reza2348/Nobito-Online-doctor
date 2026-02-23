@@ -20,7 +20,7 @@ const Header: H.React.FC = () => {
               alt="logo"
               width={120}
               height={120}
-              className=" sm:w-[110px] md:w-[130px] lg:w-[150px]"
+              className=" sm:w-27.5 `md:w-32.5 lg:w-37.5"
               priority
             />
           </H.Link>

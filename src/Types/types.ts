@@ -69,4 +69,14 @@ export interface Doctor {
   patients_satisfied: number;
   address: string;
   fields: string[];
+  rating?: string;
+  satisfied_percent?: string;
+  bio?: string;
+}
+
+export interface Service {
+  name: string;
+  description: string;
+  icon: React.ReactNode;
+  color: string;
 }

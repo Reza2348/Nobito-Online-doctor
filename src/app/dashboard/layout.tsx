@@ -24,7 +24,7 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
         className="flex items-center p-4 mt-4 text-red-700 bg-red-100 border border-red-300 rounded-lg shadow-sm"
         dir="rtl"
       >
-        <AiOutlineWarning className="w-6 h-6 ml-2 flex-shrink-0" />{" "}
+        <AiOutlineWarning className="w-6 h-6 ml-2 shrink-0" />{" "}
         {/* ml-2 به جای mr-2 برای راست‌چین */}
         <span className="text-sm md:text-base text-right">
           شما باید وارد شوید تا داشبورد خود را مشاهده کنید.

@@ -13,28 +13,28 @@ const DesktopNav: H.React.FC = () => {
       </H.Link>
 
       <H.Link
-        href="/about"
+        href="/Services"
         className="text-gray-700 hover:text-[#1F7168] font-medium transition"
       >
         خدمات
       </H.Link>
 
       <H.Link
-        href="/services"
+        href="/Onlineconsultation"
         className="text-gray-700 hover:text-[#1F7168] font-medium transition"
       >
         مشاوره آنلاین
       </H.Link>
 
       <H.Link
-        href="/contact"
+        href="/HealthMagazine"
         className="text-gray-700 hover:text-[#1F7168] font-medium transition"
       >
         مجله سلامت
       </H.Link>
 
       <H.Link
-        href="/contact"
+        href="/Charity"
         className="text-gray-700 hover:text-[#1F7168] font-medium transition"
       >
         نیکوکاری
