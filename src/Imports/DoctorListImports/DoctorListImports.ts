@@ -10,7 +10,7 @@ export type { Doctor } from "@/Types/types";
 // Icons
 export { FiMapPin } from "react-icons/fi";
 export { FaStar } from "react-icons/fa";
-export { FaPhoneAlt, FaChevronLeft } from "react-icons/fa";
+export { FaPhone, FaChevronLeft } from "react-icons/fa";
 export { IoPersonOutline, IoChatbubbleEllipsesOutline } from "react-icons/io5";
 export { MdOutlineScreenShare } from "react-icons/md";
 export { FaRegCalendarCheck } from "react-icons/fa";

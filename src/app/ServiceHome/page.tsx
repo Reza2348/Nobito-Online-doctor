@@ -43,6 +43,7 @@ const MedicalServicesCards: React.FC = () => {
         <h2 className="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4">
           خدمات ما
         </h2>
+        <div className="w-20 h-1 bg-emerald-500 mx-auto rounded-full"></div>
         <p className="text-gray-500 max-w-2xl mx-auto leading-7">
           ارائه خدمات پزشکی با کیفیت و دسترسی آسان برای همه بیماران، چه در منزل
           و چه آنلاین.

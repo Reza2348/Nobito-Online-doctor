@@ -14,7 +14,7 @@ export const FOOTER_NAV: FooterSection[] = [
     title: "خدمات",
     links: [
       { name: "خدمات پزشکی در منزل", href: "/ServiceHome" },
-      { name: "مشاوره غیرحضوری", href: "#" },
+      { name: "مشاوره غیرحضوری", href: "/Offlineconsultation" },
       { name: "مراکز درمانی", href: "#" },
       { name: "نوبت‌دهی", href: "#" },
     ],

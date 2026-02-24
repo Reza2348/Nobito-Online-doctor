@@ -32,11 +32,14 @@ const DoctorProfile: React.FC = () => {
 
   if (loading)
     return (
-      <div className="flex items-center justify-center min-h-screen gap-3">
-        <div className="w-10 h-10 border-4 border-gray-200 border-t-teal-600 rounded-full animate-spin" />
+      <div className="flex items-center justify-center min-h-screen gap-4">
+        {/* متن سمت راست */}
         <span className="text-gray-500 font-bold text-lg">
           در حال بارگذاری پروفایل...
         </span>
+
+        {/* spinner سمت چپ */}
+        <div className="w-10 h-10 border-4 border-gray-200 border-t-teal-600 rounded-full animate-spin" />
       </div>
     );
 

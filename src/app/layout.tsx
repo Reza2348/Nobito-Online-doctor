@@ -1,3 +1,4 @@
+// app/layout.tsx
 "use client";
 
 import { vazirmatnLocal } from "../fonts/vazirmatn";
@@ -6,6 +7,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import QueryProvider from "@/components/QueryProvider/QueryProvider";
 import { DoctorProvider } from "@/context/DoctorContext";
+import { ConsultantProvider } from "@/context/ConsultantsContext"; // ⚠ نام درست
 
 export default function RootLayout({
   children,
@@ -14,20 +16,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fa" dir="rtl">
+      <head>
+        <title>پزشک آنلاین نوبیتو</title>
+        <link rel="icon" href="/logo1.svg" />
+      </head>
       <body className={`${vazirmatnLocal.className} antialiased`}>
         <QueryProvider>
-          <DoctorProvider>
-            <Header />
-            {children}
-            <link rel="icon" href="/logo1.svg" />
-            <title>پزشک آنلاین نوبیتو</title>
-            <Footer />
-          </DoctorProvider>
+          <ConsultantProvider>
+            <DoctorProvider>
+              <Header />
+              <main>{children}</main>
+              <Footer />
+            </DoctorProvider>
+          </ConsultantProvider>
         </QueryProvider>
-
-        {/* این دو خط باید در <head> باشند، نه داخل <body> */}
-        {/* <link rel="icon" href="/logo1.svg" /> */}
-        {/* <title>پزشک آنلاین نوبیتو</title> */}
       </body>
     </html>
   );

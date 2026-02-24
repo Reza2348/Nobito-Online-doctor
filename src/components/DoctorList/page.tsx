@@ -11,7 +11,7 @@ const DoctorList: React.FC = () => {
   if (isLoading)
     return (
       <div className="flex justify-center py-16 text-gray-400 font-sans">
-        در حال بارگذاری...
+        در حال بارگذاری دکتر...
       </div>
     );
 

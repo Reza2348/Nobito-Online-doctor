@@ -80,3 +80,17 @@ export interface Service {
   icon: React.ReactNode;
   color: string;
 }
+
+export interface Consultant {
+  id: number;
+  name: string;
+  specialty: string;
+  photo_url?: string;
+  rating?: number;
+  fields?: string[];
+  bio?: string;
+  satisfaction_rate?: number;
+  satisfied_patients?: number;
+  // این خط اضافه شود
+  address?: string;
+}
