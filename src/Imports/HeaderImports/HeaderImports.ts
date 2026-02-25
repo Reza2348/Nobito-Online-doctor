@@ -1,65 +1,48 @@
-import React, { useState, useEffect, useRef } from "react";
+// ====================
+// React
+// ====================
+export { default as React, useState, useEffect, useRef } from "react";
 
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-// Header icon
-import { HiMenu, HiX, HiSearch } from "react-icons/hi";
-import { TbLogout } from "react-icons/tb";
-import { CgProfile } from "react-icons/cg";
-import { BiBriefcase } from "react-icons/bi";
-import { IoSettingsOutline } from "react-icons/io5";
-import { HiArrowLeft } from "react-icons/hi2";
-import { FaRegBell } from "react-icons/fa";
-import { FiMapPin } from "react-icons/fi";
-import { CiLinkedin } from "react-icons/ci";
-import { PiYoutubeLogo } from "react-icons/pi";
-import { TbSend } from "react-icons/tb";
-import { PiInstagramLogoLight } from "react-icons/pi";
-import { IoChevronDown } from "react-icons/io5";
-import { FaChevronDown } from "react-icons/fa";
+// ====================
+// Next
+// ====================
+export { default as Image } from "next/image";
+export { default as Link } from "next/link";
+export { usePathname, useRouter } from "next/navigation";
+
+// ====================
+// Icons
+// ====================
+export { HiMenu, HiX, HiSearch } from "react-icons/hi";
+export { HiArrowLeft } from "react-icons/hi2";
+export { TbLogout, TbSend } from "react-icons/tb";
+export { CgProfile } from "react-icons/cg";
+export { BiBriefcase } from "react-icons/bi";
+export { IoSettingsOutline, IoChevronDown } from "react-icons/io5";
+export { FaRegBell, FaChevronDown } from "react-icons/fa";
+export { FiMapPin } from "react-icons/fi";
+export { CiLinkedin } from "react-icons/ci";
+export { PiYoutubeLogo, PiInstagramLogoLight } from "react-icons/pi";
+
+// ====================
+// Lib
+// ====================
+export { supabase } from "@/lib/supabaseClient";
+
+// ====================
+// Types
+// ====================
+export type { User, NavLink } from "@/Types/types";
+
+// ====================
 // Header Components
+// ====================
 export { default as DesktopNav } from "@/components/Header/DesktopNav/DesktopNav";
 export { default as MobileMenu } from "@/components/Header/MobileMenu/MobileMenu";
 export { default as UserMenu } from "@/components/Header/UserMenu/UserMenu";
 export { default as SubHeader } from "@/components/Header/SubHeader/SubHeader";
 
+// ====================
 // Hooks
+// ====================
 export { useAuthUser } from "@/hooks/useAuthUser";
-
-import { supabase } from "@/lib/supabaseClient";
-
-import type { User, NavLink } from "@/Types/types";
-
-export {
-  React,
-  useState,
-  useEffect,
-  useRef,
-  Image,
-  Link,
-  usePathname,
-  useRouter,
-  FaChevronDown,
-  HiMenu,
-  HiX,
-  HiSearch,
-  HiArrowLeft,
-  IoChevronDown,
-  TbLogout,
-  CgProfile,
-  BiBriefcase,
-  IoSettingsOutline,
-  supabase,
-  type User,
-  type NavLink,
-};
-
-export {
-  FaRegBell,
-  FiMapPin,
-  CiLinkedin,
-  PiYoutubeLogo,
-  TbSend,
-  PiInstagramLogoLight,
-};

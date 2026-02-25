@@ -1,50 +1,53 @@
 "use client";
 
+import React from "react";
+import {
+  FaUserMd,
+  FaStethoscope,
+  FaCalendarCheck,
+  FaHospital,
+} from "react-icons/fa";
+
 const stats = [
-  { value: "+۱۵٬۰۰۰", label: "مراکز درمانی" },
-  { value: "+۴۰٬۰۰۰", label: "نوبت دهی روزانه" },
-  { value: "+۱۰٬۰۰۰", label: "درمانگر سیار" },
-  { value: "+۳۵٬۰۰۰", label: "پزشک آماده به خدمت" },
+  { value: "35٬000+", label: "پزشک آماده به خدمت", icon: <FaUserMd /> },
+  { value: "10٬000+", label: "درمانگر سیار", icon: <FaStethoscope /> },
+  { value: "40٬000+", label: "نوبت دهی روزانه", icon: <FaCalendarCheck /> },
+  { value: "15٬000+", label: "مراکز درمانی", icon: <FaHospital /> },
 ];
 
 export default function StatsSection() {
   return (
-    <div
+    <section
       dir="rtl"
-      className="relative bg-gray-50 overflow-hidden mt-10 mb-10"
+      className="relative bg-gray-50 overflow-hidden py-12 px-4"
       style={{ fontFamily: "'Vazirmatn', 'Tahoma', sans-serif" }}
     >
-      {/* Top diagonal ribbon */}
-      <div
-        className="w-full h-5"
-        style={{
-          background: "#2d7a6a",
-          clipPath: "polygon(0 0, 100% 0, 96% 100%, 4% 100%)",
-        }}
-      />
+      {/* خط سبز بالا */}
+      <div className="w-full h-3 bg-emerald-500 rounded-b-lg"></div>
 
-      {/* Stats */}
-      <div className="px-6 py-8">
-        <div className="max-w-4xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-y-8 gap-x-4">
-          {stats.map((stat, i) => (
-            <div key={i} className="flex flex-col items-start gap-1 px-4">
-              <span className="text-2xl md:text-3xl font-bold text-gray-800">
-                {stat.value}
-              </span>
-              <span className="text-sm text-gray-500">{stat.label}</span>
+      {/* کارت‌های آمار */}
+      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 mt-10">
+        {stats.map((stat, i) => (
+          <div
+            key={i}
+            className="group bg-white rounded-2xl shadow-lg p-6 flex flex-col items-center text-center transition hover:shadow-2xl hover:scale-105"
+          >
+            {/* آیکون دایره‌ای */}
+            <div className="w-16 h-16 flex items-center justify-center rounded-full bg-emerald-100 text-emerald-600 text-2xl mb-4 transition group-hover:bg-emerald-200">
+              {stat.icon}
             </div>
-          ))}
-        </div>
+            {/* مقدار */}
+            <span className="text-2xl md:text-3xl font-extrabold text-gray-800">
+              {stat.value}
+            </span>
+            {/* توضیح */}
+            <span className="text-gray-500 mt-1">{stat.label}</span>
+          </div>
+        ))}
       </div>
 
-      {/* Bottom diagonal ribbon */}
-      <div
-        className="w-full h-5"
-        style={{
-          background: "#2d7a6a",
-          clipPath: "polygon(4% 0, 96% 0, 100% 100%, 0 100%)",
-        }}
-      />
-    </div>
+      {/* خط سبز پایین */}
+      <div className="w-full h-3 bg-emerald-500 rounded-t-lg mt-10"></div>
+    </section>
   );
 }

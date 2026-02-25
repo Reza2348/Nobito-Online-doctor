@@ -3,17 +3,17 @@ import LocalFont from "next/font/local";
 export const vazirmatnLocal = LocalFont({
   src: [
     {
-      path: "./Vazirmatn-Light.ttf",
+      path: "./IRANSansWeb_Light.ttf",
       weight: "400",
       style: "normal",
     },
     {
-      path: "./Vazirmatn-Medium.ttf",
+      path: "./IRANSansWeb_Medium.ttf",
       weight: "500",
       style: "normal",
     },
     {
-      path: "./Vazirmatn-Black.ttf",
+      path: "./IRANSansWeb_Bold.ttf",
       weight: "700",
       style: "normal",
     },

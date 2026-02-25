@@ -1,39 +1,24 @@
-import Image from "next/image";
-import Link from "next/link";
-import { FiExternalLink } from "react-icons/fi";
-import { TbPhoneCall } from "react-icons/tb";
-import { CiMail } from "react-icons/ci";
-import { FaRegBuilding } from "react-icons/fa";
-import { FaPlus } from "react-icons/fa6";
-import { IoSend } from "react-icons/io5";
-import { FaMinus } from "react-icons/fa";
-import { FaYoutube, FaInstagram, FaTelegram, FaLinkedin } from "react-icons/fa";
-import type { FooterSection, FooterLink } from "@/Types/types";
-import FooterTop from "@/components/Footer/FooterTop/FooterTop";
-import FooterDesktopNav from "@/components/Footer/FooterDesktopNav/FooterDesktopNav";
-import FooterMobileNav from "@/components/Footer/FooterMobileNav/FooterMobileNav";
-import FooterContact from "@/components/Footer/FooterContact/FooterContact";
-import FooterBottom from "@/components/Footer/FooterBottom/FooterBottom";
+export { default as Image } from "next/image";
+export { default as Link } from "next/link";
 
+export { FiExternalLink } from "react-icons/fi";
+export { TbPhoneCall } from "react-icons/tb";
+export { CiMail } from "react-icons/ci";
 export {
-  FooterTop,
-  FooterDesktopNav,
-  FooterMobileNav,
-  FooterContact,
-  FooterBottom,
-  Image,
-  Link,
-  FiExternalLink,
-  TbPhoneCall,
-  IoSend,
-  CiMail,
   FaRegBuilding,
-  FaPlus,
   FaMinus,
   FaYoutube,
   FaInstagram,
   FaTelegram,
   FaLinkedin,
-  type FooterSection,
-  type FooterLink,
-};
+} from "react-icons/fa";
+export { FaPlus } from "react-icons/fa6";
+export { IoSend } from "react-icons/io5";
+
+export type { FooterSection, FooterLink } from "@/Types/types";
+
+export { default as FooterTop } from "@/components/Footer/FooterTop/FooterTop";
+export { default as FooterDesktopNav } from "@/components/Footer/FooterDesktopNav/FooterDesktopNav";
+export { default as FooterMobileNav } from "@/components/Footer/FooterMobileNav/FooterMobileNav";
+export { default as FooterContact } from "@/components/Footer/FooterContact/FooterContact";
+export { default as FooterBottom } from "@/components/Footer/FooterBottom/FooterBottom";

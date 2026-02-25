@@ -6,8 +6,8 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import QueryProvider from "@/components/QueryProvider/QueryProvider";
-import { DoctorProvider } from "@/context/DoctorContext";
-import { ConsultantProvider } from "@/context/ConsultantsContext"; // ⚠ نام درست
+import { DoctorProvider } from "@/context/DoctorContext/DoctorContext";
+import { ConsultantProvider } from "@/context/ConsultantsContext/ConsultantsContext"; // ⚠ نام درست
 
 export default function RootLayout({
   children,

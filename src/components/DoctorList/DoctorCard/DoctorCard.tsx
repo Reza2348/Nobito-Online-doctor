@@ -3,7 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import * as D from "@/Imports/DoctorListImports/DoctorListImports";
-import { useDoctor } from "@/context/DoctorContext";
+import { useDoctor } from "@/context/DoctorContext/DoctorContext";
 
 interface Props {
   doctor: D.Doctor;

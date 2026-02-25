@@ -15,24 +15,24 @@ export const FOOTER_NAV: FooterSection[] = [
     links: [
       { name: "خدمات پزشکی در منزل", href: "/ServiceHome" },
       { name: "مشاوره غیرحضوری", href: "/Offlineconsultation" },
-      { name: "مراکز درمانی", href: "#" },
-      { name: "نوبت‌دهی", href: "#" },
+      { name: "مراکز درمانی", href: "/TreatmentCenters" },
+      { name: "نوبت‌دهی", href: "/AppointmentCard" },
     ],
   },
   {
     title: "نیکوکاری",
     links: [
-      { name: "درمانگر داوطلب", href: "#" },
-      { name: "بیشتر بدانید", href: "#" },
-      { name: "کمک مالی", href: "#" },
+      { name: "درمانگر داوطلب", href: "/VolunteerTherapist" },
+      { name: "بیشتر بدانید", href: "/LearnMoreCards" },
+      { name: "کمک مالی", href: "/DonationsCards" },
     ],
   },
   {
     title: "پشتیبانی",
     links: [
-      { name: "شبکه‌های اجتماعی", href: "#" },
-      { name: "واحد انفورماتیک", href: "#" },
-      { name: "حریم شخصی", href: "#" },
+      { name: "شبکه‌های اجتماعی", href: "/componets/Socialnetwork" },
+      { name: "واحد انفورماتیک", href: "/ITDepartment" },
+      { name: "حریم شخصی", href: "/PrivacyPolicy" },
     ],
   },
 ];

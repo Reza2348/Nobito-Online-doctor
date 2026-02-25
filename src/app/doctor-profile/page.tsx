@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { Doctor } from "@/Types/types";
-import { useDoctor } from "@/context/DoctorContext";
+import { useDoctor } from "@/context/DoctorContext/DoctorContext";
 
 import DoctorHeader from "@/components/DoctorProfile/DoctorHeader/DoctorHeader";
 import DoctorBio from "@/components/DoctorProfile/DoctorBio/DoctorBio";

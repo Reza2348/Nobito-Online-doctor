@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
-import { useConsultant } from "@/context/ConsultantsContext";
+import { useConsultant } from "@/context/ConsultantsContext/ConsultantsContext";
 import { ConsultantsProfile } from "@/components/ConsultantsProfile/ConsultantsProfile";
 import type { Consultant } from "@/Types/types";
 
