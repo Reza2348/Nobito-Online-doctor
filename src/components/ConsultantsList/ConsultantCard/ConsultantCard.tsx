@@ -38,7 +38,7 @@ export const ConsultantCard: React.FC<ConsultantCardProps> = ({
 
       {/* نام و امتیاز */}
       <div className="flex flex-col items-center gap-1 mb-2">
-        <h2 className="text-lg font-bold">{consultant.name}</h2>
+        <h2 className="text-lg font-bold text-black">{consultant.name}</h2>
         <div className="flex items-center gap-1">
           <span className="text-yellow-400 text-sm">★</span>
           <span className="text-sm text-gray-600 font-medium">

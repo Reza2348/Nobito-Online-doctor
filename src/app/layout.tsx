@@ -7,7 +7,8 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import QueryProvider from "@/components/QueryProvider/QueryProvider";
 import { DoctorProvider } from "@/context/DoctorContext/DoctorContext";
-import { ConsultantProvider } from "@/context/ConsultantsContext/ConsultantsContext"; // ⚠ نام درست
+import { ConsultantProvider } from "@/context/ConsultantsContext/ConsultantsContext";
+import { ClinicsProvider } from "@/context/ClinicsContext/ClinicsContext";
 
 export default function RootLayout({
   children,
@@ -22,13 +23,15 @@ export default function RootLayout({
       </head>
       <body className={`${vazirmatnLocal.className} antialiased`}>
         <QueryProvider>
-          <ConsultantProvider>
-            <DoctorProvider>
-              <Header />
-              <main>{children}</main>
-              <Footer />
-            </DoctorProvider>
-          </ConsultantProvider>
+          <ClinicsProvider>
+            <ConsultantProvider>
+              <DoctorProvider>
+                <Header />
+                <main>{children}</main>
+                <Footer />
+              </DoctorProvider>
+            </ConsultantProvider>
+          </ClinicsProvider>
         </QueryProvider>
       </body>
     </html>
