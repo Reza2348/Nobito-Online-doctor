@@ -30,7 +30,7 @@ export const FOOTER_NAV: FooterSection[] = [
   {
     title: "پشتیبانی",
     links: [
-      { name: "شبکه‌های اجتماعی", href: "/componets/Socialnetwork" },
+      { name: "شبکه‌های اجتماعی", href: "/SocialMedia" },
       { name: "واحد انفورماتیک", href: "/ITDepartment" },
       { name: "حریم شخصی", href: "/PrivacyPolicy" },
     ],

@@ -3,7 +3,6 @@
 import React from "react";
 import * as D from "@/Imports/DoctorListImports/DoctorListImports";
 
-// کامپوننت کمکی برای انواع مشاوره در بالای کارت
 const ConsultationType = ({
   icon,
   label,

@@ -8,9 +8,9 @@ interface ClinicsAddressProps {
 
 export default function ClinicsAddress({ address }: ClinicsAddressProps) {
   return (
-    <div className="flex items-center gap-1 text-sm">
-      <FiMapPin className="text-gray-600" />
-      <span>{address}</span>
+    <div className="flex items-center gap-2 text-gray-400 text-sm">
+      <FiMapPin className="shrink-0" size={16} />
+      <span className="truncate">نشانی : {address}</span>
     </div>
   );
 }

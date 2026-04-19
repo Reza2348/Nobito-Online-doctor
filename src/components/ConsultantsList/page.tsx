@@ -26,12 +26,14 @@ const ConsultantsList = () => {
   });
 
   if (isLoading)
-    return <p className="text-center mt-10">در حال بارگذاری مشاورین...</p>;
+    return (
+      <p className="flex justify-center py-16 text-gray-400 font-sans">
+        در حال بارگذاری مشاورین...
+      </p>
+    );
   if (isError)
     return (
-      <p className="text-center mt-10 text-red-500">
-        {(error as Error).message}
-      </p>
+      <p className="text-center mt-10 text-red-500">خطا در بارگذاری داده‌ها</p>
     );
 
   return (

@@ -11,10 +11,18 @@ export default function Page() {
   });
 
   if (isLoading)
-    return <div className="text-center py-10">در حال بارگذاری...</div>;
+    return (
+      <div className="flex justify-center py-16 text-gray-400 font-sans">
+        در حال بارگزاری کلینک های پزشکی ...
+      </div>
+    );
 
   if (error)
-    return <div className="text-center py-10">خطا در دریافت اطلاعات</div>;
+    return (
+      <div className="flex justify-center py-16 text-red-400 font-sans">
+        خطا در بارگذاری داده‌ها
+      </div>
+    );
 
   return (
     <div className="container mx-auto px-4 py-10">
