@@ -1,8 +1,14 @@
-// فایل اول: components/Sidebar/page.tsx
-
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabaseClient";
+
+import SidebarHeader from "@/components/Sidebar/SidebarHeader/SidebarHeader";
+import SidebarMenu from "@/components/Sidebar/SidebarMenu/SidebarMenu";
+import SidebarToggle from "@/components/Sidebar/SidebarToggle/SidebarToggle";
+import SidebarOverlay from "@/components/Sidebar/SidebarOverlay/SidebarOverlay";
+import LogoutModal from "@/components/LogoutModal/LogoutModal";
+
 import {
   HiOutlineUser,
   HiOutlineClipboardList,
@@ -11,12 +17,7 @@ import {
   HiOutlineChatAlt2,
   HiOutlineLockClosed,
   HiOutlineLogout,
-  HiOutlinePencilAlt,
-  HiOutlineUserAdd,
-  HiOutlineMenu,
-  HiOutlineX,
 } from "react-icons/hi";
-import { supabase } from "@/lib/supabaseClient";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -24,6 +25,10 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
+  const [logoutOpen, setLogoutOpen] = useState(false);
+
+  const [activeItem, setActiveItem] = useState<number>(1);
+
   const [userData, setUserData] = useState({
     phone: "در حال بارگذاری...",
     name: "نام کاربر",
@@ -31,35 +36,30 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      try {
-        const {
-          data: { user },
-          error,
-        } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-        if (error) throw error;
-
-        if (user) {
-          const phone = user.phone || user.user_metadata?.phone || "بدون شماره";
-
-          const name =
+      if (user) {
+        setUserData({
+          phone: user.phone || user.user_metadata?.phone || "بدون شماره",
+          name:
             user.user_metadata?.full_name ||
             user.email?.split("@")[0] ||
-            "نام کاربر";
-
-          setUserData({ phone, name });
-        }
-      } catch (err) {
-        console.error("خطا در دریافت اطلاعات کاربر:", err);
-        setUserData({ phone: "خطا در بارگذاری", name: "نام کاربر" });
+            "کاربر",
+        });
       }
     };
 
     fetchUser();
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = sidebarOpen ? "hidden" : "auto";
+  }, [sidebarOpen]);
+
   const menuItems = [
-    { id: 1, title: "اطلاعات حساب کاربری", icon: HiOutlineUser, active: true },
+    { id: 1, title: "اطلاعات حساب کاربری", icon: HiOutlineUser },
     { id: 2, title: "تاریخچه نوبت ها", icon: HiOutlineClipboardList },
     { id: 3, title: "پیغام ها", icon: HiOutlineMail },
     { id: 4, title: "پرونده پزشکی", icon: HiOutlineDocumentText },
@@ -68,120 +68,74 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     { id: 7, title: "خروج از حساب کاربری", icon: HiOutlineLogout },
   ];
 
+  const handleMenuClick = (item: any) => {
+    if (item.title === "خروج از حساب کاربری") {
+      setLogoutOpen(true);
+      return;
+    }
+
+    setActiveItem(item.id);
+    setSidebarOpen(false);
+  };
+
   const handleLogout = async () => {
     await supabase.auth.signOut();
     window.location.href = "/";
   };
 
-  const handleMenuClick = (title: string) => {
-    if (title === "خروج از حساب کاربری") {
-      handleLogout();
-    } else {
-      setSidebarOpen(false);
-    }
-  };
-
   return (
     <>
-      {/* دکمه همبرگر — فقط در موبایل */}
-      <button
-        onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="md:hidden fixed top-4 right-4 z-50 bg-[#2d7d74] text-white p-2 rounded-xl shadow-lg"
-      >
-        {sidebarOpen ? (
-          <HiOutlineX className="text-2xl" />
-        ) : (
-          <HiOutlineMenu className="text-2xl" />
-        )}
-      </button>
+      <SidebarToggle
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+      />
 
-      {/* پس‌زمینه تاریک — فقط در موبایل وقتی باز است */}
-      {sidebarOpen && (
-        <div
-          className="md:hidden fixed inset-0 bg-black/40 z-30"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+      <SidebarOverlay
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+      />
 
-      {/* سایدبار */}
       <aside
         dir="rtl"
         className={`
-          fixed top-0 right-0 h-full z-40 
-          w-[280px] bg-white shadow-xl
-          transition-transform duration-300 ease-in-out
-          ${sidebarOpen ? "translate-x-0" : "translate-x-full"}
-          md:static md:translate-x-0 md:h-screen
-          md:w-[300px] md:shadow-none md:border-l md:border-gray-100
+          fixed top-0 right-0 h-full z-40
+          mt-2
+          mr-4
+          ml-4
+          pb-7
+          rounded-2xl
+          w-70 bg-white shadow-xl
           flex flex-col overflow-y-auto
+          transition-transform duration-300
+
+          
+          ${sidebarOpen ? "translate-x-0" : "translate-x-full"}
+
+          
+          md:translate-x-0 md:static md:block
         `}
       >
-        {/* هدر پروفایل */}
-        <div className="relative flex flex-col items-center">
-          <div className="w-full h-28 bg-[#2d7d74] relative flex-shrink-0">
-            <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
-          </div>
+        <SidebarHeader userData={userData} />
 
-          <div className="absolute top-12">
-            <div className="w-24 h-24 bg-white rounded-full border-[6px] border-white shadow-lg flex items-center justify-center">
-              <HiOutlineUserAdd className="text-[#2d7d74] text-5xl opacity-80" />
-            </div>
-          </div>
-
-          <div className="mt-14 mb-4 text-center w-full px-6 relative">
-            <button className="absolute right-8 top-1 text-gray-400 hover:text-[#2d7d74] transition-colors">
-              <HiOutlinePencilAlt size={20} />
-            </button>
-            <h2 className="text-xl font-bold text-gray-800 truncate">
-              {userData.name}
-            </h2>
-            <p className="text-gray-400 text-sm mt-1 tabular-nums">
-              {userData.phone}
-            </p>
-          </div>
-        </div>
-
-        <div className="px-8 mb-2">
+        <div className="px-6 my-2">
           <div className="h-px bg-gray-100 w-full" />
         </div>
 
-        {/* منو */}
-        <nav className="flex flex-col px-3 pb-8 flex-1">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.id}
-                onClick={() => handleMenuClick(item.title)}
-                className={`
-                  relative flex items-center gap-4 px-5 py-4 rounded-2xl 
-                  transition-all text-right w-full
-                  ${
-                    item.active
-                      ? "text-[#2d7d74] font-bold bg-[#f0faf9]"
-                      : "text-gray-500 hover:bg-gray-50"
-                  }
-                  ${
-                    item.title === "خروج از حساب کاربری"
-                      ? "hover:text-red-500 hover:bg-red-50 mt-auto"
-                      : ""
-                  }
-                `}
-              >
-                {item.active && (
-                  <div className="absolute right-0 w-1.5 h-10 bg-[#2d7d74] rounded-l-full" />
-                )}
-                <Icon
-                  className={`text-2xl flex-shrink-0 ${
-                    item.active ? "text-[#2d7d74]" : "text-gray-400"
-                  }`}
-                />
-                <span className="text-[15px]">{item.title}</span>
-              </button>
-            );
-          })}
-        </nav>
+        <div className="flex-1 overflow-y-auto px-3">
+          <SidebarMenu
+            items={menuItems}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+            onItemClick={handleMenuClick}
+          />
+        </div>
       </aside>
+
+      <LogoutModal
+        open={logoutOpen}
+        onClose={() => setLogoutOpen(false)}
+        onConfirm={handleLogout}
+      />
     </>
   );
 };
