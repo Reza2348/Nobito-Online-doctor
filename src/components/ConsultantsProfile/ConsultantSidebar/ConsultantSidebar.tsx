@@ -49,7 +49,6 @@ export const ConsultantSidebar = () => (
           className="border border-gray-100 rounded-2xl p-4 bg-gray-50/50"
         >
           <div className="flex justify-between items-start mb-4">
-            {/* بخش اطلاعات نوبت - حالا در سمت راست قرار می‌گیرد */}
             <div className="text-right">
               <p className="text-sm font-bold text-slate-700">مشاوره حضوری</p>
               <p className="text-[10px] text-gray-400 mt-1">
@@ -57,7 +56,6 @@ export const ConsultantSidebar = () => (
               </p>
             </div>
 
-            {/* بخش راهنما - حالا در سمت چپ قرار می‌گیرد */}
             <span className="text-blue-500 text-xs font-bold cursor-pointer">
               راهنما
             </span>

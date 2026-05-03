@@ -32,19 +32,16 @@ const OnlineConsultationTimeline = () => {
         </p>
       </div>
 
-      {/* Timeline */}
       <div className="relative flex flex-col md:flex-row md:justify-between items-center max-w-5xl mx-auto">
         {steps.map((step, index) => (
           <div
             key={index}
             className="flex-1 flex flex-col items-center text-center mb-12 md:mb-0 relative"
           >
-            {/* آیکون */}
             <div className="bg-white p-4 rounded-full shadow-lg z-10 mb-4">
               {step.icon}
             </div>
 
-            {/* عنوان و توضیح */}
             <h3 className="text-xl font-semibold text-gray-800 mb-2">
               {step.title}
             </h3>

@@ -12,7 +12,6 @@ export const useAuthUser = () => {
   } | null>(null);
   const router = useRouter();
 
-  // فرمت امن user
   const formatUser = (user: any) => ({
     id: user.id,
     email: user.email ?? "",
@@ -61,7 +60,6 @@ export const useAuthUser = () => {
     };
   }, []);
 
-  // تابع logout با مدیریت خطا
   const logout = async () => {
     try {
       await supabase.auth.signOut();

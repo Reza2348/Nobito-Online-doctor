@@ -11,7 +11,6 @@ const SearchBox: FC<SearchBoxProps> = ({
 }) => {
   return (
     <div className="flex flex-col sm:flex-row items-stretch w-full bg-white rounded-md sm:rounded-md shadow-2xl overflow-hidden">
-      {/* Search input */}
       <div className="flex items-center flex-1 px-4 gap-2 border-b sm:border-b-0  border-gray-200">
         <FiSearch className="text-gray-400" size={18} />
         <input
@@ -23,7 +22,6 @@ const SearchBox: FC<SearchBoxProps> = ({
         />
       </div>
 
-      {/* City selector */}
       <div className="relative flex items-center px-4 ml-3 mt-2 mb-2 border">
         <FiMapPin className="text-teal-600 ml-2" size={16} />
         <select

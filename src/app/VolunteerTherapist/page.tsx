@@ -46,12 +46,10 @@ const VolunteerTherapist: React.FC = () => {
             key={vol.id}
             className="group bg-white rounded-3xl shadow-md hover:shadow-xl p-8 flex flex-col items-center text-center transition-transform transform hover:-translate-y-2 hover:scale-[1.03]"
           >
-            {/* آیکون دایره‌ای درمانگر */}
             <div className="w-24 h-24 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 text-5xl mb-4 transition-colors duration-300 group-hover:bg-emerald-100">
               <FaUserNurse />
             </div>
 
-            {/* نام و تخصص */}
             <h3 className="text-xl font-bold text-gray-800 mb-1 group-hover:text-emerald-600 transition-colors">
               {vol.name}
             </h3>
@@ -60,7 +58,6 @@ const VolunteerTherapist: React.FC = () => {
               {vol.status}
             </p>
 
-            {/* تلفن و زمان */}
             <div className="flex flex-col gap-2 w-full text-sm text-gray-700 mb-6">
               <div className="flex items-center gap-2 justify-center bg-blue-50 rounded-lg p-2">
                 <FaPhoneAlt className="text-teal-600" />
@@ -68,7 +65,6 @@ const VolunteerTherapist: React.FC = () => {
               </div>
             </div>
 
-            {/* دکمه تماس */}
             <button className="w-full bg-emerald-600 text-white py-2 rounded-xl font-semibold shadow hover:bg-emerald-700 transition transform hover:scale-105">
               تماس با درمانگر
             </button>

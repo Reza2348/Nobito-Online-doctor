@@ -3,14 +3,12 @@
 import React from "react";
 import { FaPhone, FaUserFriends, FaVideo, FaCommentDots } from "react-icons/fa";
 
-// تعریف type props برای هر نوع مشاوره
 export interface ClinicsTypeProps {
   icon: React.ReactNode;
   label: string;
   active?: boolean;
 }
 
-// کامپوننت ClinicsType با استفاده از ClinicsTypeProps
 export const ClinicsType: React.FC<ClinicsTypeProps> = ({
   icon,
   label,
@@ -38,7 +36,6 @@ export const ClinicsType: React.FC<ClinicsTypeProps> = ({
   );
 };
 
-// کامپوننت اصلی ClinicsSidebar
 const ClinicsSidebar: React.FC = () => {
   return (
     <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 sticky top-8">
@@ -46,7 +43,6 @@ const ClinicsSidebar: React.FC = () => {
         ملاقات با پزشک
       </h2>
 
-      {/* بخش نوع مشاوره */}
       <div className="grid grid-cols-4 gap-2 mb-8">
         <ClinicsType icon={<FaPhone />} label="تلفنی" />
         <ClinicsType icon={<FaUserFriends />} label="حضوری" active />
@@ -54,7 +50,6 @@ const ClinicsSidebar: React.FC = () => {
         <ClinicsType icon={<FaCommentDots />} label="متنی" />
       </div>
 
-      {/* لیست نوبت‌ها */}
       <div className="space-y-4">
         {[1, 2, 3].map((item) => (
           <div
@@ -62,7 +57,6 @@ const ClinicsSidebar: React.FC = () => {
             className="border border-gray-100 rounded-2xl p-4 bg-gray-50/50"
           >
             <div className="flex justify-between items-start mb-4">
-              {/* بخش اطلاعات نوبت */}
               <div className="text-right">
                 <p className="text-sm font-bold text-slate-700">مشاوره حضوری</p>
                 <p className="text-[10px] text-gray-400 mt-1">
@@ -70,13 +64,11 @@ const ClinicsSidebar: React.FC = () => {
                 </p>
               </div>
 
-              {/* بخش راهنما */}
               <span className="text-blue-500 text-xs font-bold cursor-pointer">
                 راهنما
               </span>
             </div>
 
-            {/* دکمه نوبت و قیمت */}
             <div className="flex justify-between items-center">
               <button className="bg-white border border-teal-500 text-teal-600 text-xs font-bold px-4 py-2 rounded-xl hover:bg-teal-50 transition-colors">
                 نوبت بگیرید

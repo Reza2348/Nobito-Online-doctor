@@ -1,4 +1,4 @@
-import * as S from "@/Imports/signupImports/signupImports"; // برای Image
+import * as S from "@/Imports/signupImports/signupImports";
 
 export default function LogoSection() {
   return (

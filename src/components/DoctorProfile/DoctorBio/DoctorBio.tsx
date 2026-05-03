@@ -25,7 +25,6 @@ const DoctorBio: React.FC<Props> = ({ doctor }) => (
         </h3>
       </div>
 
-      {/* نمایش فیلدهای تخصصی پزشک با کامپوننت جدا */}
       <D.DoctorFields fields={doctor.fields || []} />
     </div>
   </div>

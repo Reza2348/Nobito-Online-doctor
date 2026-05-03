@@ -1,10 +1,9 @@
 "use client";
 
 import React from "react";
-import * as P from "@/Imports/publicprofileImports/publicprofileImports"; // با فرض وجود ایمپورت‌های قبلی شما
+import * as P from "@/Imports/publicprofileImports/publicprofileImports";
 
 export default function ProfilePage() {
-  // استفاده از React Hook Form برای مدیریت فرم
   const { register, handleSubmit } = P.useForm();
 
   const onSubmit = (data: any) => {
@@ -17,7 +16,6 @@ export default function ProfilePage() {
       dir="rtl"
     >
       <div className="max-w-4xl mx-auto space-y-6">
-        {/* بنر اطلاع‌رسانی (Alert Box) */}
         <div className="w-full bg-[#E3F2FD] border border-[#BBDEFB] rounded-xl p-4 flex items-center justify-between text-[#1976D2]">
           <div className="flex items-center gap-3">
             <span className="bg-[#1976D2] text-white w-6 h-6 rounded-full flex items-center justify-center text-sm font-bold">
@@ -31,9 +29,7 @@ export default function ProfilePage() {
           <P.FaChevronLeft className="text-xs opacity-50" />
         </div>
 
-        {/* کارت اصلی فرم */}
         <div className="bg-white rounded-[30px] shadow-sm border border-gray-100 overflow-hidden">
-          {/* هدر بخش اطلاعات */}
           <div className="flex justify-between items-center px-8 py-6 border-b border-gray-50">
             <h2 className="text-xl font-bold text-gray-700">
               اطلاعات حساب کاربری
@@ -42,7 +38,6 @@ export default function ProfilePage() {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="p-8 space-y-8">
-            {/* ردیف اول: نام و نام خانوادگی */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="flex flex-col gap-2">
                 <label className="text-sm text-[#347469] font-bold mr-1 text-left">
@@ -64,7 +59,6 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* ردیف دوم: کدملی و شماره تلفن */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="flex flex-col gap-2">
                 <label className="text-sm text-gray-400 font-bold mr-1">
@@ -86,7 +80,6 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* ردیف سوم: کشور و استان */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="flex flex-col gap-2 relative">
                 <label className="text-sm text-gray-400 font-bold mr-1">
@@ -108,7 +101,6 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* بخش فوتر فرم (دکمه و راهنما) */}
             <div className="flex flex-col md:flex-row items-center justify-between pt-6 border-t border-gray-50 gap-4">
               <button
                 type="submit"

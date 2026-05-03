@@ -8,7 +8,6 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-/* اعتبارسنجی فرم */
 const loginSchema = z.object({
   identifier: z
     .string()
@@ -23,7 +22,7 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 interface LoginFormProps {
-  onSuccess?: () => void; // callback در صورت موفقیت (اختیاری)
+  onSuccess?: () => void;
 }
 
 export default function LoginForm({ onSuccess }: LoginFormProps) {

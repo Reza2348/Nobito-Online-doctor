@@ -11,11 +11,11 @@ interface Props {
 
 const DoctorCard: React.FC<Props> = ({ doctor }) => {
   const router = useRouter();
-  const { setDoctorId } = useDoctor(); // گرفتن setter از context
+  const { setDoctorId } = useDoctor();
 
   const handleClick = () => {
-    setDoctorId(doctor.id); // ذخیره ID در context
-    router.push("/doctor-profile"); // هدایت به صفحه با URL ثابت
+    setDoctorId(doctor.id);
+    router.push("/doctor-profile");
   };
 
   return (

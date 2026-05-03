@@ -36,7 +36,6 @@ const MobileMenu: H.React.FC<Props> = ({
     setOpenDropdown(false);
   };
 
-  // تابع کمکی برای کلیک روی لینک
   const handleLinkClick = (href: string) => {
     setIsOpen(false);
     setOpenDropdown(false);
@@ -58,14 +57,12 @@ const MobileMenu: H.React.FC<Props> = ({
 
   return (
     <>
-      {/* Hamburger */}
       <div className="md:hidden">
         <button onClick={toggleMenu}>
           <H.HiMenu size={26} className="text-gray-700" />
         </button>
       </div>
 
-      {/* Backdrop */}
       <div
         onClick={toggleMenu}
         className={`fixed inset-0 bg-black/40 z-40 md:hidden transition-opacity duration-300 ${
@@ -73,14 +70,12 @@ const MobileMenu: H.React.FC<Props> = ({
         }`}
       />
 
-      {/* Drawer */}
       <div
         className={`fixed top-0 right-0 h-full w-80 max-w-[85%] bg-white z-50 md:hidden
         transform transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        {/* Header */}
         <div className="flex items-center justify-between px-4 h-16 border-b">
           <H.Link href="/">
             <H.Image
@@ -96,7 +91,6 @@ const MobileMenu: H.React.FC<Props> = ({
           </button>
         </div>
 
-        {/* Links */}
         <nav className="flex flex-col gap-2 p-4">
           {NAV_LINKS.map((link) => (
             <button
@@ -109,7 +103,6 @@ const MobileMenu: H.React.FC<Props> = ({
           ))}
         </nav>
 
-        {/* Auth Section */}
         <div className="p-4 border-t relative">
           {!user ? (
             <button
@@ -133,7 +126,6 @@ const MobileMenu: H.React.FC<Props> = ({
                 />
               </button>
 
-              {/* Dropdown */}
               {openDropdown && (
                 <div className="mt-2 bg-white shadow-lg rounded-xl border overflow-hidden">
                   <button
@@ -154,7 +146,6 @@ const MobileMenu: H.React.FC<Props> = ({
             </div>
           )}
 
-          {/* Extra Links */}
           <div className="mt-6">
             <ul className="flex flex-col gap-3 text-[#757575] text-sm font-medium">
               <button

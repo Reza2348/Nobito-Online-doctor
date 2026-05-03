@@ -1,10 +1,6 @@
 import { supabase } from "@/lib/supabaseClient";
 import { Clinic } from "@/Types/types";
 
-/**
- * fetchClinics
- * دریافت لیست کلینیک‌ها از Supabase
- */
 export const fetchClinics = async (): Promise<Clinic[]> => {
   const { data, error } = await supabase
     .from("clinics")
@@ -13,6 +9,5 @@ export const fetchClinics = async (): Promise<Clinic[]> => {
 
   if (error) throw new Error(error.message);
 
-  // اگر داده‌ای نباشد، آرایه خالی برگردان
   return data || [];
 };

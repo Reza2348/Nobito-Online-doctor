@@ -3,7 +3,6 @@ import * as F from "@/Imports/FooterImports/FooterImports";
 export default function FooterContact() {
   return (
     <div className="max-w-7xl mx-auto px-6 py-10 flex flex-col md:flex-row justify-between items-start gap-8 md:gap-12">
-      {/* ستون راست: اطلاعات تماس */}
       <div className="flex flex-col gap-5 text-right w-full md:w-auto">
         <div className="flex items-start gap-3 text-gray-700 group cursor-pointer">
           <F.TbPhoneCall
@@ -33,7 +32,6 @@ export default function FooterContact() {
         </div>
       </div>
 
-      {/* ستون چپ: نمادهای اعتماد */}
       <div className="flex flex-col items-center md:items-start gap-5 w-full md:w-auto">
         <div className="flex flex-wrap justify-center md:justify-start gap-4">
           {[1, 2, 3, 4].map((item) => (
@@ -52,7 +50,7 @@ export default function FooterContact() {
           ))}
         </div>
 
-        <p className="text-[11px] text-gray-400 text-center md:text-right max-w-[380px] leading-6">
+        <p className="text-[11px] text-gray-400 text-center md:text-right max-w-95 leading-6">
           لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با استفاده
           از طراحان گرافیک است. این متن صرفاً جهت پر کردن فضا استفاده شده است.
         </p>

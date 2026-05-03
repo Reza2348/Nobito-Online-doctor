@@ -1,26 +1,16 @@
-// types.ts
 import React from "react";
 
-// =======================
-// ===== User =====
-// =======================
 export interface User {
   id: string;
   username: string;
   email: string;
 }
 
-// =======================
-// ===== Navigation =====
-// =======================
 export interface NavLink {
   href: string;
   label: string;
 }
 
-// =======================
-// ===== Footer =====
-// =======================
 export interface FooterLink {
   name: string;
   href: string;
@@ -33,9 +23,6 @@ export interface FooterSection {
   links: FooterLink[];
 }
 
-// =======================
-// ===== Auth Forms =====
-// =======================
 export interface SignUpFormData {
   firstName: string;
   lastName: string;
@@ -48,9 +35,6 @@ export interface LoginFormData {
   password: string;
 }
 
-// =======================
-// ===== General Form Data =====
-// =======================
 export type FormData = {
   firstName: string;
   lastName: string;
@@ -60,17 +44,11 @@ export type FormData = {
   state: string;
 };
 
-// =======================
-// ===== FAQ =====
-// =======================
 export interface FAQItem {
   question: string;
   answer: string;
 }
 
-// =======================
-// ===== Search Box =====
-// =======================
 export interface SearchBoxProps {
   search: string;
   setSearch: (value: string) => void;
@@ -78,9 +56,6 @@ export interface SearchBoxProps {
   setCity: (value: string) => void;
 }
 
-// =======================
-// ===== Doctor =====
-// =======================
 export interface Doctor {
   id: number;
   name: string;
@@ -94,9 +69,6 @@ export interface Doctor {
   bio?: string;
 }
 
-// =======================
-// ===== Service =====
-// =======================
 export interface Service {
   name: string;
   description: string;
@@ -104,9 +76,6 @@ export interface Service {
   color: string;
 }
 
-// =======================
-// ===== Consultant =====
-// =======================
 export interface Consultant {
   id: number;
   name: string;
@@ -120,9 +89,6 @@ export interface Consultant {
   address?: string;
 }
 
-// =======================
-// ===== OTP Input =====
-// =======================
 export interface OtpInputProps {
   otp: string[];
   setOtp: (otp: string[]) => void;
@@ -140,5 +106,5 @@ export type Clinic = {
   fields: string[];
   rating: number;
   satisfied_percent: number;
-  bio?: string; // <-- اضافه شد
+  bio?: string;
 };

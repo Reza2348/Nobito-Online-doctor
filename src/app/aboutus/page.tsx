@@ -9,7 +9,6 @@ import {
 const About = () => {
   return (
     <section className="container px-4 sm:px-6 py-12 sm:py-16 md:py-24">
-      {/* 🔹 عنوان + متن‌ها */}
       <div className="max-w-4xl mx-auto text-center sm:text-right">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-black">
           درباره ما
@@ -27,9 +26,7 @@ const About = () => {
         </p>
       </div>
 
-      {/* 🔹 کارت‌ها */}
       <div className="mt-12 md:mt-16 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-        {/* کارت 1 */}
         <div
           className="
           bg-white rounded-2xl shadow-md p-5
@@ -50,7 +47,6 @@ const About = () => {
           </p>
         </div>
 
-        {/* کارت 2 */}
         <div
           className="
           bg-white rounded-2xl shadow-md p-5
@@ -71,7 +67,6 @@ const About = () => {
           </p>
         </div>
 
-        {/* کارت 3 */}
         <div
           className="
           bg-white rounded-2xl shadow-md p-5

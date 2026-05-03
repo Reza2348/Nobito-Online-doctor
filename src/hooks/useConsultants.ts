@@ -1,4 +1,3 @@
-// hooks/useConsultants.ts
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/lib/supabaseClient";
 import type { Consultant } from "@/Types/types";

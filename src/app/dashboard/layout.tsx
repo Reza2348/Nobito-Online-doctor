@@ -9,7 +9,6 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { userId, status } = useUser();
 
-  // در حال لود session
   if (status === "loading") {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -24,8 +23,8 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
         className="flex items-center p-4 mt-4 text-red-700 bg-red-100 border border-red-300 rounded-lg shadow-sm"
         dir="rtl"
       >
-        <AiOutlineWarning className="w-6 h-6 ml-2 shrink-0" />{" "}
-        {/* ml-2 به جای mr-2 برای راست‌چین */}
+        <AiOutlineWarning className="w-6 h-6 ml-2 shrink-0" />
+
         <span className="text-sm md:text-base text-right">
           شما باید وارد شوید تا داشبورد خود را مشاهده کنید.
         </span>

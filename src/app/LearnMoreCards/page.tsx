@@ -58,24 +58,20 @@ const LearnMoreCards: React.FC = () => {
             key={item.id}
             className="group bg-white rounded-3xl shadow-md p-8 flex flex-col items-center text-center transition-transform transform hover:-translate-y-2 hover:shadow-xl"
           >
-            {/* آیکون دایره‌ای */}
             <div
               className={`w-20 h-20 flex items-center justify-center rounded-full mb-6 ${item.color} text-4xl transition-transform group-hover:scale-110`}
             >
               {item.icon}
             </div>
 
-            {/* عنوان */}
             <h3 className="font-extrabold text-xl text-gray-900 mb-3 group-hover:text-emerald-600 transition-colors">
               {item.title}
             </h3>
 
-            {/* توضیح */}
             <p className="text-gray-500 text-sm mb-6 leading-relaxed">
               {item.description}
             </p>
 
-            {/* دکمه بیشتر بدانید */}
             <button className="mt-auto bg-emerald-600 text-white px-6 py-2 rounded-full text-sm font-semibold shadow hover:bg-emerald-700 transition transform hover:scale-105">
               بیشتر بدانید
             </button>

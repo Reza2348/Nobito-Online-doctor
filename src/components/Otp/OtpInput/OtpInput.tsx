@@ -6,7 +6,7 @@ const OTP_LENGTH = 8;
 
 export interface OtpInputProps {
   otp: string[];
-  setOtp: O.Dispatch<O.SetStateAction<string[]>>; // از react type مستقیم استفاده شد
+  setOtp: O.Dispatch<O.SetStateAction<string[]>>;
   inputRefs: O.MutableRefObject<(HTMLInputElement | null)[]>;
   isSubmitting: boolean;
 }
@@ -17,9 +17,8 @@ export const OtpInput: O.FC<OtpInputProps> = ({
   inputRefs,
   isSubmitting,
 }) => {
-  // تغییر مقدار هر باکس
   const handleChange = (index: number, value: string) => {
-    if (!/^\d*$/.test(value)) return; // فقط اعداد
+    if (!/^\d*$/.test(value)) return;
     const newOtp = [...otp];
     newOtp[index] = value;
     setOtp(newOtp);
@@ -27,7 +26,6 @@ export const OtpInput: O.FC<OtpInputProps> = ({
     if (value && index < OTP_LENGTH - 1) inputRefs.current[index + 1]?.focus();
   };
 
-  // مدیریت کلیدها (Backspace و Arrow)
   const handleKeyDown = (
     index: number,
     e: O.KeyboardEvent<HTMLInputElement>,
@@ -41,7 +39,6 @@ export const OtpInput: O.FC<OtpInputProps> = ({
     }
   };
 
-  // پشتیبانی Paste کامل OTP
   const handlePaste = (e: O.ClipboardEvent<HTMLInputElement>) => {
     const pasteData = e.clipboardData
       .getData("text")
@@ -67,7 +64,7 @@ export const OtpInput: O.FC<OtpInputProps> = ({
         <input
           key={index}
           ref={(el) => {
-            inputRefs.current[index] = el; // فقط assign، بدون return
+            inputRefs.current[index] = el;
           }}
           type="text"
           inputMode="numeric"

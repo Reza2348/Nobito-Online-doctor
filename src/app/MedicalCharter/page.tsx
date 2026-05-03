@@ -12,7 +12,6 @@ const MedicalCharter: React.FC = () => {
   return (
     <section dir="rtl" className="bg-white py-16 px-6 lg:px-20">
       <div className="max-w-6xl mx-auto">
-        {/* Title */}
         <div className="text-center mb-12">
           <h2 className="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4">
             میثاق‌نامه اخلاق حرفه‌ای
@@ -24,9 +23,7 @@ const MedicalCharter: React.FC = () => {
           </p>
         </div>
 
-        {/* Items */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Item 1 */}
           <div className="bg-gray-50 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
             <div className="flex items-center gap-3 mb-4">
               <FaShieldAlt className="text-teal-600 text-2xl" />
@@ -40,7 +37,6 @@ const MedicalCharter: React.FC = () => {
             </p>
           </div>
 
-          {/* Item 2 */}
           <div className="bg-gray-50 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
             <div className="flex items-center gap-3 mb-4">
               <FaHeartbeat className="text-teal-600 text-2xl" />
@@ -54,7 +50,6 @@ const MedicalCharter: React.FC = () => {
             </p>
           </div>
 
-          {/* Item 3 */}
           <div className="bg-gray-50 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
             <div className="flex items-center gap-3 mb-4">
               <FaUserMd className="text-teal-600 text-2xl" />
@@ -68,7 +63,6 @@ const MedicalCharter: React.FC = () => {
             </p>
           </div>
 
-          {/* Item 4 */}
           <div className="bg-gray-50 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
             <div className="flex items-center gap-3 mb-4">
               <FaFileMedical className="text-teal-600 text-2xl" />

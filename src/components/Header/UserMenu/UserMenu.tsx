@@ -23,10 +23,8 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
 
   return (
     <div className="flex items-center gap-3 md:gap-4 relative whitespace-nowrap">
-      {/* Notification */}
       <H.FaRegBell className="hidden md:block text-gray-400 text-2xl md:text-3xl cursor-pointer" />
 
-      {/* وقتی لاگین نیست */}
       {!user?.id ? (
         <H.Link
           href="/auth/signup"
@@ -36,7 +34,6 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
         </H.Link>
       ) : (
         <div className="relative group">
-          {/* Button */}
           <button
             className="
               bg-red-50 hover:bg-red-100
@@ -52,7 +49,6 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
             {displayName}
           </button>
 
-          {/* Dropdown */}
           <div
             className="
               absolute right-0 mt-2

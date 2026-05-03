@@ -1,15 +1,14 @@
 "use client";
 
-import type { Clinic } from "@/Types/types"; // <-- استفاده از Clinic به جای Consultant
+import type { Clinic } from "@/Types/types";
 import { FaStar, FaRegCheckCircle } from "react-icons/fa";
 
 interface ClinicHeaderProps {
-  clinic: Clinic; // <-- تغییر نام prop به clinic
+  clinic: Clinic;
 }
 
 export const ClinicHeader: React.FC<ClinicHeaderProps> = ({ clinic }) => (
   <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 flex flex-col md:flex-row items-center md:items-start gap-6">
-    {/* عکس کلینیک */}
     <div className="relative">
       <img
         src={clinic.photo_url ?? "/placeholder.jpg"}
@@ -19,12 +18,10 @@ export const ClinicHeader: React.FC<ClinicHeaderProps> = ({ clinic }) => (
     </div>
 
     <div className="flex-1 text-center md:text-right">
-      {/* نام و تخصص کلینیک */}
       <h1 className="text-2xl font-bold text-slate-800">{clinic.name}</h1>
       <p className="text-teal-600 font-medium mt-1">{clinic.specialty}</p>
       <p className="text-gray-400 text-sm mt-1">تهران</p>
 
-      {/* امتیاز ⭐ */}
       <div className="flex flex-wrap justify-center md:justify-start items-center gap-4 mt-4">
         <div className="flex items-center gap-1">
           {[...Array(5)].map((_, i) => (
@@ -41,7 +38,6 @@ export const ClinicHeader: React.FC<ClinicHeaderProps> = ({ clinic }) => (
         </span>
       </div>
 
-      {/* رضایت بیماران سبز */}
       <div className="mt-4 flex items-center justify-center md:justify-start gap-2 text-green-600 bg-green-50 w-fit px-3 py-1 rounded-full mx-auto md:mx-0">
         <FaRegCheckCircle className="w-4 h-4" />
         <span className="text-xs font-bold">

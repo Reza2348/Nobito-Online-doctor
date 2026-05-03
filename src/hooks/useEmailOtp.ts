@@ -11,7 +11,6 @@ export function useEmailOtp() {
   const [identifier, setIdentifier] = O.useState<string | null>(null);
   const router = O.useRouter();
 
-  // بررسی identifier از localStorage
   O.useEffect(() => {
     const storedId = localStorage.getItem("otp_identifier");
     if (!storedId) {
@@ -24,7 +23,6 @@ export function useEmailOtp() {
     }
   }, [router]);
 
-  // تابع تایید OTP
   const handleSubmit = async () => {
     const otpValue = otp.join("");
     if (otpValue.length < OTP_LENGTH) {

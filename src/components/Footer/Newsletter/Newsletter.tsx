@@ -15,17 +15,13 @@ export default function Newsletter({ mobile = false, onSubmit }: Props) {
         mobile ? "pt-8 pb-4" : ""
       }`}
     >
-      {/* عنوان */}
       <h3 className="text-gray-800 text-[16px] font-semibold">خبرنامه</h3>
 
-      {/* توضیح کوتاه */}
       <p className="text-[12px] text-gray-500 leading-relaxed">
         برای اینکه از جدیدترین اخبار نوبیتو جا نمونید...
       </p>
 
-      {/* فرم */}
       <form onSubmit={onSubmit} className="flex flex-col gap-3">
-        {/* ردیف input و دکمه */}
         <div className="flex flex-col sm:flex-row-reverse gap-2">
           <input
             name="email"
@@ -35,7 +31,6 @@ export default function Newsletter({ mobile = false, onSubmit }: Props) {
             className="flex-1 bg-white border border-gray-200 rounded-xl px-4 py-3 text-[13px] text-right outline-none focus:border-[#1F7168] transition-colors"
           />
 
-          {/* دکمه دسکتاپ */}
           {!mobile && (
             <button
               type="submit"
@@ -46,12 +41,10 @@ export default function Newsletter({ mobile = false, onSubmit }: Props) {
           )}
         </div>
 
-        {/* متن توضیح تک‌خطی فقط در دسکتاپ */}
         <p className="text-[11px] text-gray-400 leading-relaxed whitespace-normal lg:whitespace-nowrap lg:truncate">
           تلاش ما ارائه بهترین خدمات ممکن به شما همراهان نوبیتو است.
         </p>
 
-        {/* دکمه موبایل */}
         {mobile && (
           <button
             type="submit"

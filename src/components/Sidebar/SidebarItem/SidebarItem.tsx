@@ -1,7 +1,6 @@
 "use client";
 
 const SidebarItem = ({ item, onClick }: any) => {
-  // 🛡️ جلوگیری از crash
   if (!item || !item.icon) return null;
 
   const Icon = item.icon;

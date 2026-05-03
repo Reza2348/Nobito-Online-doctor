@@ -5,9 +5,7 @@ export default function ServicesSection() {
     <section className="w-full py-16 ">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-8">
-          {/* کارت خدمات (الان اول نمایش داده می‌شود) */}
           <div className="relative overflow-hidden rounded-3xl bg-linear-to-r from-pink-600 to-rose-500 text-white p-10 flex items-center justify-between hover:scale-[1.02] transition-transform duration-300">
-            {/* متن */}
             <div className="max-w-md space-y-4 z-10">
               <h3 className="text-lg font-medium opacity-90">
                 خدمات پزشکی رو برای شما در <br /> دسترستر کردیم
@@ -24,7 +22,6 @@ export default function ServicesSection() {
               </button>
             </div>
 
-            {/* تصویر */}
             <div className="hidden md:block relative w-44 h-60">
               <Image
                 src="/pic (8).png"
@@ -35,9 +32,7 @@ export default function ServicesSection() {
             </div>
           </div>
 
-          {/* کارت مشاوره (الان دوم نمایش داده می‌شود) */}
           <div className="relative overflow-hidden rounded-3xl bg-linear-to-r from-sky-600 to-sky-500 text-white p-10 flex items-center justify-between hover:scale-[1.02] transition-transform duration-300">
-            {/* متن */}
             <div className="max-w-md space-y-4 z-10">
               <h3 className="text-lg font-medium opacity-90">
                 مشغله زندگی نمیزاره بیایی دکتر؟ <br />
@@ -55,7 +50,6 @@ export default function ServicesSection() {
               </button>
             </div>
 
-            {/* تصویر */}
             <div className="hidden md:block relative w-44 h-60">
               <Image
                 src="/wepik (9).png"

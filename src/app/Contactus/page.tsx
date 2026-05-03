@@ -59,11 +59,7 @@ export default function Contact() {
 
   return (
     <div className="py-12 px-4 bg-gray-50">
-      {/* تغییر flex-row-reverse به flex-row برای جابجایی فرم و عکس */}
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
-        {/* عکس در دسکتاپ (سمت راست) */}
-
-        {/* فرم و تیتر */}
         <div className="w-full md:w-1/2 space-y-6">
           <div className="space-y-3 text-center md:text-right">
             <h2 className="text-2xl font-bold text-gray-800">
@@ -76,7 +72,6 @@ export default function Contact() {
             </p>
           </div>
 
-          {/* عکس در موبایل (بعد از فرم) */}
           <div className="md:hidden">
             <img
               src="/card1.png"

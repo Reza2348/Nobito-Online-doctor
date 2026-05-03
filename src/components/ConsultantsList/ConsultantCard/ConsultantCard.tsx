@@ -25,7 +25,6 @@ export const ConsultantCard: React.FC<ConsultantCardProps> = ({
                  hover:shadow-lg transition mt-8 mx-2 mb-4 cursor-pointer flex flex-col items-center"
       onClick={handleClick}
     >
-      {/* عکس دایره‌ای */}
       <div className="flex justify-center -mt-16 mb-4">
         <div className="w-28 h-28 rounded-full border-4 border-white shadow-md overflow-hidden bg-gray-100 transition-transform hover:scale-105">
           <img
@@ -36,7 +35,6 @@ export const ConsultantCard: React.FC<ConsultantCardProps> = ({
         </div>
       </div>
 
-      {/* نام و امتیاز */}
       <div className="flex flex-col items-center gap-1 mb-2">
         <h2 className="text-lg font-bold text-black">{consultant.name}</h2>
         <div className="flex items-center gap-1">
@@ -47,10 +45,8 @@ export const ConsultantCard: React.FC<ConsultantCardProps> = ({
         </div>
       </div>
 
-      {/* تخصص */}
       <p className="text-gray-500 text-sm mb-3">{consultant.specialty}</p>
 
-      {/* زمینه‌ها */}
       {consultant.fields && (
         <div className="flex flex-wrap justify-center gap-2 mb-4">
           {consultant.fields.map((field, index) => (
@@ -64,7 +60,6 @@ export const ConsultantCard: React.FC<ConsultantCardProps> = ({
         </div>
       )}
 
-      {/* دکمه دریافت نوبت */}
       <button
         className="w-full sm:w-5/6 md:w-3/4 lg:w-3/5 xl:w-1/2 
                    border border-black text-black 

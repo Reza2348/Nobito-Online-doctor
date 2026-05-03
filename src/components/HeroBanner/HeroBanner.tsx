@@ -3,15 +3,15 @@ import { FC, useState, useEffect } from "react";
 import SearchBox from "@/components/SearchBox/SearchBox";
 
 const HeroBanner: FC = () => {
-  const [mounted, setMounted] = useState(false); // برای حل مشکل hydration
+  const [mounted, setMounted] = useState(false);
   const [city, setCity] = useState("");
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    setMounted(true); // بعد از mount، render شود
+    setMounted(true);
   }, []);
 
-  if (!mounted) return null; // تا قبل از mount چیزی render نشود
+  if (!mounted) return null;
 
   return (
     <div
@@ -23,7 +23,6 @@ const HeroBanner: FC = () => {
         fontFamily: "'Vazirmatn', 'Tahoma', sans-serif",
       }}
     >
-      {/* Pattern */}
       <div
         className="absolute inset-0 opacity-[0.06]"
         style={{
@@ -31,7 +30,6 @@ const HeroBanner: FC = () => {
         }}
       />
 
-      {/* Content */}
       <div className="relative z-10 text-center w-full max-w-3xl">
         <h1 className="text-white text-xl sm:text-2xl md:text-4xl font-bold leading-loose mb-4">
           تلاش ما دسترسی{" "}
@@ -48,7 +46,6 @@ const HeroBanner: FC = () => {
           (دریافت نوبت، مشاوره پزشکی، خدمات پزشکی در منزل)
         </p>
 
-        {/* SearchBox */}
         <SearchBox
           search={search}
           setSearch={setSearch}

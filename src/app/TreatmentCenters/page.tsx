@@ -52,22 +52,18 @@ const TreatmentCenters = () => {
               key={center.id}
               className="group bg-white rounded-2xl shadow-md p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-2"
             >
-              {/* آیکون مرکز */}
               <div className="w-20 h-20 flex items-center justify-center rounded-full bg-teal-100 text-teal-600 text-4xl mx-auto mb-4 transition-colors duration-300 group-hover:bg-teal-200">
                 {center.icon}
               </div>
 
-              {/* نام مرکز */}
               <h3 className="text-lg font-semibold text-gray-800 mb-2 transition-colors duration-300 group-hover:text-emerald-600">
                 {center.name}
               </h3>
 
-              {/* توضیحات */}
               <p className="text-gray-500 text-sm mb-4 leading-snug">
                 {center.description}
               </p>
 
-              {/* آدرس و تلفن */}
               <div className="text-sm text-gray-600 space-y-2 mb-4 w-full">
                 <div className="flex items-center gap-2  bg-gray-50 rounded-lg p-2">
                   <FaMapMarkerAlt className="text-teal-600 shrink-0" />
@@ -80,7 +76,6 @@ const TreatmentCenters = () => {
                 </div>
               </div>
 
-              {/* دکمه مشاهده جزئیات */}
               <button className="w-full bg-teal-600 hover:bg-teal-700 text-white py-2 rounded-xl transition duration-300 transform hover:scale-105">
                 مشاهده جزئیات
               </button>

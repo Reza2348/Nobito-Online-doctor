@@ -39,7 +39,6 @@ const DoctorAppointments: React.FC = () => {
         ملاقات با پزشک
       </h3>
 
-      {/* بخش انتخاب نوع مشاوره */}
       <div className="flex justify-between gap-2 mb-8">
         <ConsultationType icon={<D.FaPhone size={18} />} label="تلفنی" />
         <ConsultationType
@@ -57,7 +56,6 @@ const DoctorAppointments: React.FC = () => {
         />
       </div>
 
-      {/* لیست نوبت‌ها */}
       <div className="space-y-4">
         {[1, 2, 3].map((item) => (
           <div
@@ -65,7 +63,6 @@ const DoctorAppointments: React.FC = () => {
             className="border border-gray-100 rounded-2xl p-4 bg-[#fbfbfb]"
           >
             <div className="flex justify-between items-start mb-4">
-              {/* اطلاعات نوبت - حالا در سمت چپ قرار می‌گیرد */}
               <div className="text-right">
                 <div className="flex items-center justify-end gap-1 text-gray-700 font-bold text-sm">
                   مشاوره حضوری
@@ -76,7 +73,6 @@ const DoctorAppointments: React.FC = () => {
                 </p>
               </div>
 
-              {/* بخش راهنما - حالا در سمت راست قرار می‌گیرد */}
               <span className="text-blue-500 text-[10px] font-bold cursor-pointer italic">
                 راهنما
               </span>

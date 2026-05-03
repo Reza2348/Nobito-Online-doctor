@@ -18,7 +18,7 @@ export default function ClinicsProfilePage() {
       setError(null);
 
       try {
-        const id = selectedClinic?.id ?? 1; // اگر چیزی انتخاب نشده بود یک id پیش‌فرض
+        const id = selectedClinic?.id ?? 1;
         const { data, error } = await supabase
           .from("clinics")
           .select("*")
@@ -28,7 +28,7 @@ export default function ClinicsProfilePage() {
         if (error) setError(error.message);
         else {
           setClinic(data as Clinic);
-          setSelectedClinic(data as Clinic); // آپدیت Context
+          setSelectedClinic(data as Clinic);
         }
       } catch (err: any) {
         setError(err.message);
@@ -40,7 +40,6 @@ export default function ClinicsProfilePage() {
     fetchClinic();
   }, [selectedClinic?.id, setSelectedClinic]);
 
-  // نمایش Spinner هنگام بارگذاری
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen gap-4">
@@ -52,7 +51,6 @@ export default function ClinicsProfilePage() {
     );
   }
 
-  // نمایش خطا
   if (error) {
     return (
       <p className="text-center mt-10 text-red-500">
@@ -61,7 +59,6 @@ export default function ClinicsProfilePage() {
     );
   }
 
-  // اگر کلینیک پیدا نشد
   if (!clinic) {
     return (
       <p className="text-center mt-10 text-gray-500">
@@ -70,6 +67,5 @@ export default function ClinicsProfilePage() {
     );
   }
 
-  // نمایش پروفایل کلینیک
   return <ClinicProfile clinic={clinic} />;
 }

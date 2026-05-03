@@ -4,7 +4,6 @@ import React from "react";
 import { FaHome, FaVideo, FaHospital, FaCalendarCheck } from "react-icons/fa";
 import { Service } from "@/Types/types"; // استفاده از نوع جدا شده
 
-// آرایه سرویس‌ها
 const services: Service[] = [
   {
     name: "خدمات پزشکی در منزل",

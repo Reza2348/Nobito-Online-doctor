@@ -34,7 +34,6 @@ export default function FAQ() {
                   : "border-gray-200 bg-white hover:border-emerald-300"
               }`}
             >
-              {/* بخش سوال - همیشه نمایش داده می‌شود */}
               <button
                 onClick={() => toggleFAQ(index)}
                 className="w-full flex justify-between items-center p-5 text-right focus:outline-none"
@@ -58,7 +57,6 @@ export default function FAQ() {
                 </div>
               </button>
 
-              {/* بخش جواب - انیمیشن ارتفاع */}
               <div
                 ref={(el) => {
                   contentRefs.current[index] = el;

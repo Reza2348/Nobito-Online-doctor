@@ -3,12 +3,10 @@ import * as F from "@/Imports/FooterImports/FooterImports";
 export default function FooterTop() {
   return (
     <div className="mx-9 px-4 py-10 flex flex-col md:flex-row gap-8 items-center">
-      {/* لوگو */}
       <F.Link href="/">
         <F.Image src="/logo1.svg" alt="logo" width={90} height={90} />
       </F.Link>
 
-      {/* توضیحات برند */}
       <div
         className="flex flex-col gap-6 md:gap-4 md:flex-1 items-center md:items-start text-center md:text-right"
         dir="rtl"

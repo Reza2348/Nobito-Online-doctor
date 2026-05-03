@@ -1,4 +1,4 @@
-"use client"; // ← اضافه شود چون فرم و hook داریم
+"use client";
 
 import { FOOTER_NAV } from "@/components/Footer/footer data/footer.data";
 import Newsletter from "@/components/Footer/Newsletter/Newsletter";

@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { User } from "@supabase/supabase-js";
 
 export function useUser(idleTime = 5 * 60 * 1000) {
-  // پیش‌فرض 5 دقیقه
   const router = useRouter();
   const [user, setUser] = useState<{
     id: string;
@@ -18,7 +17,6 @@ export function useUser(idleTime = 5 * 60 * 1000) {
   >("loading");
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  // تابع امن برای فرمت user
   const formatUser = (user: User) => ({
     id: user.id,
     email: user.email ?? "",
@@ -28,17 +26,15 @@ export function useUser(idleTime = 5 * 60 * 1000) {
       "US",
   });
 
-  // reset تایمر idle
   const resetTimer = useCallback(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
     if (status === "authenticated") return;
 
     timerRef.current = setTimeout(() => {
-      router.push("/auth/signup"); // redirect بعد از idle
+      router.push("/auth/signup");
     }, idleTime);
   }, [status, idleTime, router]);
 
-  // load initial user و listener تغییرات auth
   useEffect(() => {
     let isMounted = true;
 
@@ -87,7 +83,6 @@ export function useUser(idleTime = 5 * 60 * 1000) {
     };
   }, [resetTimer]);
 
-  // مدیریت activity user برای reset timer
   useEffect(() => {
     if (status === "authenticated") return;
 

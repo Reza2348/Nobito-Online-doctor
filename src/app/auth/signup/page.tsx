@@ -13,20 +13,15 @@ export default function MagicLinkPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#F2F2F2] font-[tahoma]">
       <div className="w-[95%] max-w-112.5 bg-white p-8 rounded-2xl shadow-lg flex flex-col items-center">
-        {/* بلوک لوگو */}
         <LogoSection />
 
-        {/* بلوک عنوان و توضیح */}
         <HeaderSection />
 
-        {/* بلوک فرم ورود */}
         <LoginForm />
 
-        {/* بلوک متن شرایط و قوانین */}
         <TermsSection />
       </div>
 
-      {/* Toast */}
       <ToastProvider />
     </div>
   );

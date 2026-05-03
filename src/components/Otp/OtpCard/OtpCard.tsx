@@ -4,7 +4,7 @@ import * as O from "@/Imports/OtpImports/OtpImports";
 
 interface OtpCardProps {
   otp: string[];
-  setOtp: O.Dispatch<O.SetStateAction<string[]>>; // از react type مستقیم استفاده شد
+  setOtp: O.Dispatch<O.SetStateAction<string[]>>;
   inputRefs: O.MutableRefObject<(HTMLInputElement | null)[]>;
   isSubmitting: boolean;
   onSubmit: () => void;
@@ -26,7 +26,6 @@ export const OtpCard: O.FC<OtpCardProps> = ({
         لطفا کد ۸ رقمی ارسال شده به ایمیل خود را وارد کنید.
       </p>
 
-      {/* کامپوننت OtpInput */}
       <O.OtpInput
         otp={otp}
         setOtp={setOtp}
