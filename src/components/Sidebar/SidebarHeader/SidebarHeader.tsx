@@ -24,11 +24,11 @@ const SidebarHeader: React.FC<Props> = ({ userData }) => {
       </div>
 
       <div className="mt-14 mb-4 text-center w-full px-6 relative">
-        <button className="absolute right-8 top-1 text-gray-400">
-          <HiOutlinePencilAlt size={20} />
+        <button className="absolute right-8 top-1  text-gray-400">
+          <HiOutlinePencilAlt size={20} className="ml-5" />
         </button>
 
-        <h2 className="text-xl font-bold text-gray-800 truncate">
+        <h2 className="text-xl font-bold text-gray-800 truncate mr-2">
           {userData.name}
         </h2>
 

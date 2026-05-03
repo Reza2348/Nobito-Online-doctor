@@ -9,6 +9,8 @@ import SidebarToggle from "@/components/Sidebar/SidebarToggle/SidebarToggle";
 import SidebarOverlay from "@/components/Sidebar/SidebarOverlay/SidebarOverlay";
 import LogoutModal from "@/components/LogoutModal/LogoutModal";
 
+import { MenuItem } from "@/Types/types";
+
 import {
   HiOutlineUser,
   HiOutlineClipboardList,
@@ -22,12 +24,18 @@ import {
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
+
+  activeItem: number;
+  setActiveItem: (id: number) => void;
 }
 
-const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
+const Sidebar = ({
+  sidebarOpen,
+  setSidebarOpen,
+  activeItem,
+  setActiveItem,
+}: SidebarProps) => {
   const [logoutOpen, setLogoutOpen] = useState(false);
-
-  const [activeItem, setActiveItem] = useState<number>(1);
 
   const [userData, setUserData] = useState({
     phone: "در حال بارگذاری...",
@@ -58,7 +66,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     document.body.style.overflow = sidebarOpen ? "hidden" : "auto";
   }, [sidebarOpen]);
 
-  const menuItems = [
+  const menuItems: MenuItem[] = [
     { id: 1, title: "اطلاعات حساب کاربری", icon: HiOutlineUser },
     { id: 2, title: "تاریخچه نوبت ها", icon: HiOutlineClipboardList },
     { id: 3, title: "پیغام ها", icon: HiOutlineMail },
@@ -68,8 +76,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
     { id: 7, title: "خروج از حساب کاربری", icon: HiOutlineLogout },
   ];
 
-  const handleMenuClick = (item: any) => {
-    if (item.title === "خروج از حساب کاربری") {
+  const handleMenuClick = (item: MenuItem) => {
+    if (item.id === 7) {
       setLogoutOpen(true);
       return;
     }
@@ -99,19 +107,11 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         dir="rtl"
         className={`
           fixed top-0 right-0 h-full z-40
-          mt-2
-          mr-4
-          ml-4
-          pb-7
-          rounded-2xl
-          w-70 bg-white shadow-xl
+          mt-2 mr-4 ml-4 pb-7
+          rounded-2xl w-70 bg-white shadow-xl
           flex flex-col overflow-y-auto
           transition-transform duration-300
-
-          
           ${sidebarOpen ? "translate-x-0" : "translate-x-full"}
-
-          
           md:translate-x-0 md:static md:block
         `}
       >
@@ -125,7 +125,6 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
           <SidebarMenu
             items={menuItems}
             activeItem={activeItem}
-            setActiveItem={setActiveItem}
             onItemClick={handleMenuClick}
           />
         </div>

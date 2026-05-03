@@ -1,46 +1,42 @@
 "use client";
 
-import React, { PropsWithChildren, useState } from "react";
+import React, { useState } from "react";
 import Sidebar from "@/components/Sidebar/page";
-import { useUser } from "@/hooks/useUser";
-import { AiOutlineWarning } from "react-icons/ai";
+import PublicProfile from "@/app/dashboard/Publicprofile/public-profile";
 
-export default function DashboardLayout({ children }: PropsWithChildren) {
+export default function DashboardLayout({ children }: any) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { userId, status } = useUser();
+  const [activeItem, setActiveItem] = useState(1);
 
-  if (status === "loading") {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="w-10 h-10 border-4 border-gray-200 border-t-[#2d7d74] rounded-full animate-spin" />
-      </div>
-    );
-  }
-
-  if (status === "unauthenticated" || !userId) {
-    return (
-      <div
-        className="flex items-center p-4 mt-4 text-red-700 bg-red-100 border border-red-300 rounded-lg shadow-sm"
-        dir="rtl"
-      >
-        <AiOutlineWarning className="w-6 h-6 ml-2 shrink-0" />
-
-        <span className="text-sm md:text-base text-right">
-          شما باید وارد شوید تا داشبورد خود را مشاهده کنید.
-        </span>
-      </div>
-    );
-  }
+  const renderContent = () => {
+    switch (activeItem) {
+      case 1:
+        return <PublicProfile />;
+      case 2:
+        return <div>تاریخچه نوبت‌ها</div>;
+      case 3:
+        return <div>پیغام‌ها</div>;
+      case 4:
+        return <div>پرونده پزشکی</div>;
+      case 5:
+        return <div>بازخوردها</div>;
+      case 6:
+        return <div>رمز عبور</div>;
+      default:
+        return children;
+    }
+  };
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
-      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-      <main
-        className="flex-1 overflow-y-auto p-4 md:p-8"
-        onClick={() => sidebarOpen && setSidebarOpen(false)}
-      >
-        {children}
-      </main>
+      <Sidebar
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+        activeItem={activeItem}
+        setActiveItem={setActiveItem}
+      />
+
+      <main className="flex-1 p-4 md:p-8">{renderContent()}</main>
     </div>
   );
 }

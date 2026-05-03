@@ -1,4 +1,5 @@
 import React from "react";
+import { IconType } from "react-icons";
 
 export interface User {
   id: string;
@@ -108,3 +109,9 @@ export type Clinic = {
   satisfied_percent: number;
   bio?: string;
 };
+
+export interface MenuItem {
+  id: number;
+  title: string;
+  icon: IconType;
+}
