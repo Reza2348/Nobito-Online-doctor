@@ -115,3 +115,8 @@ export interface MenuItem {
   title: string;
   icon: IconType;
 }
+
+export interface PasswordFormData {
+  password?: string;
+  confirmPassword?: string;
+}

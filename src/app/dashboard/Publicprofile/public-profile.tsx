@@ -104,7 +104,7 @@ export default function ProfilePage() {
 
               <button
                 type="submit"
-                className="bg-[#347469] hover:bg-[#2a5d54] text-white font-bold w-34 py-2 px-2 rounded-xl shadow-md transition-all active:scale-95"
+                className="bg-[#347469] hover:bg-[#2a5d54] text-white font-bold w-34 py-2 px-2 rounded-md shadow-md transition-all active:scale-95"
               >
                 ذخیره تغییرات
               </button>

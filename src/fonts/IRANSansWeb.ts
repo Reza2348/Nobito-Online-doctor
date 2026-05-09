@@ -1,10 +1,10 @@
 import LocalFont from "next/font/local";
 
-export const vazirmatnLocal = LocalFont({
+export const IRANSansWebLocal = LocalFont({
   src: [
     {
       path: "./IRANSansWeb_Light.ttf",
-      weight: "400",
+      weight: "200",
       style: "normal",
     },
     {
@@ -14,7 +14,7 @@ export const vazirmatnLocal = LocalFont({
     },
     {
       path: "./IRANSansWeb_Bold.ttf",
-      weight: "700",
+      weight: "900",
       style: "normal",
     },
   ],

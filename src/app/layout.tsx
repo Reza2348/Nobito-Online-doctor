@@ -1,7 +1,7 @@
 // app/layout.tsx
 "use client";
 
-import { vazirmatnLocal } from "../fonts/vazirmatn";
+import { IRANSansWebLocal } from "../fonts/IRANSansWeb";
 import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -21,7 +21,7 @@ export default function RootLayout({
         <title>پزشک آنلاین نوبیتو</title>
         <link rel="icon" href="/logo1.svg" />
       </head>
-      <body className={`${vazirmatnLocal.className} antialiased`}>
+      <body className={`${IRANSansWebLocal.className} antialiased`}>
         <QueryProvider>
           <ClinicsProvider>
             <ConsultantProvider>

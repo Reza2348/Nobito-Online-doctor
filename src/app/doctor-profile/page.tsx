@@ -9,6 +9,8 @@ import DoctorHeader from "@/components/DoctorProfile/DoctorHeader/DoctorHeader";
 import DoctorBio from "@/components/DoctorProfile/DoctorBio/DoctorBio";
 import DoctorLocation from "@/components/DoctorProfile/DoctorLocation/DoctorLocation";
 import DoctorAppointments from "@/components/DoctorProfile/DoctorAppointments/DoctorAppointments";
+import Userexperience from "@/components/DoctorProfile/Userexperience/Userexperience";
+import Survey from "@/components/DoctorProfile/Survey/Survey";
 
 const DoctorProfile: React.FC = () => {
   const { doctorId } = useDoctor();
@@ -49,11 +51,13 @@ const DoctorProfile: React.FC = () => {
     );
 
   return (
-    <div className="max-w-7xl mx-auto p-4 md:p-8 bg-[#fdfdfd] dir-rtl text-right grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div className="max-w-7xl mx-auto p-4 md:p-8  dir-rtl text-right grid grid-cols-1 lg:grid-cols-12 gap-8">
       <div className="lg:col-span-8 space-y-6">
         <DoctorHeader doctor={doctor} />
         <DoctorBio doctor={doctor} />
         <DoctorLocation doctor={doctor} />
+        <Userexperience />
+        <Survey />
       </div>
       <div className="lg:col-span-4 space-y-6">
         <DoctorAppointments />
