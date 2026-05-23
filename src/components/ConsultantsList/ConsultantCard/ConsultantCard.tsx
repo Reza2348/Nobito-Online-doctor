@@ -22,11 +22,11 @@ export const ConsultantCard: React.FC<ConsultantCardProps> = ({
   return (
     <div
       className="bg-white rounded-2xl shadow-md border p-6 text-center relative 
-                 hover:shadow-lg transition mt-8 mx-2 mb-4 cursor-pointer flex flex-col items-center"
-      onClick={handleClick}
+                 hover:shadow-2xl hover:scale-105 transition mt-8 mx-2 mb-4 
+                 flex flex-col items-center"
     >
       <div className="flex justify-center -mt-16 mb-4">
-        <div className="w-28 h-28 rounded-full border-4 border-white shadow-md overflow-hidden bg-gray-100 transition-transform hover:scale-105">
+        <div className="w-28 h-28 rounded-full border-4 border-white shadow-md overflow-hidden bg-gray-100 transition-transform">
           <img
             src={consultant.photo_url ?? "/placeholder.jpg"}
             alt={consultant.name}
@@ -61,6 +61,7 @@ export const ConsultantCard: React.FC<ConsultantCardProps> = ({
       )}
 
       <button
+        onClick={handleClick}
         className="w-full sm:w-5/6 md:w-3/4 lg:w-3/5 xl:w-1/2 
                    border border-black text-black 
                    hover:bg-black hover:text-white 

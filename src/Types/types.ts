@@ -1,5 +1,6 @@
 import React from "react";
 import { IconType } from "react-icons";
+import { Dispatch, SetStateAction } from "react";
 
 export interface User {
   id: string;
@@ -52,9 +53,9 @@ export interface FAQItem {
 
 export interface SearchBoxProps {
   search: string;
-  setSearch: (value: string) => void;
+  setSearch: Dispatch<SetStateAction<string>>;
   city: string;
-  setCity: (value: string) => void;
+  setCity: Dispatch<SetStateAction<string>>;
 }
 
 export interface Doctor {
@@ -119,4 +120,13 @@ export interface MenuItem {
 export interface PasswordFormData {
   password?: string;
   confirmPassword?: string;
+}
+
+export interface Comment {
+  id: string;
+  name: string;
+  date: string;
+  text: string;
+  photo_url: string;
+  rating: number;
 }

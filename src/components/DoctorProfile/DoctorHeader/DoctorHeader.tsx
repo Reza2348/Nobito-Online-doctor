@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Doctor } from "@/Types/types";
-import { FaStar, FaRegStar, FaThumbsUp } from "react-icons/fa";
+import { FaStar, FaRegStar, FaRegCheckCircle } from "react-icons/fa";
 
 interface Props {
   doctor: Doctor;
@@ -48,13 +48,11 @@ const DoctorHeader: React.FC<Props> = ({ doctor }) => {
             </div>
           </div>
 
-          <div className="mt-8 flex items-center justify-center md:justify-start gap-2 text-[#2a7d73] font-bold">
-            <div className="bg-[#e9f4f2] p-1.5 rounded-full">
-              <FaThumbsUp size={14} />
-            </div>
-            <span className="text-xs">
-              ({doctor.satisfied_percent || "۹۷%"}){" "}
-              {doctor.patients_satisfied?.toLocaleString("fa-IR")} بیمار راضی
+          <div className="mt-4 flex items-center justify-center md:justify-start gap-2 text-green-600 bg-green-50 w-fit px-3 py-1 rounded-full mx-auto md:mx-0">
+            <FaRegCheckCircle className="w-4 h-4" />
+            <span className="text-xs font-bold">
+              ({doctor.satisfied_percent ?? "۹۷"}٪){" "}
+              {doctor.patients_satisfied.toLocaleString("fa-IR")} بیمار راضی
             </span>
           </div>
         </div>

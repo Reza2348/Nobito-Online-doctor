@@ -38,10 +38,13 @@ export default function Page() {
               (اینجا Google Map قرار می‌گیرد)
             </span>
           </div>
-
-          <div className="text-xs text-gray-500 bg-gray-50 p-3 rounded-xl border">
-            برای دقت بیشتر، روی نقشه زوم کنید و محل دقیق را انتخاب کنید.
-          </div>
+          <input
+            type="text"
+            placeholder=" برای دقت بیشتر، روی نقشه زوم کنید و محل دقیق را انتخاب کنید."
+            name=""
+            id=""
+            className="text-xs text-gray-500 bg-gray-50 p-3 rounded-xl border w-full "
+          />
 
           <button className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white py-3 rounded-2xl hover:bg-blue-700 active:scale-[0.99] transition">
             <FiCheckCircle className="text-lg" />

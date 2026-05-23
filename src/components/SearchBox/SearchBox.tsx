@@ -1,47 +1,210 @@
 "use client";
-import { FC } from "react";
-import { FiSearch, FiMapPin, FiChevronDown } from "react-icons/fi";
-import { SearchBoxProps } from "@/Types/types";
 
-const SearchBox: FC<SearchBoxProps> = ({
-  search,
-  setSearch,
-  city,
-  setCity,
-}) => {
+import { FC, useState, useRef, useEffect } from "react";
+import { FiSearch } from "react-icons/fi";
+import { IoLocationOutline, IoChevronDownOutline } from "react-icons/io5";
+
+const CITIES = [
+  { value: "tehran", label: "تهران" },
+  { value: "mashhad", label: "مشهد" },
+  { value: "tabriz", label: "تبریز" },
+  { value: "isfahan", label: "اصفهان" },
+  { value: "shiraz", label: "شیراز" },
+  { value: "karaj", label: "کرج" },
+  { value: "ahvaz", label: "اهواز" },
+  { value: "qom", label: "قم" },
+  { value: "rasht", label: "رشت" },
+  { value: "kermanshah", label: "کرمانشاه" },
+  { value: "urmia", label: "ارومیه" },
+  { value: "yazd", label: "یزد" },
+  { value: "kerman", label: "کرمان" },
+  { value: "zahedan", label: "زاهدان" },
+  { value: "hamedan", label: "همدان" },
+  { value: "arak", label: "اراک" },
+  { value: "bandar_abbas", label: "بندرعباس" },
+];
+
+type Props = {
+  search: string;
+  setSearch: (v: string) => void;
+  city: string;
+  setCity: (v: string) => void;
+};
+
+const SearchBox: FC<Props> = ({ search, setSearch, city, setCity }) => {
+  const [open, setOpen] = useState(false);
+
+  // --- drag-to-dismiss ---
+  const sheetRef = useRef<HTMLDivElement>(null);
+  const dragStartY = useRef(0);
+  const dragCurrentY = useRef(0);
+  const isDragging = useRef(false);
+
+  const onDragStart = (clientY: number) => {
+    isDragging.current = true;
+    dragStartY.current = clientY;
+    dragCurrentY.current = 0;
+  };
+
+  const onDragMove = (clientY: number) => {
+    if (!isDragging.current || !sheetRef.current) return;
+    const delta = clientY - dragStartY.current;
+    dragCurrentY.current = delta;
+    if (delta > 0) {
+      sheetRef.current.style.transform = `translateY(${delta}px)`;
+      sheetRef.current.style.transition = "none";
+    }
+  };
+
+  const onDragEnd = () => {
+    if (!isDragging.current || !sheetRef.current) return;
+    isDragging.current = false;
+    if (dragCurrentY.current > 80) {
+      setOpen(false);
+    } else {
+      sheetRef.current.style.transition = "transform 0.3s ease";
+      sheetRef.current.style.transform = "translateY(0)";
+    }
+  };
+
+  // Reset sheet position when opened
+  useEffect(() => {
+    if (open && sheetRef.current) {
+      sheetRef.current.style.transform = "translateY(0)";
+      sheetRef.current.style.transition = "transform 0.3s ease";
+    }
+  }, [open]);
+
+  // Close on backdrop click or Escape
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, []);
+
+  const selectedLabel =
+    CITIES.find((c) => c.value === city)?.label ?? "انتخاب شهر";
+
   return (
-    <div className="flex flex-col sm:flex-row items-stretch w-full bg-white rounded-md sm:rounded-md shadow-2xl overflow-hidden">
-      <div className="flex items-center flex-1 px-4 gap-2 border-b sm:border-b-0  border-gray-200">
-        <FiSearch className="text-gray-400" size={18} />
-        <input
-          type="text"
-          placeholder="جستجو پزشک، درمانگر، کلینیک..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 py-4 text-sm text-gray-700 bg-transparent outline-none text-right"
-        />
+    <>
+      {/* ── Search bar ─────────────────────────────────── */}
+      <div
+        className="
+          bg-white rounded-2xl shadow-2xl border border-gray-100
+          p-2 md:p-3 flex flex-col md:flex-row gap-2 items-stretch
+        "
+      >
+        {/* Search input */}
+        <div className="flex-1 flex items-center px-3 rounded-xl bg-white">
+          <FiSearch className="text-gray-400 shrink-0 ml-2" size={22} />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="جستجو پزشک، درمانگر، کلینیک..."
+            className="w-full h-12 outline-none text-sm md:text-base placeholder:text-gray-400 text-right text-black"
+          />
+        </div>
+
+        {/* City trigger button */}
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="
+            flex items-center gap-2
+            border border-[#0F766E]/30 rounded-xl
+            px-3 py-3 md:w-45
+            text-[#0F766E] cursor-pointer
+            hover:bg-[#0F766E]/5 transition-colors
+          "
+        >
+          <IoLocationOutline size={20} />
+          <span className="text-sm flex-1 text-center">{selectedLabel}</span>
+          <IoChevronDownOutline
+            size={16}
+            className={`shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          />
+        </button>
       </div>
 
-      <div className="relative flex items-center px-4 ml-3 mt-2 mb-2 border">
-        <FiMapPin className="text-teal-600 ml-2" size={16} />
-        <select
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-          className="appearance-none bg-transparent  text-teal-700 font-semibold text-sm outline-none cursor-pointer py-4 pl-5"
-        >
-          <option value="">انتخاب شهر</option>
-          <option value="tehran">تهران</option>
-          <option value="mashhad">مشهد</option>
-          <option value="isfahan">اصفهان</option>
-          <option value="shiraz">شیراز</option>
-          <option value="tabriz">تبریز</option>
-        </select>
-        <FiChevronDown
-          className="text-teal-600 pointer-events-none absolute left-4"
-          size={14}
-        />
-      </div>
-    </div>
+      {/* ── Bottom sheet ───────────────────────────────── */}
+      {open && (
+        <>
+          {/* Backdrop */}
+          <div
+            className="fixed inset-0 z-40 bg-black/40"
+            onClick={() => setOpen(false)}
+          />
+
+          {/* Sheet */}
+          <div
+            ref={sheetRef}
+            className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl shadow-2xl"
+            style={{ maxHeight: "80vh" }}
+          >
+            {/* ── Drag handle ── */}
+            <div
+              className="flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing touch-none"
+              onMouseDown={(e) => onDragStart(e.clientY)}
+              onMouseMove={(e) => onDragMove(e.clientY)}
+              onMouseUp={onDragEnd}
+              onMouseLeave={onDragEnd}
+              onTouchStart={(e) => onDragStart(e.touches[0].clientY)}
+              onTouchMove={(e) => onDragMove(e.touches[0].clientY)}
+              onTouchEnd={onDragEnd}
+            >
+              <div className="w-10 h-1.5 bg-gray-300 rounded-full" />
+            </div>
+
+            {/* Sheet header */}
+            <p className="text-center text-sm font-medium text-gray-700 py-3 border-b border-gray-100">
+              انتخاب شهر
+            </p>
+
+            {/* City list */}
+            <ul
+              className="overflow-y-auto"
+              style={{ maxHeight: "calc(80vh - 80px)" }}
+            >
+              <li>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCity("");
+                    setOpen(false);
+                  }}
+                  className={`
+                    w-full text-right px-5 py-3.5 text-sm border-b border-gray-50
+                    transition-colors
+                    ${city === "" ? "bg-teal-50 text-[#0F766E] font-medium" : "text-gray-700 hover:bg-gray-50"}
+                  `}
+                >
+                  همه شهرها
+                </button>
+              </li>
+              {CITIES.map((c) => (
+                <li key={c.value}>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setCity(c.value);
+                      setOpen(false);
+                    }}
+                    className={`
+                      w-full text-right px-5 py-3.5 text-sm border-b border-gray-50
+                      transition-colors
+                      ${city === c.value ? "bg-teal-50 text-[#0F766E] font-medium" : "text-gray-700 hover:bg-gray-50"}
+                    `}
+                  >
+                    {c.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      )}
+    </>
   );
 };
 

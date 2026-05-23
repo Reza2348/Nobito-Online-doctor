@@ -1,6 +1,7 @@
 "use client";
 import { FC, useState, useEffect } from "react";
 import SearchBox from "@/components/SearchBox/SearchBox";
+import { FaQuoteRight } from "react-icons/fa";
 
 const HeroBanner: FC = () => {
   const [mounted, setMounted] = useState(false);
@@ -31,20 +32,30 @@ const HeroBanner: FC = () => {
       />
 
       <div className="relative z-10 text-center w-full max-w-3xl">
-        <h1 className="text-white text-xl sm:text-2xl md:text-4xl font-bold leading-loose mb-4">
-          تلاش ما دسترسی{" "}
-          <span className="bg-yellow-300 text-teal-800 px-2 sm:px-3 py-0.5 rounded-md">
-            سریع‌تر و آسان‌تر
-          </span>{" "}
-          شما به خدمات پزشکی است
-        </h1>
-
-        <p className="text-white/85 text-sm sm:text-base mb-2">
-          کافیست خدمات درمانی موردنظر خود را جستجو کنید
-        </p>
-        <p className="text-white/70 text-xs sm:text-sm mb-8">
-          (دریافت نوبت، مشاوره پزشکی، خدمات پزشکی در منزل)
-        </p>
+        <div>
+          <span className="flex text-amber-400 text-4xl">
+            <FaQuoteRight />
+          </span>
+          <p className="text-white text-md sm:text-xl md:text-4xl font-bold leading-loose mb-4">
+            تلاش ما دسترسی{" "}
+            <span className="bg-[#FFE4BC] text-teal-800 px-2 sm:px-3 py-0.5 rounded-md">
+              سریعتر و آسان
+            </span>{" "}
+            <span className="flex text-center justify-center">
+              {" "}
+              شما به خدمات پزشکی است
+            </span>
+          </p>
+          <p className="text-white/85 text-sm sm:text-sm sm:text-[13px]">
+            کافیست خدمات درمانی موردنظر خود را جستجو کنید
+          </p>
+          <p className="text-white/70 text-xs sm:text-sm mb-8">
+            (دریافت نوبت، مشاوره پزشکی، خدمات پزشکی در منزل)
+          </p>
+          <span className="flex  items-end justify-end mb-2  text-amber-400 text-4xl">
+            <FaQuoteRight />
+          </span>
+        </div>
 
         <SearchBox
           search={search}

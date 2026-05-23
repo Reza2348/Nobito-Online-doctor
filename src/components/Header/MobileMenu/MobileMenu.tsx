@@ -31,6 +31,8 @@ const MobileMenu: H.React.FC<Props> = ({
   const [isOpen, setIsOpen] = H.useState(false);
   const [openDropdown, setOpenDropdown] = H.useState(false);
 
+  const router = H.useRouter();
+
   const toggleMenu = () => {
     setIsOpen(!isOpen);
     setOpenDropdown(false);
@@ -39,7 +41,7 @@ const MobileMenu: H.React.FC<Props> = ({
   const handleLinkClick = (href: string) => {
     setIsOpen(false);
     setOpenDropdown(false);
-    window.location.href = href;
+    router.push(href);
   };
 
   const handleLogout = () => {
@@ -48,21 +50,32 @@ const MobileMenu: H.React.FC<Props> = ({
     logout();
   };
 
+  // ✅ FIX اصلی مشکل اسکرول افقی
   H.useEffect(() => {
-    document.body.style.overflow = isOpen ? "hidden" : "";
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      document.body.style.overflowX = "hidden";
+    } else {
+      document.body.style.overflow = "";
+      document.body.style.overflowX = "";
+    }
+
     return () => {
       document.body.style.overflow = "";
+      document.body.style.overflowX = "";
     };
   }, [isOpen]);
 
   return (
     <>
+      {/* Hamburger button */}
       <div className="md:hidden">
         <button onClick={toggleMenu}>
           <H.HiMenu size={26} className="text-gray-700" />
         </button>
       </div>
 
+      {/* Overlay */}
       <div
         onClick={toggleMenu}
         className={`fixed inset-0 bg-black/40 z-40 md:hidden transition-opacity duration-300 ${
@@ -70,12 +83,14 @@ const MobileMenu: H.React.FC<Props> = ({
         }`}
       />
 
+      {/* Menu */}
       <div
         className={`fixed top-0 right-0 h-full w-80 max-w-[85%] bg-white z-50 md:hidden
         transform transition-transform duration-300 ease-in-out ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
+        {/* Header */}
         <div className="flex items-center justify-between px-4 h-16 border-b">
           <H.Link href="/">
             <H.Image
@@ -86,11 +101,13 @@ const MobileMenu: H.React.FC<Props> = ({
               priority
             />
           </H.Link>
+
           <button onClick={toggleMenu}>
             <H.HiX size={26} className="text-black" />
           </button>
         </div>
 
+        {/* Links */}
         <nav className="flex flex-col gap-2 p-4">
           {NAV_LINKS.map((link) => (
             <button
@@ -103,6 +120,7 @@ const MobileMenu: H.React.FC<Props> = ({
           ))}
         </nav>
 
+        {/* Auth */}
         <div className="p-4 border-t relative">
           {!user ? (
             <button
@@ -113,7 +131,6 @@ const MobileMenu: H.React.FC<Props> = ({
             </button>
           ) : (
             <div className="relative">
-              {/* Dashboard Button */}
               <button
                 onClick={() => setOpenDropdown(!openDropdown)}
                 className="w-full flex items-center justify-center gap-2 bg-emerald-600 text-white py-3 rounded-xl"
@@ -146,6 +163,7 @@ const MobileMenu: H.React.FC<Props> = ({
             </div>
           )}
 
+          {/* Bottom links */}
           <div className="mt-6">
             <ul className="flex flex-col gap-3 text-[#757575] text-sm font-medium">
               <button
@@ -154,12 +172,14 @@ const MobileMenu: H.React.FC<Props> = ({
               >
                 درباره ما
               </button>
+
               <button
                 onClick={() => handleLinkClick("/Contactus")}
                 className="text-right hover:text-black transition-colors"
               >
                 تماس با ما
               </button>
+
               <button
                 onClick={() => handleLinkClick("/FAQ")}
                 className="text-right hover:text-black transition-colors"

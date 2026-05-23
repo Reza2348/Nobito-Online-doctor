@@ -33,7 +33,7 @@ export const ClinicHeader: React.FC<ClinicHeaderProps> = ({ clinic }) => (
         </div>
         <span className="text-gray-400 text-xs">|</span>
         <span className="text-gray-500 text-sm">
-          تعداد بیماران راضی:{" "}
+          کد نظام پزشکی : ۵۰۵۵۸{" "}
           {clinic.patients_satisfied.toLocaleString("fa-IR")}
         </span>
       </div>

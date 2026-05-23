@@ -10,10 +10,11 @@ export { TbLogout, TbSend } from "react-icons/tb";
 export { CgProfile } from "react-icons/cg";
 export { BiBriefcase } from "react-icons/bi";
 export { IoSettingsOutline, IoChevronDown } from "react-icons/io5";
-export { FaRegBell, FaChevronDown } from "react-icons/fa";
+export { FaRegBell } from "react-icons/fa";
 export { FiMapPin } from "react-icons/fi";
 export { CiLinkedin } from "react-icons/ci";
 export { PiYoutubeLogo, PiInstagramLogoLight } from "react-icons/pi";
+export { FaChevronDown } from "react-icons/fa";
 
 export { supabase } from "@/lib/supabaseClient";
 

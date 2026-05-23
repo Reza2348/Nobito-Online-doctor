@@ -10,7 +10,7 @@ const Header: H.React.FC = () => {
 
   return (
     <nav className="bg-white w-full">
-      <div className="border-b border-gray-100">
+      <div className="border-b border-[#C0C0C0]">
         <div className="max-w-7xl mx-auto flex items-center justify-between px-2 sm:px-6 lg:px-8 h-16 md:h-20 gap-1 md:gap-4">
           <H.Link href="/" className="shrink-0">
             <H.Image
@@ -39,7 +39,7 @@ const Header: H.React.FC = () => {
         </div>
       </div>
 
-      <div className="hidden lg:block bg-[#C0C0C0]">
+      <div className="hidden lg:block">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
           <H.SubHeader />
         </div>

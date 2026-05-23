@@ -22,7 +22,7 @@ export default function ServicesSection() {
               </button>
             </div>
 
-            <div className="hidden md:block relative w-44 h-60">
+            <div className="hidden md:block relative w-100 h-60">
               <Image
                 src="/pic (8).png"
                 alt="doctor"
@@ -50,7 +50,7 @@ export default function ServicesSection() {
               </button>
             </div>
 
-            <div className="hidden md:block relative w-44 h-60">
+            <div className="hidden md:block relative w-100 h-60">
               <Image
                 src="/wepik (9).png"
                 alt="doctor"

@@ -14,11 +14,12 @@ export const ClinicBio: React.FC<ClinicBioProps> = ({ clinic }) => {
         درباره کلینیک
       </h2>
 
-      <p className="text-gray-500 text-sm leading-8 text-justify">
+      <p className="text-gray-400 text-[13px] leading-7 text-justify font-medium">
         {clinic.bio ||
-          "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ است..."}
+          `لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ است.
+این متن برای پر کردن جای محتوا استفاده می‌شود و می‌تواند جایگزین متن واقعی شود.
+لورم ایپسوم نمونه‌ای از متن طولانی‌تر برای نمایش چند خط می‌باشد.`}
       </p>
-
       <div className="mt-6">
         <div className="flex items-center gap-2 mb-4 text-slate-700">
           <FaUserMd className="text-teal-500" />

@@ -21,7 +21,7 @@ const DoctorCard: React.FC<Props> = ({ doctor }) => {
   return (
     <div
       onClick={handleClick}
-      className="flex flex-col bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow overflow-hidden w-full sm:max-w-75 lg:max-w-87.5] mx-auto cursor-pointer"
+      className="flex flex-col bg-white rounded-2xl shadow-md hover:shadow-2xl hover:scale-105 transition-shadow overflow-hidden w-full sm:max-w-75 lg:max-w-87.5] mx-auto cursor-pointer"
     >
       <D.DoctorPhoto name={doctor.name} photoUrl={doctor.photo_url} />
 

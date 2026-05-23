@@ -28,7 +28,7 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
       {!user?.id ? (
         <H.Link
           href="/auth/signup"
-          className="bg-emerald-700 hover:bg-emerald-800 transition-colors text-white px-4 py-2 md:px-6 rounded-xl text-sm font-medium whitespace-nowrap"
+          className="bg-emerald-700 hover:bg-emerald-800 transition-colors text-white px-4 py-2 md:px-6 rounded-xl text-sm font-medium whitespace-nowrap hidden md:block" // کلاس‌های hidden و md:block اضافه شده‌اند
         >
           ورود / ثبت‌نام
         </H.Link>
