@@ -1,8 +1,9 @@
-"use client"; // این صفحه نیاز به Client Component ندارد ولی گذاشتن آن ایراد ندارد
+"use client";
 import React from "react";
 import HeroBanner from "@/components/HeroBanner/HeroBanner";
 import StatsBar from "@/components/StatsBar/StatsBar";
 import Card from "@/components/Card/page";
+import Banner from "@/app/Banner/page";
 
 const Page = () => {
   return (
@@ -10,6 +11,7 @@ const Page = () => {
       <HeroBanner />
       <StatsBar />
       <Card />
+      <Banner />
     </div>
   );
 };

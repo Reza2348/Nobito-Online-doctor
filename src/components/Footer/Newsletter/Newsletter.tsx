@@ -23,14 +23,6 @@ export default function Newsletter({ mobile = false, onSubmit }: Props) {
 
       <form onSubmit={onSubmit} className="flex flex-col gap-3">
         <div className="flex flex-col sm:flex-row-reverse gap-2">
-          <input
-            name="email"
-            type="email"
-            required
-            placeholder="ایمیل خود را اینجا وارد کنید"
-            className="flex-1 bg-white border border-gray-200 rounded-xl px-4 py-3 text-[13px] text-right outline-none focus:border-[#1F7168] transition-colors"
-          />
-
           {!mobile && (
             <button
               type="submit"
@@ -39,6 +31,13 @@ export default function Newsletter({ mobile = false, onSubmit }: Props) {
               ارسال
             </button>
           )}
+          <input
+            name="email"
+            type="email"
+            required
+            placeholder="ایمیل خود را اینجا وارد کنید"
+            className="flex-1 bg-white border border-gray-200 rounded-xl px-4 py-3 text-[13px] text-right outline-none focus:border-[#1F7168] transition-colors"
+          />
         </div>
 
         <p className="text-[11px] text-gray-400 leading-relaxed whitespace-normal lg:whitespace-nowrap lg:truncate">

@@ -2,30 +2,7 @@
 
 import React from "react";
 import { FaUserMd, FaCalendarAlt, FaClock } from "react-icons/fa";
-
-const appointments = [
-  {
-    id: 1,
-    doctor: "دکتر عباس میراحمدی",
-    specialty: "قلب و عروق",
-    day: "شنبه تا چهارشنبه",
-    time: "09:00 - 15:00",
-  },
-  {
-    id: 2,
-    doctor: "دکتر مهران مهام",
-    specialty: "متخصص کلیه و مجاری ادراری",
-    day: "یکشنبه تا پنجشنبه",
-    time: "10:00 - 16:00",
-  },
-  {
-    id: 3,
-    doctor: "دکتر محمد ابراهیمی",
-    specialty: "ارتوپدی",
-    day: "شنبه و سه‌شنبه",
-    time: "11:00 - 14:00",
-  },
-];
+import { appointments } from "@/app/AppointmentCard/AppData";
 
 const AppointmentCard: React.FC = () => {
   return (
@@ -43,9 +20,10 @@ const AppointmentCard: React.FC = () => {
                 <FaUserMd />
               </div>
 
-              <h3 className="text-lg font-semibold text-gray-800 mb-1 transition-colors duration-300 group-hover:text-emerald-600">
+              <h3 className="text-lg font-semibold text-gray-800 mb-1 group-hover:text-emerald-600">
                 {item.doctor}
               </h3>
+
               <p className="text-gray-500 text-sm mb-4 leading-relaxed">
                 {item.specialty}
               </p>

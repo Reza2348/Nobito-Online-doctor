@@ -27,7 +27,8 @@ const DesktopNav: H.React.FC = () => {
       {/* DROPDOWN */}
       <div ref={ref} className="relative">
         <button
-          onClick={() => setOpen(!open)}
+          type="button"
+          onClick={() => setOpen((prev) => !prev)}
           className="flex items-center gap-1 hover:text-[#1F7168] font-medium"
         >
           خدمات
@@ -39,7 +40,7 @@ const DesktopNav: H.React.FC = () => {
         </button>
 
         {open && (
-          <div className="absolute top-full right-0 mt-2 w-44 bg-white border rounded-xl shadow-xl z-99999">
+          <div className="absolute top-full right-0 mt-2 w-44 bg-white rounded-xl shadow-xl z-50">
             <H.Link
               href="/dentistry"
               className="block px-4 py-2 hover:bg-gray-50"

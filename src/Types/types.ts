@@ -130,3 +130,11 @@ export interface Comment {
   photo_url: string;
   rating: number;
 }
+
+export interface Appointment {
+  id: number;
+  doctor: string;
+  specialty: string;
+  day: string;
+  time: string;
+}
