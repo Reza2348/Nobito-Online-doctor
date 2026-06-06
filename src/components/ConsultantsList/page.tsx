@@ -31,9 +31,19 @@ const ConsultantsList = () => {
         در حال بارگذاری مشاورین...
       </p>
     );
-  if (isError)
+
+  if (error)
     return (
-      <p className="text-center mt-10 text-red-500">خطا در بارگذاری داده‌ها</p>
+      <div className="flex justify-center py-16 text-red-400 font-sans">
+        خطا در بارگذاری داده‌ها
+      </div>
+    );
+
+  if (!consultants?.length)
+    return (
+      <div className="flex justify-center py-16 text-gray-400 font-sans">
+        هیچ مشاوری یافت نشد
+      </div>
     );
 
   return (

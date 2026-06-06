@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { FaRegArrowAltCircleLeft } from "react-icons/fa";
 
 export default function ServicesSection() {
   return (
@@ -18,7 +19,9 @@ export default function ServicesSection() {
               </p>
               <button className="mt-4 inline-flex items-center gap-2 bg-white text-rose-600 font-medium px-5 py-2.5 rounded-xl shadow hover:bg-gray-100 transition">
                 مشاهده خدمات
-                <span className="text-lg">←</span>
+                <span className="text-lg">
+                  <FaRegArrowAltCircleLeft />
+                </span>
               </button>
             </div>
 
@@ -46,7 +49,9 @@ export default function ServicesSection() {
 
               <button className="mt-4 inline-flex items-center gap-2 bg-white text-sky-600 font-medium px-5 py-2.5 rounded-xl shadow hover:bg-gray-100 transition">
                 نوبت بگیر
-                <span className="text-lg">←</span>
+                <span className="text-lg">
+                  <FaRegArrowAltCircleLeft />
+                </span>
               </button>
             </div>
 

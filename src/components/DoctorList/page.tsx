@@ -32,7 +32,7 @@ const DoctorList: React.FC = () => {
   return (
     <div
       dir="rtl"
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4"
+      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-6 mb-6"
     >
       {data.map((doctor) => (
         <D.DoctorCard key={doctor.id} doctor={doctor} />
