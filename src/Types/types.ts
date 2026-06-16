@@ -69,6 +69,7 @@ export interface Doctor {
   rating?: string;
   satisfied_percent?: string;
   bio?: string;
+  slug: string;
 }
 
 export interface Service {
@@ -138,3 +139,27 @@ export interface Appointment {
   day: string;
   time: string;
 }
+
+export type SupabaseUser = {
+  id: string;
+  email?: string;
+  phone?: string;
+  user_metadata?: {
+    phone?: string;
+    [key: string]: any;
+  };
+};
+
+export type FeedbackTab = "positive" | "negative";
+
+export type FeedbackPayload = {
+  doctor_id: number;
+  clinic_id: number | null;
+  consultant_id: number | null;
+  rating: number;
+  positive_or_negative: FeedbackTab;
+  options: string[];
+  comment: string;
+};
+
+export type FeedbackOption = string;

@@ -20,6 +20,7 @@ const DEFAULT_NAV_LINKS: H.NavLink[] = [
   { href: "/Online consultation", label: "مشاوره آنلاین" },
   { href: "/Health Magazine", label: "مجله سلامت" },
   { href: "/Charity", label: "نیکوکاری" },
+  { href: "/Notifications", label: "اعلان ها" },
 ];
 
 const MobileMenuContent: H.React.FC<Props> = ({

@@ -1,7 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import React from "react";
 import { FaPhone, FaUserFriends, FaVideo, FaCommentDots } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export interface ClinicsTypeProps {
   icon: React.ReactNode;
@@ -37,8 +40,24 @@ export const ClinicsType: React.FC<ClinicsTypeProps> = ({
 };
 
 const ClinicsSidebar: React.FC = () => {
+  const router = useRouter();
+  const [loadingItem, setLoadingItem] = React.useState<number | null>(null);
+
+  const handleClick = (item: number): void => {
+    if (loadingItem !== null) return;
+
+    setLoadingItem(item);
+    toast.success("نوبت شما با موفقیت ثبت شد ✅");
+
+    setTimeout(() => {
+      router.push("/Feedback");
+      setLoadingItem(null);
+    }, 3000);
+  };
+
   return (
     <div className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100 sticky top-8">
+      <ToastContainer position="top-center" rtl />
       <h2 className="text-lg font-bold text-center text-slate-800 mb-6">
         ملاقات با پزشک
       </h2>
@@ -70,8 +89,13 @@ const ClinicsSidebar: React.FC = () => {
             </div>
 
             <div className="flex justify-between items-center">
-              <button className="bg-white border border-teal-500 text-teal-600 text-xs font-bold px-4 py-2 rounded-xl hover:bg-teal-50 transition-colors">
-                نوبت بگیرید
+              <button
+                type="button"
+                onClick={() => handleClick(item)}
+                disabled={loadingItem !== null}
+                className="bg-white border border-teal-500 text-teal-600 text-xs font-bold px-4 py-2 rounded-xl hover:bg-teal-50 transition-colors disabled:opacity-50"
+              >
+                {loadingItem === item ? "در حال ثبت..." : "نوبت بگیرید"}
               </button>
               <div className="text-right">
                 <span className="text-lg font-black text-slate-800">

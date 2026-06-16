@@ -1,16 +1,7 @@
 "use client";
 
 import * as H from "@/Imports/HeaderImports/HeaderImports";
-
-type SupabaseUser = {
-  id: string;
-  email?: string;
-  phone?: string;
-  user_metadata?: {
-    phone?: string;
-    [key: string]: any;
-  };
-};
+import type { SupabaseUser } from "@/Types/types";
 
 type Props = {
   user: SupabaseUser | null;
@@ -22,18 +13,18 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
     user?.user_metadata?.phone || user?.phone || user?.email || "کاربر";
 
   return (
-    <div className="flex items-center gap-3 md:gap-4 relative whitespace-nowrap">
-      <H.FaRegBell className="hidden md:block text-gray-400 text-2xl md:text-3xl cursor-pointer" />
+    <div className="flex items-center gap-3 md:gap-4 relative min-w-0">
+      <H.FaRegBell className="hidden md:block text-gray-400 text-2xl md:text-3xl cursor-pointer shrink-0" />
 
       {!user?.id ? (
         <H.Link
           href="/auth/signup"
-          className="bg-emerald-700 hover:bg-emerald-800 transition-colors text-white px-4 py-2 md:px-6 rounded-xl text-sm font-medium whitespace-nowrap hidden md:block" // کلاس‌های hidden و md:block اضافه شده‌اند
+          className="bg-emerald-700 hover:bg-emerald-800 transition-colors text-white px-4 py-2 md:px-6 rounded-xl text-sm font-medium hidden md:block"
         >
           ورود / ثبت‌نام
         </H.Link>
       ) : (
-        <div className="relative group">
+        <div className="relative group min-w-0">
           <button
             className="
               bg-red-50 hover:bg-red-100
@@ -42,8 +33,9 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
               px-4 py-2 md:px-6
               rounded-xl
               text-sm font-medium
-              max-w-40
+              max-w-32 md:max-w-40
               truncate
+              block
             "
           >
             {displayName}
@@ -57,12 +49,9 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
               border border-gray-200
               rounded-xl
               shadow-lg
-
               opacity-0 invisible
               group-hover:opacity-100 group-hover:visible
-
               transition-all duration-200
-
               z-50
               overflow-hidden
             "

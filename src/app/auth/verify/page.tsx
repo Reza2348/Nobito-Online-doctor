@@ -1,7 +1,6 @@
 "use client";
 
 import * as O from "@/Imports/OtpImports/OtpImports";
-import { OtpCard } from "@/Imports/OtpImports/OtpImports";
 import { useEmailOtp } from "@/hooks/useEmailOtp";
 
 export default function EmailOtpVerifyPage() {

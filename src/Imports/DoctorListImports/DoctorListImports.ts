@@ -13,6 +13,10 @@ export { FaRegCalendarCheck } from "react-icons/fa";
 export { FaStethoscope } from "react-icons/fa";
 export { FaRegStar } from "react-icons/fa";
 export { FaThumbsUp } from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+export { toast, ToastContainer };
 
 export { default as DoctorPhoto } from "@/components/DoctorList/DoctorPhoto/DoctorPhoto";
 export { default as DoctorRating } from "@/components/DoctorList/DoctorRating/DoctorRating";

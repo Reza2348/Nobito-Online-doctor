@@ -6,6 +6,7 @@ import { CiFaceSmile, CiFaceFrown } from "react-icons/ci";
 import { LuClock3 } from "react-icons/lu";
 import { FaStar } from "react-icons/fa";
 import type { Comment } from "@/Types/types";
+import { FaChevronDown } from "react-icons/fa";
 
 const Comments = () => {
   const [comments, setComments] = useState<Comment[]>([]);
@@ -109,6 +110,10 @@ const Comments = () => {
           </div>
         </div>
       ))}
+      <button className="border border-black text-black w-full rounded-md py-2 flex items-center justify-center gap-2">
+        مشاهده بیشتر
+        <FaChevronDown />
+      </button>
     </div>
   );
 };
