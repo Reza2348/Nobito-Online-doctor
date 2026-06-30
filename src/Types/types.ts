@@ -163,3 +163,16 @@ export type FeedbackPayload = {
 };
 
 export type FeedbackOption = string;
+
+export type AppointmentIconType = "phone" | "video" | "doctor";
+
+export interface AppointmentHistoryItem {
+  id: number;
+  type: string;
+  iconType: AppointmentIconType;
+  doctorName: string;
+  specialty: string;
+  avatar: string;
+  note: string;
+  date: string;
+}

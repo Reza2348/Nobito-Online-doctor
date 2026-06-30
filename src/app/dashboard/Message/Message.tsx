@@ -39,7 +39,7 @@ export default function Message() {
   ];
 
   return (
-    <div className="w-full min-h-screen bg-[#F8F8F8] px-4 md:px-12 py-6 md:py-12 font-[Tahoma]">
+    <div className="w-full min-h-screen  px-4 md:px-12 py-6 md:py-12 font-[Tahoma]">
       <div className="bg-white rounded-[20px] md:rounded-[30px] shadow-sm border border-gray-100 overflow-hidden">
         {/* هدر */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 px-4 md:px-8 py-4 md:py-6 border-b border-[#E4E4E4]">

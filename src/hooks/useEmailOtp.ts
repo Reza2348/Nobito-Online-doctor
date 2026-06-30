@@ -48,7 +48,7 @@ export function useEmailOtp() {
       localStorage.removeItem("otp_identifier");
 
       setTimeout(() => {
-        router.push("/dashboard");
+        router.push("/");
       }, 1500);
     } catch (err: any) {
       console.error(err);

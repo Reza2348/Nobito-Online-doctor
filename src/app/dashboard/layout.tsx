@@ -7,6 +7,7 @@ import Sidebar from "@/components/Sidebar/page";
 import PublicProfile from "@/app/dashboard/Publicprofile/public-profile";
 import Password from "@/app/dashboard/Password/password";
 import Message from "@/app/dashboard/Message/Message";
+import Historyofturns from "@/app/dashboard/Historyofturns/Historyofturns";
 
 import { useUser } from "@/hooks/useUser";
 
@@ -37,7 +38,7 @@ export default function DashboardLayout({ children }: any) {
       case 1:
         return <PublicProfile />;
       case 2:
-        return <div>تاریخچه نوبت‌ها</div>;
+        return <Historyofturns />;
       case 3:
         return <Message />;
       case 4:
