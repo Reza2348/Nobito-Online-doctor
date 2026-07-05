@@ -50,7 +50,7 @@ const ClinicsSidebar: React.FC = () => {
     toast.success("نوبت شما با موفقیت ثبت شد ✅");
 
     setTimeout(() => {
-      router.push("/Feedback");
+      router.push("/Feedback/Feedback-clinics");
       setLoadingItem(null);
     }, 3000);
   };

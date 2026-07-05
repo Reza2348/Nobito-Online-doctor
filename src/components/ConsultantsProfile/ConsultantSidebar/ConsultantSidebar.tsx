@@ -44,7 +44,7 @@ export const ConsultantSidebar = () => {
     toast.success("نوبت شما با موفقیت ثبت شد ✅");
 
     setTimeout(() => {
-      router.push("/Feedback");
+      router.push("/Feedback/Feedback-Consultants");
       setLoadingItem(null);
     }, 3000);
   };

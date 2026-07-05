@@ -46,7 +46,7 @@ const DoctorAppointments: React.FC = () => {
     toast.success("نوبت شما با موفقیت ثبت شد ✅");
 
     setTimeout(() => {
-      router.push("/Feedback");
+      router.push("/Feedback/Feedback-doctor");
       setLoadingItem(null);
     }, 3000);
   };

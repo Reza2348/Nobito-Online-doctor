@@ -3,8 +3,6 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { useDoctor } from "@/context/DoctorContext/DoctorContext";
-import { useClinics } from "@/context/ClinicsContext/ClinicsContext";
-import { useConsultant } from "@/context/ConsultantsContext/ConsultantsContext";
 import { supabase } from "@/lib/supabaseClient";
 import { FaStar, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
@@ -12,7 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 import type {
   Doctor,
   FeedbackTab,
-  FeedbackPayload,
+  DoctorFeedbackPayload,
   FeedbackOption,
 } from "@/Types/types";
 
@@ -28,10 +26,6 @@ const feedbackOptions: FeedbackOption[] = [
 const Page: React.FC = () => {
   const router = useRouter();
   const { doctorId } = useDoctor();
-  const { selectedClinic } = useClinics(); // TODO: جایگزین با فیلد واقعی بعد از تایید
-  const clinicId: number | null = selectedClinic?.id ?? null; // TODO: موقت
-  const { consultantId } = useConsultant();
-
   const [doctors, setDoctors] = React.useState<Doctor[]>([]);
   const [rating, setRating] = React.useState<number>(0);
   const [hovered, setHovered] = React.useState<number>(0);
@@ -70,17 +64,15 @@ const Page: React.FC = () => {
   const handleSubmit = async (): Promise<void> => {
     if (!selectedDoctor) return;
 
-    const payload: FeedbackPayload = {
+    const payload: DoctorFeedbackPayload = {
       doctor_id: selectedDoctor.id,
-      clinic_id: clinicId,
-      consultant_id: consultantId ?? null,
       rating,
       positive_or_negative: activeTab,
       options: selected,
       comment,
     };
 
-    const { error } = await supabase.from("feedbacks").insert(payload);
+    const { error } = await supabase.from("feedbacks_doctors").insert(payload);
 
     if (error) {
       toast.error("خطا در ثبت بازخورد");
@@ -175,12 +167,10 @@ const Page: React.FC = () => {
             </button>
           </div>
 
-          {/* عنوان سوال */}
           <p className="text-[#121212] font-semibold text-sm text-center">
             از کدام موارد رضایت داشته اید؟
           </p>
 
-          {/* دکمه‌های بازخورد - ۳ ستون مثل عکس */}
           <div className="grid grid-cols-3 gap-2 w-full">
             {feedbackOptions.map((option) => (
               <button
@@ -196,8 +186,6 @@ const Page: React.FC = () => {
               </button>
             ))}
           </div>
-
-          {/* باکس نوشتن نظر */}
           {isWritingComment && (
             <textarea
               value={comment}

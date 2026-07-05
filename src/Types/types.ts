@@ -152,10 +152,24 @@ export type SupabaseUser = {
 
 export type FeedbackTab = "positive" | "negative";
 
-export type FeedbackPayload = {
+export type DoctorFeedbackPayload = {
   doctor_id: number;
-  clinic_id: number | null;
-  consultant_id: number | null;
+  rating: number;
+  positive_or_negative: FeedbackTab;
+  options: string[];
+  comment: string;
+};
+
+export type ConsultantFeedbackPayload = {
+  consultant_id: number;
+  rating: number;
+  positive_or_negative: FeedbackTab;
+  options: string[];
+  comment: string;
+};
+
+export type ClinicFeedbackPayload = {
+  clinic_id: number;
   rating: number;
   positive_or_negative: FeedbackTab;
   options: string[];
