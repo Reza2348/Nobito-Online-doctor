@@ -1,10 +1,14 @@
 import React from "react";
+import SecondBanner from "@/components/SecondBanner/SecondBanner";
+import StatsBar from "@/components/SecondBanner/StatsBar/StatsBar";
+import Card from "@/components/SecondBanner/Card/page";
 
 const Page = () => {
   return (
-    <div className=" flex items-center text-black flex-nowrap text-sm pr-2 px-2 mx-auto ">
-      ,bn,mbnm,dfnb,mdfnbm,ndbmnms,bnb,mnbndfmndfsm,n
-      <p>kldfbndnbmdsfnbndsbnsdbnsdnb</p>
+    <div className="flex flex-col">
+      <SecondBanner />
+      <StatsBar />
+      <Card />
     </div>
   );
 };

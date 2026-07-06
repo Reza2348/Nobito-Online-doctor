@@ -190,3 +190,19 @@ export interface AppointmentHistoryItem {
   note: string;
   date: string;
 }
+
+export interface Article {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  cover_image: string | null;
+  category: string;
+  author: string;
+  reading_time: number;
+  views: number;
+  published: boolean;
+  created_at: string;
+  updated_at: string;
+}
