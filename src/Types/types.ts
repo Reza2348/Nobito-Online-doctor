@@ -191,18 +191,23 @@ export interface AppointmentHistoryItem {
   date: string;
 }
 
-export interface Article {
-  id: string;
+export type Article = {
+  id: number;
   title: string;
-  slug: string;
   excerpt: string;
-  content: string;
-  cover_image: string | null;
-  category: string;
-  author: string;
+  photo_url: string | null;
   reading_time: number;
   views: number;
   published: boolean;
   created_at: string;
-  updated_at: string;
-}
+};
+
+export type PopularArticle = {
+  id: number;
+  title: string;
+  excerpt: string;
+  photo_url: string | null;
+  reading_time: number;
+  display_order: number;
+  published?: boolean;
+};
