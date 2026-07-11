@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import type { Consultant } from "@/Types/types";
 import { useConsultant } from "@/context/ConsultantsContext/ConsultantsContext";
+import Image from "next/image";
 
 interface ConsultantCardProps {
   consultant: Consultant;
@@ -26,11 +27,13 @@ export const ConsultantCard: React.FC<ConsultantCardProps> = ({
                  flex flex-col items-center"
     >
       <div className="flex justify-center -mt-16 mb-4">
-        <div className="w-28 h-28 rounded-full border-4 border-white shadow-md overflow-hidden bg-gray-100 transition-transform">
-          <img
-            src={consultant.photo_url ?? "/placeholder.jpg"}
+        <div className="relative w-28 h-28 rounded-full border-4 border-white shadow-md overflow-hidden bg-gray-100">
+          <Image
+            src={consultant.photo_url || "/placeholder.jpg"}
             alt={consultant.name}
-            className="w-full h-full object-cover"
+            fill
+            sizes="112px"
+            className="object-cover"
           />
         </div>
       </div>

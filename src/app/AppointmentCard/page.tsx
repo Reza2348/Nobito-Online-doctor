@@ -1,8 +1,7 @@
-"use client";
-
 import React from "react";
 import { FaUserMd, FaCalendarAlt, FaClock } from "react-icons/fa";
 import { appointments } from "@/app/AppointmentCard/AppData";
+import BookButton from "./BookButton";
 
 const AppointmentCard: React.FC = () => {
   return (
@@ -40,9 +39,7 @@ const AppointmentCard: React.FC = () => {
                 </div>
               </div>
 
-              <button className="w-full bg-teal-600 hover:bg-teal-700 transition text-white py-2 rounded-xl duration-300 transform hover:scale-105">
-                رزرو نوبت
-              </button>
+              <BookButton appointmentId={item.id} />
             </div>
           ))}
         </div>

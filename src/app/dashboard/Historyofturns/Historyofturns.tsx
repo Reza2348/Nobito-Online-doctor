@@ -18,7 +18,7 @@ const Historyofturns = () => {
   return (
     <div
       dir="rtl"
-      className="w-full min-h-screen bg-[#F8F8F8] px-4 md:px-12 py-6 md:py-12 font-[Tahoma]"
+      className="w-full min-h-screen  px-4 md:px-12 py-6 md:py-12 font-[Tahoma]"
     >
       <div className="bg-white rounded-[20px] md:rounded-[30px] shadow-sm border border-gray-100 overflow-hidden">
         {/* هدر */}

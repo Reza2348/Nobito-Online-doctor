@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { FaUserShield, FaLock, FaFileContract } from "react-icons/fa";
 

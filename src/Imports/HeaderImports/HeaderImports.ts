@@ -1,5 +1,4 @@
 export { default as React, useState, useEffect, useRef } from "react";
-
 export { default as Image } from "next/image";
 export { default as Link } from "next/link";
 export { usePathname, useRouter } from "next/navigation";

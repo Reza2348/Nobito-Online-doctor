@@ -33,9 +33,7 @@ export const ConsultantHeader: React.FC<ConsultantHeaderProps> = ({
           ))}
         </div>
         <span className="text-gray-400 text-xs">|</span>
-        <span className="text-gray-500 text-sm">
-          کد نظام پزشکی: {consultant.id || "۵۰۵۵۸"}
-        </span>
+        <span className="text-gray-500 text-sm">کد نظام پزشکی: ۵۰۵۵۸ </span>
       </div>
 
       <div className="mt-4 flex items-center justify-center md:justify-start gap-2 text-green-600 bg-green-50 w-fit px-3 py-1 rounded-full mx-auto md:mx-0">

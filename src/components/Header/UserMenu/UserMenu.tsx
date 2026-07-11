@@ -2,6 +2,7 @@
 
 import * as H from "@/Imports/HeaderImports/HeaderImports";
 import type { SupabaseUser } from "@/Types/types";
+import { useState, useRef, useEffect } from "react";
 
 type Props = {
   user: SupabaseUser | null;
@@ -9,8 +10,22 @@ type Props = {
 };
 
 const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
+  const [open, setOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
   const displayName =
     user?.user_metadata?.phone || user?.phone || user?.email || "کاربر";
+
+  // بستن منو با کلیک بیرون از آن
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <div className="flex items-center gap-3 md:gap-4 relative min-w-0">
@@ -24,8 +39,9 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
           ورود / ثبت‌نام
         </H.Link>
       ) : (
-        <div className="relative group min-w-0">
+        <div className="relative min-w-0 hidden lg:block" ref={menuRef}>
           <button
+            onClick={() => setOpen((prev) => !prev)}
             className="
               bg-red-50 hover:bg-red-100
               transition-colors
@@ -41,35 +57,39 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
             {displayName}
           </button>
 
-          <div
-            className="
-              absolute right-0 mt-2
-              w-48
-              bg-white
-              border border-gray-200
-              rounded-xl
-              shadow-lg
-              opacity-0 invisible
-              group-hover:opacity-100 group-hover:visible
-              transition-all duration-200
-              z-50
-              overflow-hidden
-            "
-          >
-            <H.Link
-              href="/dashboard"
-              className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+          {open && (
+            <div
+              className="
+                absolute right-0 mt-2
+                w-48
+                max-w-[85vw]
+                bg-white
+                border border-gray-200
+                rounded-xl
+                shadow-lg
+                z-50
+                overflow-hidden
+              "
             >
-              ورود به داشبورد
-            </H.Link>
+              <H.Link
+                href="/dashboard"
+                onClick={() => setOpen(false)}
+                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+              >
+                ورود به داشبورد
+              </H.Link>
 
-            <button
-              onClick={logout}
-              className="w-full text-right px-4 py-2 text-red-600 hover:bg-red-50"
-            >
-              خروج
-            </button>
-          </div>
+              <button
+                onClick={() => {
+                  setOpen(false);
+                  logout();
+                }}
+                className="w-full text-right px-4 py-2 text-red-600 hover:bg-red-50"
+              >
+                خروج
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -16,7 +16,9 @@ export const ConsultantBio: React.FC<ConsultantBioProps> = ({ consultant }) => {
 
       <p className="text-gray-500 text-sm leading-8 text-justify">
         {consultant.bio ||
-          "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ است..."}
+          `لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ است.
+این متن برای پر کردن جای محتوا استفاده می‌شود و می‌تواند جایگزین متن واقعی شود.
+لورم ایپسوم نمونه‌ای از متن طولانی‌تر برای نمایش چند خط می‌باشد.`}
       </p>
 
       <div className="mt-6">

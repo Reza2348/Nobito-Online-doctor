@@ -39,8 +39,30 @@ const DoctorAppointments: React.FC = () => {
   const router = useRouter();
   const [loadingItem, setLoadingItem] = React.useState<number | null>(null);
 
+  // بررسی وضعیت ورود کاربر
+  const isUserLoggedIn = (): boolean => {
+    if (typeof window === "undefined") return false;
+    const token = localStorage.getItem("token"); // اگر نام کلید توکن شما فرق دارد، اینجا تغییر دهید
+    return !!token;
+  };
+
   const handleClick = (item: number) => {
     if (loadingItem !== null) return;
+
+    // پالیسی: اگر کاربر لاگین نکرده باشد، اجازه‌ی گرفتن نوبت داده نمی‌شود
+    if (!isUserLoggedIn()) {
+      toast.error(
+        "برای گرفتن نوبت ابتدا باید وارد حساب کاربری خود شوید یا ثبت‌نام کنید ⚠️",
+        { autoClose: 3000 },
+      );
+
+      // کمی صبر می‌کنیم تا کاربر پیام را ببیند، بعد به صفحه‌ی ورود هدایت می‌شود
+      setTimeout(() => {
+        router.push("/auth/signup"); // مسیر صفحه‌ی ورود/ثبت‌نام خودتان را اینجا قرار دهید
+      }, 1800);
+
+      return;
+    }
 
     setLoadingItem(item);
     toast.success("نوبت شما با موفقیت ثبت شد ✅");

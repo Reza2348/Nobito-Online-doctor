@@ -38,17 +38,19 @@ export default function ConsultantProfilePage() {
     fetchConsultant();
   }, [consultantId, contextId, setConsultantId]);
 
-  if (loading)
+  if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen gap-4">
-        <span className="text-gray-500 font-bold text-lg">
-          در حال بارگذاری پروفایل...
+      <div className="flex flex-col sm:flex-row items-center justify-center min-h-screen gap-4 px-4">
+        <span className="text-gray-500 font-bold text-lg whitespace-nowrap">
+          در حال بارگذاری پروفایل مشاور...
         </span>
-
         <div className="w-10 h-10 border-4 border-gray-200 border-t-teal-600 rounded-full animate-spin" />
       </div>
     );
+  }
+
   if (error) return <p className="text-center mt-10 text-red-500">{error}</p>;
+
   if (!consultant)
     return <p className="text-center mt-10 text-gray-500">مشاور پیدا نشد.</p>;
 

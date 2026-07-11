@@ -18,7 +18,7 @@ type Props = {
 
 const DEFAULT_NAV_LINKS: H.NavLink[] = [
   { href: "/Online consultation", label: "مشاوره آنلاین" },
-  { href: "/Health Magazine", label: "مجله سلامت" },
+  { href: "/HealthMagazine", label: "مجله سلامت" },
   { href: "/Charity", label: "نیکوکاری" },
   { href: "/Notifications", label: "اعلان ها" },
 ];
@@ -52,13 +52,7 @@ const MobileMenuContent: H.React.FC<Props> = ({
       {/* HEADER */}
       <div className="flex items-center justify-between px-4 h-16 border-b">
         <H.Link href="/">
-          <H.Image
-            src="Default.svg"
-            alt="logo"
-            width={150}
-            height={150}
-            priority
-          />
+          <img src="Default.svg" alt="logo" width={150} height={150} />
         </H.Link>
 
         <button onClick={onClose}>

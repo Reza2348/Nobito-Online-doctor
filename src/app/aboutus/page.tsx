@@ -1,5 +1,3 @@
-"use client";
-
 import {
   HiOutlineShieldCheck,
   HiOutlineClock,
@@ -27,65 +25,42 @@ const About = () => {
       </div>
 
       <div className="mt-12 md:mt-16 grid gap-6 sm:grid-cols-2 md:grid-cols-3">
-        <div
-          className="
-          bg-white rounded-2xl shadow-md p-5
-          text-center sm:text-right
-          transition hover:shadow-xl hover:-translate-y-1
-        "
-        >
-          <div className="flex justify-center sm:justify-start">
-            <div className="bg-green-100 w-12 h-12 flex items-center justify-center rounded-xl">
-              <HiOutlineShieldCheck className="text-green-600 text-2xl" />
+        {[
+          {
+            icon: HiOutlineShieldCheck,
+            title: "امنیت اطلاعات",
+            desc: "اطلاعات شما با بالاترین استانداردهای امنیتی نگهداری می‌شود.",
+          },
+          {
+            icon: HiOutlineClock,
+            title: "دسترسی سریع",
+            desc: "در هر زمان و مکان به خدمات و سوابق پزشکی خود دسترسی دارید.",
+          },
+          {
+            icon: HiOutlineUserGroup,
+            title: "ارتباط آسان",
+            desc: "ارتباط سریع و ساده با پزشکان و مراکز درمانی.",
+          },
+        ].map(({ icon: Icon, title, desc }) => (
+          <div
+            key={title}
+            className="
+              bg-white rounded-2xl shadow-md p-5
+              text-center sm:text-right
+              transition hover:shadow-xl hover:-translate-y-1
+            "
+          >
+            <div className="flex justify-center sm:justify-start">
+              <div className="bg-green-100 w-12 h-12 flex items-center justify-center rounded-xl">
+                <Icon className="text-green-600 text-2xl" />
+              </div>
             </div>
+
+            <h3 className="mt-4 font-bold text-black">{title}</h3>
+
+            <p className="mt-2 text-sm text-gray-600 leading-loose">{desc}</p>
           </div>
-
-          <h3 className="mt-4 font-bold text-black">امنیت اطلاعات</h3>
-
-          <p className="mt-2 text-sm text-gray-600 leading-loose">
-            اطلاعات شما با بالاترین استانداردهای امنیتی نگهداری می‌شود.
-          </p>
-        </div>
-
-        <div
-          className="
-          bg-white rounded-2xl shadow-md p-5
-          text-center sm:text-right
-          transition hover:shadow-xl hover:-translate-y-1
-        "
-        >
-          <div className="flex justify-center sm:justify-start">
-            <div className="bg-green-100 w-12 h-12 flex items-center justify-center rounded-xl">
-              <HiOutlineClock className="text-green-600 text-2xl" />
-            </div>
-          </div>
-
-          <h3 className="mt-4 font-bold text-black">دسترسی سریع</h3>
-
-          <p className="mt-2 text-sm text-gray-600 leading-loose">
-            در هر زمان و مکان به خدمات و سوابق پزشکی خود دسترسی دارید.
-          </p>
-        </div>
-
-        <div
-          className="
-          bg-white rounded-2xl shadow-md p-5
-          text-center sm:text-right
-          transition hover:shadow-xl hover:-translate-y-1
-        "
-        >
-          <div className="flex justify-center sm:justify-start">
-            <div className="bg-green-100 w-12 h-12 flex items-center justify-center rounded-xl">
-              <HiOutlineUserGroup className="text-green-600 text-2xl" />
-            </div>
-          </div>
-
-          <h3 className="mt-4 font-bold text-black">ارتباط آسان</h3>
-
-          <p className="mt-2 text-sm text-gray-600 leading-loose">
-            ارتباط سریع و ساده با پزشکان و مراکز درمانی.
-          </p>
-        </div>
+        ))}
       </div>
     </section>
   );

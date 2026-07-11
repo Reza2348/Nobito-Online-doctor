@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { FaLaptopCode, FaServer, FaShieldAlt } from "react-icons/fa";
 

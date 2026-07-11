@@ -13,12 +13,12 @@ const Header: H.React.FC = () => {
           {/* LOGO */}
           <H.Link href="/" className="shrink-0">
             <H.Image
-              src="Default.svg"
+              src="/Default.svg"
               alt="logo"
               width={120}
               height={120}
-              className="sm:w-27.5 md:w-32.5 lg:w-37.5"
               priority
+              className="h-auto sm:w-27.5 md:w-32.5 lg:w-37.5"
             />
           </H.Link>
 

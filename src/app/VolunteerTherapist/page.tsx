@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 import { FaUserNurse, FaPhoneAlt, FaClock } from "react-icons/fa";
 

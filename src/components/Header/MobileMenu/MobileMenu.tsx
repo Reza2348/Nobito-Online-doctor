@@ -10,7 +10,8 @@ import MobileMenuContent from "@/components/Header/MobileMenu/MobileMenuContent/
 interface MyUser extends H.User {
   user_metadata?: {
     phone?: string;
-    [key: string]: any;
+    full_name?: string;
+    avatar_url?: string;
   };
 }
 

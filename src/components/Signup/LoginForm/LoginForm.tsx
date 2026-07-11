@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import * as S from "@/Imports/signupImports/signupImports";
-import { supabase } from "@/lib/supabaseClient";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -41,40 +40,43 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
 
   const onSubmit = async (data: LoginFormData) => {
     setIsSubmitting(true);
+
     const identifier = data.identifier.trim();
 
     try {
-      const isEmail = identifier.includes("@");
-      let response;
+      // The identifier is sent to the server and stored there in an
+      // HttpOnly cookie. It's never written to localStorage and never
+      // put in the URL, so it can't be read or tampered with from the
+      // browser.
+      const res = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ identifier }),
+      });
 
-      if (isEmail) {
-        response = await supabase.auth.signInWithOtp({
-          email: identifier.toLowerCase(),
-          options: { shouldCreateUser: true },
-        });
-      } else {
-        response = await supabase.auth.signInWithOtp({
-          phone: identifier,
-          options: { shouldCreateUser: true },
-        });
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.error ?? "خطا در ارسال لینک یا کد تایید");
       }
 
-      if (response.error) throw response.error;
-
-      localStorage.setItem("otp_identifier", identifier);
-
       S.toast.success(
-        isEmail
-          ? "لینک ورود به ایمیل شما ارسال شد. لطفا ایمیل خود را چک کنید."
-          : "کد ورود به شماره شما ارسال شد. لطفا پیامک خود را بررسی کنید.",
+        result.channel === "email"
+          ? "لینک ورود به ایمیل شما ارسال شد. لطفا ایمیل خود را بررسی کنید."
+          : "کد ورود به شماره موبایل شما ارسال شد. لطفا پیامک خود را بررسی کنید.",
       );
 
       reset();
       onSuccess?.();
-      setTimeout(() => router.push("/auth/verify"), 1000);
-    } catch (err: any) {
-      console.error(err);
-      S.toast.error(err.message || "خطا در ارسال لینک/کد تایید");
+
+      setTimeout(() => {
+        router.push("/auth/verify");
+      }, 1000);
+    } catch (err: unknown) {
+      const message =
+        err instanceof Error ? err.message : "خطا در ارسال لینک یا کد تایید";
+
+      S.toast.error(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -93,8 +95,9 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
         dir="ltr"
         className="w-full px-4 py-4 rounded-xl text-right border border-gray-300 bg-white focus:outline-none text-black focus:ring-2 focus:ring-[#347469]"
       />
+
       {errors.identifier && (
-        <p className="text-red-500 text-sm">{errors.identifier.message}</p>
+        <p className="text-sm text-red-500">{errors.identifier.message}</p>
       )}
 
       <button
