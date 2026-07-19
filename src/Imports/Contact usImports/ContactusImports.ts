@@ -14,4 +14,4 @@ export { FiPhoneCall } from "react-icons/fi";
 export { MdOutlineMailOutline } from "react-icons/md";
 export { IoLocationOutline } from "react-icons/io5";
 
-export { default as Socialnetwork } from "@/components/Socialnetwork/page";
+export { default as Socialnetwork } from "@/components/Socialnetwork/Socialnetwork";

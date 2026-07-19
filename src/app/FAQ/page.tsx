@@ -4,7 +4,7 @@ import React, { useState, useRef } from "react";
 import { FaChevronDown } from "react-icons/fa";
 import type { FAQItem } from "@/Types/types";
 import { medicalFAQs } from "@/app/FAQ/faqData";
-import Socialnetwork from "@/components/Socialnetwork/page";
+import Socialnetwork from "@/components/Socialnetwork/Socialnetwork";
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);

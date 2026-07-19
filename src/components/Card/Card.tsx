@@ -1,8 +1,8 @@
 import React from "react";
-import DoctorList from "@/components/DoctorList/page";
-import ConsultantsList from "@/components/ConsultantsList/page";
+import DoctorList from "@/components/DoctorList/DoctorList";
+import ConsultantsList from "@/components/ConsultantsList/ConsultantsList";
 import ServicesSection from "@/components/ServicesSection/ServicesSection";
-import Clinics from "@/components/Clinics/page";
+import Clinics from "@/components/Clinics/Clinics";
 const Page = () => {
   return (
     <div className="my-4">

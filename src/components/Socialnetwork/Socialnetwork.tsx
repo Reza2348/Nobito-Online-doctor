@@ -1,6 +1,5 @@
 import React from "react";
 import * as C from "@/Imports/Contact usImports/ContactusImports";
-import SocialMedia from "@/app/SocialMedia/page";
 
 const Page = () => {
   return (

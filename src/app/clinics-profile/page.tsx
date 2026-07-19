@@ -1,5 +1,3 @@
-"use client";
-
 import { useClinicProfile } from "@/hooks/useClinicProfile";
 import ClinicProfile from "@/components/ClinicsProfile/ClinicsProfile";
 

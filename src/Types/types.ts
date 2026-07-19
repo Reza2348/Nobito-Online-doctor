@@ -116,6 +116,7 @@ export interface MenuItem {
   id: number;
   title: string;
   icon: IconType;
+  href?: string;
 }
 
 export interface PasswordFormData {

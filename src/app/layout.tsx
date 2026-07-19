@@ -7,9 +7,7 @@ import "./globals.css";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import QueryProvider from "@/components/QueryProvider/QueryProvider";
-import { DoctorProvider } from "@/context/DoctorContext/DoctorContext";
-import { ConsultantProvider } from "@/context/ConsultantsContext/ConsultantsContext";
-import { ClinicsProvider } from "@/context/ClinicsContext/ClinicsContext";
+import AppProviders from "@/components/providers/AppProviders";
 
 export const metadata: Metadata = {
   title: "پزشک آنلاین نوبیتو",
@@ -27,15 +25,11 @@ export default function RootLayout({
     <html lang="fa" dir="rtl">
       <body className={`${IRANSansWebLocal.className} antialiased`}>
         <QueryProvider>
-          <ClinicsProvider>
-            <ConsultantProvider>
-              <DoctorProvider>
-                <Header />
-                <main>{children}</main>
-                <Footer />
-              </DoctorProvider>
-            </ConsultantProvider>
-          </ClinicsProvider>
+          <AppProviders>
+            <Header />
+            <main>{children}</main>
+            <Footer />
+          </AppProviders>
         </QueryProvider>
       </body>
     </html>

@@ -24,17 +24,9 @@ import {
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (open: boolean) => void;
-
-  activeItem: number;
-  setActiveItem: (id: number) => void;
 }
 
-const Sidebar = ({
-  sidebarOpen,
-  setSidebarOpen,
-  activeItem,
-  setActiveItem,
-}: SidebarProps) => {
+const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   const [logoutOpen, setLogoutOpen] = useState(false);
 
   const [userData, setUserData] = useState({
@@ -67,12 +59,42 @@ const Sidebar = ({
   }, [sidebarOpen]);
 
   const menuItems: MenuItem[] = [
-    { id: 1, title: "اطلاعات حساب کاربری", icon: HiOutlineUser },
-    { id: 2, title: "تاریخچه نوبت ها", icon: HiOutlineClipboardList },
-    { id: 3, title: "پیغام ها", icon: HiOutlineMail },
-    { id: 4, title: "پرونده پزشکی", icon: HiOutlineDocumentText },
-    { id: 5, title: "بازخوردها", icon: HiOutlineChatAlt2 },
-    { id: 6, title: "رمز عبور", icon: HiOutlineLockClosed },
+    {
+      id: 1,
+      title: "اطلاعات حساب کاربری",
+      icon: HiOutlineUser,
+      href: "/dashboard",
+    },
+    {
+      id: 2,
+      title: "تاریخچه نوبت ها",
+      icon: HiOutlineClipboardList,
+      href: "/dashboard/history",
+    },
+    {
+      id: 3,
+      title: "پیغام ها",
+      icon: HiOutlineMail,
+      href: "/dashboard/messages",
+    },
+    {
+      id: 4,
+      title: "پرونده پزشکی",
+      icon: HiOutlineDocumentText,
+      href: "/dashboard/medical-records",
+    },
+    {
+      id: 5,
+      title: "بازخوردها",
+      icon: HiOutlineChatAlt2,
+      href: "/dashboard/feedback",
+    },
+    {
+      id: 6,
+      title: "رمز عبور",
+      icon: HiOutlineLockClosed,
+      href: "/dashboard/password",
+    },
     { id: 7, title: "خروج از حساب کاربری", icon: HiOutlineLogout },
   ];
 
@@ -82,7 +104,6 @@ const Sidebar = ({
       return;
     }
 
-    setActiveItem(item.id);
     setSidebarOpen(false);
   };
 
@@ -122,11 +143,7 @@ const Sidebar = ({
         </div>
 
         <div className="flex-1 overflow-y-auto px-3">
-          <SidebarMenu
-            items={menuItems}
-            activeItem={activeItem}
-            onItemClick={handleMenuClick}
-          />
+          <SidebarMenu items={menuItems} onItemClick={handleMenuClick} />
         </div>
       </aside>
 

@@ -3,17 +3,15 @@
 import React, { useState } from "react";
 import { AiOutlineWarning } from "react-icons/ai";
 
-import Sidebar from "@/components/Sidebar/page";
-import PublicProfile from "@/app/dashboard/Publicprofile/public-profile";
-import Password from "@/app/dashboard/Password/password";
-import Message from "@/app/dashboard/Message/Message";
-import Historyofturns from "@/app/dashboard/Historyofturns/Historyofturns";
-
+import Sidebar from "@/components/Sidebar/Sidebar";
 import { useUser } from "@/hooks/useUser";
 
-export default function DashboardLayout({ children }: any) {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeItem, setActiveItem] = useState(1);
 
   const { userId, status } = useUser();
 
@@ -33,35 +31,11 @@ export default function DashboardLayout({ children }: any) {
     );
   }
 
-  const renderContent = () => {
-    switch (activeItem) {
-      case 1:
-        return <PublicProfile />;
-      case 2:
-        return <Historyofturns />;
-      case 3:
-        return <Message />;
-      case 4:
-        return <div>پرونده پزشکی</div>;
-      case 5:
-        return <div>بازخوردها</div>;
-      case 6:
-        return <Password />;
-      default:
-        return children;
-    }
-  };
-
   return (
     <div className="flex flex-col md:flex-row min-h-screen">
-      <Sidebar
-        sidebarOpen={sidebarOpen}
-        setSidebarOpen={setSidebarOpen}
-        activeItem={activeItem}
-        setActiveItem={setActiveItem}
-      />
+      <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-      <main className="flex-1 p-4 md:p-8">{renderContent()}</main>
+      <main className="flex-1 p-4 md:p-8">{children}</main>
     </div>
   );
 }
