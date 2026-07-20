@@ -24,4 +24,4 @@ export { default as MobileMenu } from "@/components/Header/MobileMenu/MobileMenu
 export { default as UserMenu } from "@/components/Header/UserMenu/UserMenu";
 export { default as SubHeader } from "@/components/Header/SubHeader/SubHeader";
 
-export { useAuthUser } from "@/hooks/useAuthUser";
+export { useUser } from "@/hooks/useUser";

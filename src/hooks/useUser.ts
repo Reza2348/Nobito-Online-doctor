@@ -1,90 +1,136 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { User } from "@supabase/supabase-js";
+import { supabase } from "@/lib/supabaseClient";
 
-export function useUser(idleTime = 5 * 60 * 1000) {
+const BROWSER_SESSION_FLAG = "nobito_browser_session_active";
+
+type Status = "loading" | "authenticated" | "unauthenticated";
+
+type FormattedUser = {
+  id: string;
+  email: string;
+  username: string;
+};
+
+const formatUser = (user: User): FormattedUser => ({
+  id: user.id,
+  email: user.email ?? "",
+  username:
+    typeof user.user_metadata?.username === "string"
+      ? user.user_metadata.username
+      : (user.email?.split("@")[0] ?? "US"),
+});
+
+export function useUser(idleTime: number = 5 * 60 * 1000) {
   const router = useRouter();
-  const [user, setUser] = useState<{
-    id: string;
-    email: string;
-    username: string;
-  } | null>(null);
-  const [status, setStatus] = useState<
-    "loading" | "authenticated" | "unauthenticated"
-  >("loading");
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
-  const formatUser = (user: User) => ({
-    id: user.id,
-    email: user.email ?? "",
-    username:
-      (user.user_metadata?.username as string) ||
-      user.email?.split("@")[0] ||
-      "US",
-  });
+  const [user, setUser] = useState<FormattedUser | null>(null);
+  const [status, setStatus] = useState<Status>("loading");
 
-  const resetTimer = useCallback(() => {
-    if (timerRef.current) clearTimeout(timerRef.current);
-    if (status === "authenticated") return;
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const initializedRef = useRef(false);
+
+  const clearIdleTimer = useCallback(() => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  }, []);
+
+  const startIdleTimer = useCallback(() => {
+    clearIdleTimer();
 
     timerRef.current = setTimeout(() => {
-      router.push("/auth/signup");
+      router.replace("/auth/signup");
     }, idleTime);
-  }, [status, idleTime, router]);
+  }, [clearIdleTimer, idleTime, router]);
+
+  const updateAuthState = useCallback((session: any) => {
+    if (session?.user) {
+      sessionStorage.setItem(BROWSER_SESSION_FLAG, "1");
+
+      setUser(formatUser(session.user));
+      setStatus("authenticated");
+    } else {
+      sessionStorage.removeItem(BROWSER_SESSION_FLAG);
+
+      setUser(null);
+      setStatus("unauthenticated");
+    }
+  }, []);
+
+  const logout = useCallback(async () => {
+    clearIdleTimer();
+
+    await supabase.auth.signOut();
+
+    sessionStorage.removeItem(BROWSER_SESSION_FLAG);
+
+    setUser(null);
+    setStatus("unauthenticated");
+
+    router.replace("/");
+  }, [router, clearIdleTimer]);
 
   useEffect(() => {
-    let isMounted = true;
+    let mounted = true;
 
-    const loadUser = async () => {
+    const initialize = async () => {
       try {
-        const { data } = await supabase.auth.getSession();
-        if (!isMounted) return;
+        const {
+          data: { session },
+        } = await supabase.auth.getSession();
 
-        if (data.session?.user) {
-          setUser(formatUser(data.session.user));
-          setStatus("authenticated");
-        } else {
-          setUser(null);
-          setStatus("unauthenticated");
-          resetTimer();
+        if (!mounted) return;
+
+        const firstBrowserOpen =
+          !initializedRef.current &&
+          sessionStorage.getItem(BROWSER_SESSION_FLAG) === null;
+
+        initializedRef.current = true;
+
+        if (session && firstBrowserOpen) {
+          await supabase.auth.signOut();
+          return;
         }
+
+        updateAuthState(session);
       } catch (error) {
-        console.error("Error fetching session:", error);
+        console.error(error);
+
+        if (!mounted) return;
+
         setUser(null);
         setStatus("unauthenticated");
-        resetTimer();
       }
     };
 
-    loadUser();
+    initialize();
 
-    const { data: listener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        if (!isMounted) return;
-
-        if (session?.user) {
-          setUser(formatUser(session.user));
-          setStatus("authenticated");
-        } else {
-          setUser(null);
-          setStatus("unauthenticated");
-          resetTimer();
-        }
-      },
-    );
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!mounted) return;
+      updateAuthState(session);
+    });
 
     return () => {
-      isMounted = false;
-      listener.subscription.unsubscribe();
-      if (timerRef.current) clearTimeout(timerRef.current);
+      mounted = false;
+      subscription.unsubscribe();
+      clearIdleTimer();
     };
-  }, [resetTimer]);
+  }, [clearIdleTimer, updateAuthState]);
 
   useEffect(() => {
-    if (status === "authenticated") return;
+    if (status === "loading") return;
+
+    if (status === "authenticated") {
+      clearIdleTimer();
+      return;
+    }
 
     const events = [
       "mousemove",
@@ -92,17 +138,29 @@ export function useUser(idleTime = 5 * 60 * 1000) {
       "keydown",
       "scroll",
       "touchstart",
-    ];
-    const activityHandler = () => resetTimer();
+    ] as const;
 
-    events.forEach((e) => window.addEventListener(e, activityHandler));
-    resetTimer();
+    const handleActivity = () => startIdleTimer();
+
+    events.forEach((event) =>
+      window.addEventListener(event, handleActivity, { passive: true }),
+    );
+
+    startIdleTimer();
 
     return () => {
-      events.forEach((e) => window.removeEventListener(e, activityHandler));
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [status, resetTimer]);
+      events.forEach((event) =>
+        window.removeEventListener(event, handleActivity),
+      );
 
-  return { user, userId: user?.id ?? null, status };
+      clearIdleTimer();
+    };
+  }, [status, startIdleTimer, clearIdleTimer]);
+
+  return {
+    user,
+    userId: user?.id ?? null,
+    status,
+    logout,
+  };
 }

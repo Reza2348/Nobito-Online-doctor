@@ -4,7 +4,7 @@ import * as H from "@/Imports/HeaderImports/HeaderImports";
 
 const Header: H.React.FC = () => {
   const pathname = H.usePathname();
-  const { user, logout } = H.useAuthUser();
+  const { user, logout } = H.useUser();
 
   return (
     <nav className="bg-white w-full relative z-50">

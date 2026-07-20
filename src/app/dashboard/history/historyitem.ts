@@ -1,6 +1,6 @@
-import { AppointmentHistoryItem } from "@/Types/types";
+import { HistoryItem } from "@/Types/types";
 
-export const appointments: AppointmentHistoryItem[] = [
+export const historyList: HistoryItem[] = [
   {
     id: 1,
     type: "نوبت تلفنی",

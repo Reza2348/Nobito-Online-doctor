@@ -179,12 +179,12 @@ export type ClinicFeedbackPayload = {
 
 export type FeedbackOption = string;
 
-export type AppointmentIconType = "phone" | "video" | "doctor";
+export type HistoryIconType = "phone" | "video" | "doctor";
 
-export interface AppointmentHistoryItem {
+export interface HistoryItem {
   id: number;
   type: string;
-  iconType: AppointmentIconType;
+  iconType: HistoryIconType;
   doctorName: string;
   specialty: string;
   avatar: string;
