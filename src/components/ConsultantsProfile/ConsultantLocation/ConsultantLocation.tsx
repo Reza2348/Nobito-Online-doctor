@@ -89,7 +89,7 @@ const ConsultantLocation: React.FC<ConsultantLocationProps> = ({
             rounded-3xl
             border
             border-sky-100
-            bg-gradient-to-br
+            bg-linear-to-br
             from-sky-50
             via-cyan-50
             to-indigo-100

@@ -133,6 +133,7 @@ export interface Consultant {
   satisfaction_rate?: number;
   satisfied_patients?: number;
   address?: string;
+  phone?: string;
 }
 
 // =========================================================
@@ -157,6 +158,7 @@ export type Clinic = {
   specialty: string;
   patients_satisfied: number;
   address: string;
+  phone?: string;
   fields: string[];
   rating: number;
   satisfied_percent: number;
