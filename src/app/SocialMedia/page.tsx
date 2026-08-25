@@ -38,7 +38,7 @@ export default function MedicalSocialMedia() {
   ];
 
   return (
-    <section className="`bg-linear-to-b from-blue-50 to-white py-10 sm:py-14 px-4 my-10">
+    <section className="bg-linear-to-b from-blue-50 to-white py-10 sm:py-14 px-4 my-10">
       <div className="max-w-4xl mx-auto text-center">
         {/* Title */}
         <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">
@@ -51,9 +51,9 @@ export default function MedicalSocialMedia() {
         </p>
 
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
-          {socials.map((item, index) => (
+          {socials.map((item) => (
             <a
-              key={index}
+              key={item.name}
               href={item.link}
               target="_blank"
               rel="noopener noreferrer"
@@ -80,9 +80,9 @@ export default function MedicalSocialMedia() {
       </div>
 
       <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-3 flex justify-around items-center sm:hidden shadow-md">
-        {socials.slice(0, 2).map((item, index) => (
+        {socials.slice(0, 2).map((item) => (
           <a
-            key={index}
+            key={item.name}
             href={item.link}
             target="_blank"
             className="flex flex-col items-center text-xs text-gray-600"

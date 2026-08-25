@@ -1,77 +1,191 @@
+"use client";
+
 import React from "react";
 
-const Survey = () => {
-  const overallPercent = 70;
+interface SurveyStat {
+  label: string;
+  value: number;
+}
 
-  const stats = [
-    { label: "زمان انتظار در مطب", value: 60 },
-    { label: "تشخیص درست", value: 80 },
-    { label: "امکانات رفاهی", value: 90 },
-    { label: "نظافت مطب", value: 75 },
-    { label: "رفتار مناسب", value: 85 },
-  ];
+interface SurveyProps {
+  /** به چی داریم امتیاز می‌دیم؟ مثلاً "پزشک" یا "کلینیک" */
+  entityLabel?: string;
+  overallPercent?: number;
+  stats?: SurveyStat[];
+}
 
-  const size = 100;
-  const strokeWidth = 10;
-  const radius = (size - strokeWidth) / 2;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (overallPercent / 100) * circumference;
+const defaultStats: SurveyStat[] = [
+  { label: "زمان انتظار در مطب", value: 60 },
+  { label: "تشخیص درست", value: 80 },
+  { label: "امکانات رفاهی", value: 90 },
+  { label: "نظافت مطب", value: 75 },
+  { label: "رفتار مناسب", value: 85 },
+];
 
+const Survey: React.FC<SurveyProps> = ({
+  entityLabel = "پزشک",
+  overallPercent = 70,
+  stats = defaultStats,
+}) => {
   return (
-    <div
-      className="max-w-xl mx-auto bg-[#fdfdfd] rounded-3xl p-5 md:p-8 border border-gray-200 shadow-sm font-[tahoma]"
+    <section
       dir="rtl"
+      className="
+      mt-10
+      rounded-4xl
+      border
+      border-gray-100
+      bg-white
+      p-6
+      md:p-8
+      shadow-[0_15px_40px_rgba(0,0,0,.06)]
+      "
     >
-      <p className="text-gray-500 text-sm leading-7 mb-6 text-center">
-        از میان ۱۴۸۶۵ کاربر که تحت درمان دکتر بهرام میرزایی قرار گرفته اند ،
-        ۱۳۲۵ کاربر این پزشک را پیشنهاد می کنند.
-      </p>
-      <div className="flex flex-col md:flex-row gap-6 items-center">
-        <div className="order-1 md:order-2 flex justify-center shrink-0">
-          <svg width={size} height={size}>
+      {/* HEADER */}
+
+      <div className="mb-8 text-right">
+        <h2
+          className="
+          text-xl
+          font-black
+          text-gray-800
+          "
+        >
+          رضایت بیماران
+        </h2>
+
+        <p
+          className="
+          mt-2
+          text-sm
+          text-gray-400
+          "
+        >
+          بررسی تجربه واقعی مراجعه‌کنندگان
+        </p>
+      </div>
+
+      <div
+        className="
+        flex
+        flex-col
+        md:flex-row
+        items-center
+        gap-10
+        "
+      >
+        {/* SCORE */}
+
+        <div
+          className="
+          relative
+          flex
+          h-36
+          w-36
+          shrink-0
+          items-center
+          justify-center
+          "
+        >
+          <svg width="140" height="140" className="-rotate-90">
             <circle
-              stroke="#e5e7eb"
-              fill="transparent"
-              strokeWidth={strokeWidth}
-              r={radius}
-              cx={size / 2}
-              cy={size / 2}
+              cx="70"
+              cy="70"
+              r="58"
+              stroke="#f1f5f9"
+              strokeWidth="12"
+              fill="none"
             />
+
             <circle
-              stroke="#3d7b75"
-              fill="transparent"
-              strokeWidth={strokeWidth}
+              cx="70"
+              cy="70"
+              r="58"
+              stroke="#14b8a6"
+              strokeWidth="12"
               strokeLinecap="round"
-              strokeDasharray={circumference}
-              strokeDashoffset={offset}
-              r={radius}
-              cx={size / 2}
-              cy={size / 2}
-              style={{
-                transform: "rotate(-90deg)",
-                transformOrigin: "50% 50%",
-              }}
+              fill="none"
+              strokeDasharray="364"
+              strokeDashoffset={364 - (364 * overallPercent) / 100}
             />
           </svg>
 
-          <div className="absolute flex items-center justify-center w-25 h-25">
-            <span className="text-2xl font-bold text-gray-700">
-              {overallPercent}%
+          <div
+            className="
+            absolute
+            flex
+            flex-col
+            items-center
+            "
+          >
+            <span
+              className="
+              text-3xl
+              font-black
+              text-gray-800
+              "
+            >
+              {overallPercent}٪
+            </span>
+
+            <span
+              className="
+              text-xs
+              text-gray-400
+              "
+            >
+              رضایت
             </span>
           </div>
         </div>
 
-        <div className="order-2 md:order-1 flex-1 flex flex-col gap-4 w-full">
-          {stats.map((item, index) => (
-            <div key={index} className="flex items-center gap-3">
-              <span className="text-xs text-gray-500 w-24 wrap-break-word">
-                {item.label}
-              </span>
+        {/* PROGRESS */}
 
-              <div className="flex-1 h-2 bg-gray-100 rounded-full overflow-hidden">
+        <div
+          className="
+          flex-1
+          w-full
+          space-y-5
+          "
+        >
+          {stats.map((item) => (
+            <div key={item.label}>
+              <div
+                className="
+                  mb-2
+                  flex
+                  justify-between
+                  text-xs
+                  font-bold
+                  text-gray-600
+                  "
+              >
+                <span>{item.label}</span>
+
+                <span className="text-teal-600">{item.value}٪</span>
+              </div>
+
+              <div
+                className="
+                  h-2
+                  overflow-hidden
+                  rounded-full
+                  bg-gray-100
+                  "
+              >
                 <div
-                  className="h-full bg-[#3d7b75] rounded-full"
-                  style={{ width: `${item.value}%` }}
+                  className="
+                    h-full
+                    rounded-full
+                    bg-gradient-to-r
+                    from-teal-500
+                    to-emerald-400
+                    transition-all
+                    duration-700
+                    "
+                  style={{
+                    width: `${item.value}%`,
+                  }}
                 />
               </div>
             </div>
@@ -79,25 +193,55 @@ const Survey = () => {
         </div>
       </div>
 
-      <div className="flex flex-col md:flex-row items-center justify-between gap-3 mt-6 pt-4 border-t border-gray-200">
-        <p className="text-gray-600 font-medium text-center md:text-right">
-          {overallPercent} درصد کاربران این پزشک را پیشنهاد می‌کنند
+      {/* FOOTER */}
+
+      <div
+        className="
+        mt-8
+        flex
+        flex-col
+        md:flex-row
+        items-center
+        justify-between
+        gap-4
+        border-t
+        border-gray-100
+        pt-5
+        "
+      >
+        <p
+          className="
+          text-sm
+          font-bold
+          text-gray-600
+          "
+        >
+          {overallPercent}٪ کاربران این {entityLabel} را پیشنهاد می‌کنند
         </p>
 
-        <div className="flex gap-1">
-          {[1, 2, 3, 4, 5].map((s) => (
+        <div
+          className="
+          flex
+          gap-1
+          rounded-full
+          bg-orange-50
+          px-4
+          py-2
+          "
+        >
+          {[1, 2, 3, 4, 5].map((star) => (
             <span
-              key={s}
-              className={`text-xl ${
-                s === 5 ? "text-gray-300" : "text-orange-400"
-              }`}
+              key={star}
+              className={
+                star <= 4 ? "text-orange-400 text-lg" : "text-gray-300 text-lg"
+              }
             >
               ★
             </span>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 };
 

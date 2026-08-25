@@ -3,71 +3,310 @@
 import React from "react";
 import { Doctor } from "@/Types/types";
 import { FaMapMarkerAlt, FaPhone } from "react-icons/fa";
+import { FiNavigation } from "react-icons/fi";
 
 interface Props {
   doctor: Doctor;
 }
 
 const DoctorLocation: React.FC<Props> = ({ doctor }) => (
-  <div className="border-t border-gray-200 pt-8 mt-8">
+  <div
+    className="
+    mt-10
+    border-t
+    border-gray-100
+    pt-10
+    "
+  >
     <div
       dir="rtl"
-      className="bg-white rounded-3xl p-6 shadow-sm border border-gray-100"
+      className="
+      overflow-hidden
+      rounded-4xl
+      border
+      border-gray-100
+      bg-white
+      p-6
+      sm:p-8
+      shadow-[0_12px_35px_rgba(0,0,0,.05)]
+      "
     >
-      <h2 className="text-lg font-bold text-slate-800 mb-6">
-        موقعیت مکانی مطب
-      </h2>
+      {/* TITLE */}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-        {/* map */}
-        <div className="order-1 md:order-1">
-          <div className="bg-slate-50 rounded-2xl h-52 flex items-center justify-center relative overflow-hidden border border-gray-100 group">
-            <div className="absolute inset-0 opacity-20 pointer-events-none">
-              <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/pinstripe.png')]"></div>
-            </div>
-
-            <div className="relative z-10 flex flex-col items-center">
-              <FaMapMarkerAlt className="text-teal-500 w-10 h-10 drop-shadow-lg animate-bounce" />
-              <div className="w-4 h-1.5 bg-black/10 rounded-[100%] blur-[2px] mt-1"></div>
-            </div>
-
-            <div className="absolute bottom-4 inset-x-4">
-              <button className="w-full bg-white/90 backdrop-blur-sm text-slate-700 text-[10px] font-bold py-2 rounded-xl shadow-sm border border-gray-100 hover:bg-teal-500 hover:text-white transition-all">
-                مشاهده روی نقشه بزرگ
-              </button>
-            </div>
-          </div>
+      <div
+        className="
+        mb-7
+        flex
+        items-center
+        gap-3
+        "
+      >
+        <div
+          className="
+          flex
+          h-12
+          w-12
+          items-center
+          justify-center
+          rounded-2xl
+          bg-emerald-50
+          text-emerald-600
+          "
+        >
+          <FaMapMarkerAlt size={22} />
         </div>
 
-        {/* address & phone */}
-        <div className="space-y-6 order-2 md:order-2">
-          <div className="flex gap-4">
-            <div className="bg-teal-50 p-3 rounded-xl h-fit">
-              <FaMapMarkerAlt className="text-teal-600 w-5 h-5" />
+        <div>
+          <h2
+            className="
+            text-xl
+            font-black
+            text-gray-900
+            "
+          >
+            موقعیت مکانی مطب
+          </h2>
+
+          <p
+            className="
+            mt-1
+            text-xs
+            text-gray-400
+            "
+          >
+            آدرس و راه‌های ارتباط با پزشک
+          </p>
+        </div>
+      </div>
+
+      <div
+        className="
+        grid
+        grid-cols-1
+        gap-6
+        lg:grid-cols-2
+        "
+      >
+        {/* MAP */}
+
+        <div
+          className="
+          group
+          relative
+          flex
+          h-60
+          items-center
+          justify-center
+          overflow-hidden
+          rounded-3xl
+          border
+          border-gray-100
+          bg-gradient-to-br
+          from-emerald-50
+          to-teal-100
+          "
+        >
+          <div
+            className="
+            absolute
+            inset-0
+            opacity-30
+            "
+          >
+            <div
+              className="
+              absolute
+              left-10
+              top-10
+              h-20
+              w-20
+              rounded-full
+              bg-white
+              blur-2xl
+              "
+            />
+          </div>
+
+          <div
+            className="
+            relative
+            flex
+            flex-col
+            items-center
+            "
+          >
+            <div
+              className="
+              flex
+              h-16
+              w-16
+              items-center
+              justify-center
+              rounded-full
+              bg-white
+              text-emerald-500
+              shadow-xl
+              transition-transform
+              duration-500
+              group-hover:-translate-y-2
+              "
+            >
+              <FaMapMarkerAlt size={32} />
+            </div>
+
+            <div
+              className="
+              mt-2
+              h-2
+              w-8
+              rounded-full
+              bg-black/10
+              blur-sm
+              "
+            />
+          </div>
+
+          <button
+            className="
+            absolute
+            bottom-5
+            left-5
+            right-5
+            flex
+            items-center
+            justify-center
+            gap-2
+            rounded-2xl
+            bg-white/90
+            py-3
+            text-xs
+            font-bold
+            text-gray-700
+            shadow
+            backdrop-blur
+            transition-all
+            hover:bg-emerald-600
+            hover:text-white
+            "
+          >
+            <FiNavigation />
+            مشاهده روی نقشه
+          </button>
+        </div>
+
+        {/* INFO */}
+
+        <div
+          className="
+          flex
+          flex-col
+          gap-5
+          "
+        >
+          {/* ADDRESS */}
+
+          <div
+            className="
+            flex
+            gap-4
+            rounded-3xl
+            border
+            border-gray-100
+            bg-gray-50/50
+            p-5
+            "
+          >
+            <div
+              className="
+              flex
+              h-12
+              w-12
+              shrink-0
+              items-center
+              justify-center
+              rounded-2xl
+              bg-emerald-50
+              text-emerald-600
+              "
+            >
+              <FaMapMarkerAlt />
             </div>
 
             <div>
-              <p className="font-bold text-sm text-slate-800">آدرس :</p>
+              <h3
+                className="
+                text-sm
+                font-black
+                text-gray-800
+                "
+              >
+                آدرس مطب
+              </h3>
 
-              <p className="text-gray-500 text-xs mt-2 leading-7 italic">
+              <p
+                className="
+                mt-2
+                text-xs
+                leading-7
+                text-gray-500
+                "
+              >
                 {doctor.address}
               </p>
             </div>
           </div>
 
-          <div className="flex gap-4 border-t border-gray-50 pt-6">
-            <div className="bg-teal-50 p-3 rounded-xl h-fit">
-              <FaPhone className="text-teal-600 w-5 h-5" />
+          {/* PHONE */}
+
+          <div
+            className="
+            flex
+            gap-4
+            rounded-3xl
+            border
+            border-gray-100
+            bg-gray-50/50
+            p-5
+            "
+          >
+            <div
+              className="
+              flex
+              h-12
+              w-12
+              shrink-0
+              items-center
+              justify-center
+              rounded-2xl
+              bg-teal-50
+              text-teal-600
+              "
+            >
+              <FaPhone />
             </div>
 
             <div>
-              <p className="font-bold text-sm text-slate-800">تلفن :</p>
+              <h3
+                className="
+                text-sm
+                font-black
+                text-gray-800
+                "
+              >
+                شماره تماس
+              </h3>
 
               <p
-                className="text-gray-500 text-sm mt-2 font-medium tracking-widest"
                 dir="ltr"
+                className="
+                mt-2
+                text-sm
+                font-bold
+                tracking-wider
+                text-gray-500
+                "
               >
-                ۰۲۱-۸۳۹۳۷۸۴۸ | ۰۲۱-۹۳۸۹۸۳۷
+                ۰۲۱-۸۳۹۳۷۸۴۸
               </p>
             </div>
           </div>

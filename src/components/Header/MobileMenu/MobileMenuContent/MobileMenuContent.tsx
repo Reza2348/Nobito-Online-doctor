@@ -5,7 +5,7 @@ import * as H from "@/Imports/HeaderImports/HeaderImports";
 interface MyUser extends H.User {
   user_metadata?: {
     phone?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
 }
 
@@ -17,11 +17,67 @@ type Props = {
 };
 
 const DEFAULT_NAV_LINKS: H.NavLink[] = [
-  { href: "/Online consultation", label: "مشاوره آنلاین" },
-  { href: "/HealthMagazine", label: "مجله سلامت" },
-  { href: "/Charity", label: "نیکوکاری" },
-  { href: "/Notifications", label: "اعلان ها" },
+  {
+    href: "/Online consultation",
+    label: "مشاوره آنلاین",
+  },
+  {
+    href: "/HealthMagazine",
+    label: "مجله سلامت",
+  },
+  {
+    href: "/Charity",
+    label: "نیکوکاری",
+  },
+  {
+    href: "/Notifications",
+    label: "اعلان‌ها",
+  },
 ];
+
+const SERVICE_LINKS = [
+  {
+    href: "/Services/dentistry",
+    label: "دندان‌پزشکی",
+  },
+  {
+    href: "/Services/beauty",
+    label: "زیبایی",
+  },
+  {
+    href: "/Services/treatment",
+    label: "درمانی",
+  },
+] as const;
+
+const FOOTER_LINKS = [
+  {
+    href: "/aboutus",
+    label: "درباره ما",
+  },
+  {
+    href: "/Contactus",
+    label: "تماس با ما",
+  },
+  {
+    href: "/FAQ",
+    label: "سوال‌های متداول",
+  },
+] as const;
+
+const baseItemClasses = `
+  flex min-h-12 w-full items-center
+  rounded-xl px-3 py-3
+  text-right text-sm font-medium
+  text-[#757575]
+  transition-colors duration-200
+  hover:bg-emerald-50 hover:text-emerald-700
+  active:bg-emerald-100
+  focus-visible:outline-none
+  focus-visible:ring-2
+  focus-visible:ring-emerald-500
+  motion-reduce:transition-none
+`;
 
 const MobileMenuContent: H.React.FC<Props> = ({
   user,
@@ -34,162 +90,442 @@ const MobileMenuContent: H.React.FC<Props> = ({
   const [openServices, setOpenServices] = H.useState(false);
   const [openAuth, setOpenAuth] = H.useState(false);
 
+  const servicesId = H.React.useId();
+  const authId = H.React.useId();
+
   const handleNavigate = (href: string) => {
-    onClose();
     setOpenServices(false);
     setOpenAuth(false);
+    onClose();
+
     router.push(href);
   };
 
+  const handleServicesToggle = () => {
+    setOpenServices((previous) => !previous);
+    setOpenAuth(false);
+  };
+
+  const handleAuthToggle = () => {
+    setOpenAuth((previous) => !previous);
+    setOpenServices(false);
+  };
+
   const handleLogout = () => {
+    setOpenServices(false);
     setOpenAuth(false);
     onClose();
+
     logout();
   };
 
   return (
-    <>
-      {/* HEADER */}
-      <div className="flex items-center justify-between px-4 h-16 border-b">
-        <H.Link href="/">
-          <img src="Default.svg" alt="logo" width={150} height={150} />
+    <div
+      dir="rtl"
+      className="
+        flex min-h-full flex-col
+        bg-white text-slate-900
+      "
+    >
+      {/* =====================================================
+          HEADER
+      ====================================================== */}
+
+      <header
+        className="
+          flex h-16 shrink-0
+          items-center justify-between
+          border-b border-slate-100
+          bg-white px-4
+        "
+      >
+        {/* LOGO */}
+
+        <H.Link
+          href="/"
+          onClick={onClose}
+          aria-label="صفحه اصلی نوبیتو"
+          className="
+            inline-flex items-center
+            rounded-lg
+            focus-visible:outline-none
+            focus-visible:ring-2
+            focus-visible:ring-emerald-500
+          "
+        >
+          <img
+            src="/Default.svg"
+            alt="نوبیتو"
+            width={120}
+            height={48}
+            loading="eager"
+            decoding="async"
+            className="
+              h-auto w-[100px]
+              object-contain
+              sm:w-[120px]
+            "
+          />
         </H.Link>
 
-        <button onClick={onClose}>
-          <H.HiX size={26} className="text-black" />
-        </button>
-      </div>
+        {/* CLOSE */}
 
-      {/* NAVIGATION */}
-      <nav className="flex flex-col gap-2 p-4">
-        {/* 1. نوبت دهی مطب */}
         <button
-          onClick={() => handleNavigate("/")}
-          className="px-3 py-3 rounded-lg text-[#757575] hover:bg-emerald-50 text-right"
+          type="button"
+          onClick={onClose}
+          aria-label="بستن منوی موبایل"
+          className="
+            flex h-10 w-10
+            items-center justify-center
+            rounded-xl
+            text-slate-700
+            transition-colors duration-200
+            hover:bg-slate-100
+            hover:text-slate-900
+            active:bg-slate-200
+            focus-visible:outline-none
+            focus-visible:ring-2
+            focus-visible:ring-emerald-500
+            motion-reduce:transition-none
+          "
         >
-          نوبت دهی مطب
+          <H.HiX size={24} aria-hidden="true" />
+        </button>
+      </header>
+
+      {/* =====================================================
+          MAIN NAVIGATION
+      ====================================================== */}
+
+      <nav
+        aria-label="منوی اصلی"
+        className="
+          flex flex-1
+          flex-col
+          px-4 py-4
+        "
+      >
+        {/* =================================================
+            APPOINTMENT
+        ================================================== */}
+
+        <button
+          type="button"
+          onClick={() => handleNavigate("/")}
+          className={baseItemClasses}
+        >
+          <span>نوبت‌دهی مطب</span>
         </button>
 
-        {/* 2. خدمات (Dropdown) */}
-        <div>
+        {/* =================================================
+            SERVICES
+        ================================================== */}
+
+        <div className="mt-1">
           <button
-            onClick={() => setOpenServices((p) => !p)}
-            className="w-full flex items-center justify-between px-3 py-3 rounded-lg text-[#757575] hover:bg-emerald-50"
+            type="button"
+            onClick={handleServicesToggle}
+            aria-expanded={openServices}
+            aria-controls={servicesId}
+            className={`
+              ${baseItemClasses}
+              justify-between
+            `}
           >
-            خدمات
+            <span>خدمات</span>
+
             <H.FaChevronDown
-              className={`transition-transform ${
-                openServices ? "rotate-180" : ""
-              }`}
+              aria-hidden="true"
+              className={`
+                shrink-0
+                transition-transform duration-200
+                motion-reduce:transition-none
+                ${openServices ? "rotate-180" : "rotate-0"}
+              `}
             />
           </button>
 
-          {openServices && (
-            <div className="mt-2 flex flex-col bg-gray-50 rounded-lg overflow-hidden text-[#757575]">
-              <button
-                onClick={() => handleNavigate("/Services/dentistry")}
-                className="px-4 py-3 text-right hover:bg-gray-100"
-              >
-                دندان‌پزشکی
-              </button>
+          {/* SERVICES CONTENT */}
 
-              <button
-                onClick={() => handleNavigate("/Services/beauty")}
-                className="px-4 py-3 text-right hover:bg-gray-100"
+          <div
+            id={servicesId}
+            className={`
+              grid
+              transition-[grid-template-rows,opacity]
+              duration-200
+              ease-out
+              motion-reduce:transition-none
+              ${
+                openServices
+                  ? "grid-rows-[1fr] opacity-100"
+                  : "grid-rows-[0fr] opacity-0"
+              }
+            `}
+          >
+            <div className="min-h-0 overflow-hidden">
+              <div
+                className="
+                  mt-1
+                  overflow-hidden
+                  rounded-xl
+                  border border-slate-100
+                  bg-slate-50/80
+                  p-1
+                "
               >
-                زیبایی
-              </button>
-
-              <button
-                onClick={() => handleNavigate("/Services/treatment")}
-                className="px-4 py-3 text-right hover:bg-gray-100"
-              >
-                درمانی
-              </button>
+                {SERVICE_LINKS.map((service) => (
+                  <button
+                    key={service.href}
+                    type="button"
+                    onClick={() => handleNavigate(service.href)}
+                    className="
+                      flex min-h-11 w-full
+                      items-center
+                      rounded-lg
+                      px-3 py-2.5
+                      text-right text-sm
+                      text-slate-600
+                      transition-colors duration-200
+                      hover:bg-white
+                      hover:text-emerald-700
+                      focus-visible:outline-none
+                      focus-visible:ring-2
+                      focus-visible:ring-inset
+                      focus-visible:ring-emerald-500
+                      motion-reduce:transition-none
+                    "
+                  >
+                    {service.label}
+                  </button>
+                ))}
+              </div>
             </div>
-          )}
+          </div>
         </div>
 
-        {/* OTHER LINKS */}
-        {NAV_LINKS.map((link) => (
-          <button
-            key={link.href}
-            onClick={() => handleNavigate(link.href)}
-            className="px-3 py-3 rounded-lg text-[#757575] hover:bg-emerald-50 text-right"
-          >
-            {link.label}
-          </button>
-        ))}
+        {/* =================================================
+            OTHER NAVIGATION LINKS
+        ================================================== */}
+
+        <div className="mt-1 flex flex-col">
+          {NAV_LINKS.map((link) => (
+            <button
+              key={link.href}
+              type="button"
+              onClick={() => handleNavigate(link.href)}
+              className={baseItemClasses}
+            >
+              {link.label}
+            </button>
+          ))}
+        </div>
       </nav>
 
-      {/* AUTH SECTION */}
-      <div className="p-4 border-t">
+      {/* =====================================================
+          ACCOUNT
+      ====================================================== */}
+
+      <section
+        aria-label="حساب کاربری"
+        className="
+          shrink-0
+          border-t border-slate-100
+          px-4 py-4
+        "
+      >
         {!user ? (
+          /* =================================================
+             SIGN IN / SIGN UP
+          ================================================== */
+
           <button
+            type="button"
             onClick={() => handleNavigate("/auth/signup")}
-            className="w-full text-center bg-emerald-600 text-white py-3 rounded-xl"
+            className="
+              flex min-h-12 w-full
+              items-center justify-center
+              rounded-xl
+              bg-emerald-600
+              px-4 py-3
+              text-sm font-bold
+              text-white
+              shadow-sm
+              transition-colors duration-200
+              hover:bg-emerald-700
+              active:bg-emerald-800
+              focus-visible:outline-none
+              focus-visible:ring-2
+              focus-visible:ring-emerald-500
+              focus-visible:ring-offset-2
+              motion-reduce:transition-none
+            "
           >
             ورود / ثبت‌نام
           </button>
         ) : (
+          /* =================================================
+             AUTHENTICATED USER
+          ================================================== */
+
           <div>
             <button
-              onClick={() => setOpenAuth((p) => !p)}
-              className="w-full flex items-center justify-center gap-2 bg-emerald-600 text-white py-3 rounded-xl"
+              type="button"
+              onClick={handleAuthToggle}
+              aria-expanded={openAuth}
+              aria-controls={authId}
+              className="
+                flex min-h-12 w-full
+                items-center justify-center
+                gap-2
+                rounded-xl
+                bg-emerald-600
+                px-4 py-3
+                text-sm font-bold
+                text-white
+                shadow-sm
+                transition-colors duration-200
+                hover:bg-emerald-700
+                active:bg-emerald-800
+                focus-visible:outline-none
+                focus-visible:ring-2
+                focus-visible:ring-emerald-500
+                focus-visible:ring-offset-2
+                motion-reduce:transition-none
+              "
             >
-              داشبورد
+              <span>داشبورد</span>
+
               <H.FaChevronDown
-                className={`transition-transform ${
-                  openAuth ? "rotate-180" : ""
-                }`}
+                aria-hidden="true"
+                className={`
+                  transition-transform duration-200
+                  motion-reduce:transition-none
+                  ${openAuth ? "rotate-180" : "rotate-0"}
+                `}
               />
             </button>
 
-            {openAuth && (
-              <div className="mt-2 bg-white shadow-lg rounded-xl border overflow-hidden">
-                <button
-                  onClick={() => handleNavigate("/dashboard")}
-                  className="w-full py-3 hover:bg-gray-50 text-black"
-                >
-                  ورود به داشبورد
-                </button>
+            {/* AUTH MENU */}
 
-                <button
-                  onClick={handleLogout}
-                  className="w-full py-3 text-red-600 hover:bg-red-50"
+            <div
+              id={authId}
+              className={`
+                grid
+                transition-[grid-template-rows,opacity]
+                duration-200
+                ease-out
+                motion-reduce:transition-none
+                ${
+                  openAuth
+                    ? "mt-2 grid-rows-[1fr] opacity-100"
+                    : "grid-rows-[0fr] opacity-0"
+                }
+              `}
+            >
+              <div className="min-h-0 overflow-hidden">
+                <div
+                  className="
+                    overflow-hidden
+                    rounded-xl
+                    border border-slate-200
+                    bg-white
+                    shadow-sm
+                  "
                 >
-                  خروج از حساب
-                </button>
+                  <button
+                    type="button"
+                    onClick={() => handleNavigate("/dashboard")}
+                    className="
+                      flex min-h-12 w-full
+                      items-center
+                      px-4 py-3
+                      text-right text-sm
+                      font-medium
+                      text-slate-700
+                      transition-colors duration-200
+                      hover:bg-slate-50
+                      hover:text-emerald-700
+                      focus-visible:outline-none
+                      focus-visible:ring-2
+                      focus-visible:ring-inset
+                      focus-visible:ring-emerald-500
+                      motion-reduce:transition-none
+                    "
+                  >
+                    ورود به داشبورد
+                  </button>
+
+                  <div aria-hidden="true" className="h-px bg-slate-100" />
+
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="
+                      flex min-h-12 w-full
+                      items-center
+                      px-4 py-3
+                      text-right text-sm
+                      font-medium
+                      text-red-600
+                      transition-colors duration-200
+                      hover:bg-red-50
+                      hover:text-red-700
+                      focus-visible:outline-none
+                      focus-visible:ring-2
+                      focus-visible:ring-inset
+                      focus-visible:ring-red-500
+                      motion-reduce:transition-none
+                    "
+                  >
+                    خروج از حساب
+                  </button>
+                </div>
               </div>
-            )}
+            </div>
           </div>
         )}
 
-        {/* FOOTER LINKS */}
-        <div className="mt-6 flex flex-col gap-3 text-[#757575] text-sm font-medium items-end">
-          <button
-            onClick={() => handleNavigate("/aboutus")}
-            className="text-right w-full"
-          >
-            درباره ما
-          </button>
+        {/* =================================================
+            FOOTER LINKS
+        ================================================== */}
 
-          <button
-            onClick={() => handleNavigate("/Contactus")}
-            className="text-right w-full"
-          >
-            تماس با ما
-          </button>
-
-          <button
-            onClick={() => handleNavigate("/FAQ")}
-            className="text-right w-full"
-          >
-            سوال های متداول
-          </button>
+        <div
+          className="
+            mt-5
+            flex flex-col
+            gap-1
+            border-t border-slate-100
+            pt-4
+          "
+        >
+          {FOOTER_LINKS.map((link) => (
+            <button
+              key={link.href}
+              type="button"
+              onClick={() => handleNavigate(link.href)}
+              className="
+                flex min-h-10 w-full
+                items-center
+                rounded-lg
+                px-2
+                text-right text-xs
+                font-medium
+                text-slate-500
+                transition-colors duration-200
+                hover:bg-slate-50
+                hover:text-emerald-700
+                focus-visible:outline-none
+                focus-visible:ring-2
+                focus-visible:ring-emerald-500
+                motion-reduce:transition-none
+              "
+            >
+              {link.label}
+            </button>
+          ))}
         </div>
-      </div>
-    </>
+      </section>
+    </div>
   );
 };
 

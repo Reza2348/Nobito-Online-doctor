@@ -1,6 +1,9 @@
-import React from "react";
-import { IconType } from "react-icons";
-import { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction } from "react";
+import type { IconType } from "react-icons";
+
+// =========================================================
+// AUTH / USER
+// =========================================================
 
 export interface User {
   id: string;
@@ -8,10 +11,26 @@ export interface User {
   email: string;
 }
 
+export type Role = "admin" | "consultant" | "content";
+
+export interface Account {
+  username: string;
+  passwordHash: string;
+  path: string;
+}
+
+// =========================================================
+// NAVIGATION
+// =========================================================
+
 export interface NavLink {
   href: string;
   label: string;
 }
+
+// =========================================================
+// FOOTER
+// =========================================================
 
 export interface FooterLink {
   name: string;
@@ -24,6 +43,10 @@ export interface FooterSection {
   title: string;
   links: FooterLink[];
 }
+
+// =========================================================
+// AUTH FORMS
+// =========================================================
 
 export interface SignUpFormData {
   firstName: string;
@@ -46,10 +69,18 @@ export type FormData = {
   state: string;
 };
 
+// =========================================================
+// FAQ
+// =========================================================
+
 export interface FAQItem {
   question: string;
   answer: string;
 }
+
+// =========================================================
+// SEARCH
+// =========================================================
 
 export interface SearchBoxProps {
   search: string;
@@ -57,6 +88,10 @@ export interface SearchBoxProps {
   city: string;
   setCity: Dispatch<SetStateAction<string>>;
 }
+
+// =========================================================
+// DOCTOR
+// =========================================================
 
 export interface Doctor {
   id: number;
@@ -72,12 +107,20 @@ export interface Doctor {
   slug: string;
 }
 
+// =========================================================
+// SERVICE
+// =========================================================
+
 export interface Service {
   name: string;
   description: string;
   icon: React.ReactNode;
   color: string;
 }
+
+// =========================================================
+// CONSULTANT
+// =========================================================
 
 export interface Consultant {
   id: number;
@@ -92,12 +135,20 @@ export interface Consultant {
   address?: string;
 }
 
+// =========================================================
+// OTP
+// =========================================================
+
 export interface OtpInputProps {
   otp: string[];
   setOtp: (otp: string[]) => void;
   inputRefs: React.MutableRefObject<(HTMLInputElement | null)[]>;
   isSubmitting: boolean;
 }
+
+// =========================================================
+// CLINIC
+// =========================================================
 
 export type Clinic = {
   id: number;
@@ -112,6 +163,10 @@ export type Clinic = {
   bio?: string;
 };
 
+// =========================================================
+// MENU
+// =========================================================
+
 export interface MenuItem {
   id: number;
   title: string;
@@ -119,10 +174,18 @@ export interface MenuItem {
   href?: string;
 }
 
+// =========================================================
+// PASSWORD
+// =========================================================
+
 export interface PasswordFormData {
   password?: string;
   confirmPassword?: string;
 }
+
+// =========================================================
+// COMMENTS
+// =========================================================
 
 export interface Comment {
   id: string;
@@ -133,6 +196,10 @@ export interface Comment {
   rating: number;
 }
 
+// =========================================================
+// APPOINTMENT
+// =========================================================
+
 export interface Appointment {
   id: number;
   doctor: string;
@@ -141,15 +208,23 @@ export interface Appointment {
   time: string;
 }
 
+// =========================================================
+// SUPABASE USER
+// =========================================================
+
 export type SupabaseUser = {
   id: string;
   email?: string;
   phone?: string;
   user_metadata?: {
     phone?: string;
-    [key: string]: any;
+    [key: string]: unknown;
   };
 };
+
+// =========================================================
+// FEEDBACK
+// =========================================================
 
 export type FeedbackTab = "positive" | "negative";
 
@@ -179,6 +254,10 @@ export type ClinicFeedbackPayload = {
 
 export type FeedbackOption = string;
 
+// =========================================================
+// HISTORY
+// =========================================================
+
 export type HistoryIconType = "phone" | "video" | "doctor";
 
 export interface HistoryItem {
@@ -191,6 +270,10 @@ export interface HistoryItem {
   note: string;
   date: string;
 }
+
+// =========================================================
+// ARTICLES
+// =========================================================
 
 export type Article = {
   id: number;
@@ -212,3 +295,133 @@ export type PopularArticle = {
   display_order: number;
   published?: boolean;
 };
+
+// =========================================================
+// ADMIN HEALTHCARE
+// =========================================================
+
+export interface AdminDoctor {
+  id: string;
+  name: string;
+  photo_url: string;
+  role: "پزشک";
+  specialty: string;
+  fields: string;
+  phone: string;
+  address: string;
+  city?: string | null;
+  medical_license_number?: string | null;
+  rating?: number | string | null;
+  patients_satisfied?: number | null;
+  satisfied_percent?: number | string | null;
+}
+
+export interface AdminConsultant {
+  id: string;
+  name: string;
+  photo_url: string;
+  role: "مشاور";
+  specialty: string;
+  fields: string;
+  phone: string;
+  address: string;
+}
+
+export interface AdminClinic {
+  id: string;
+  name: string;
+  photo_url?: string;
+  specialty?: string;
+  address: string;
+  phone: string;
+}
+
+// =========================================================
+// ADMIN APPOINTMENT
+// =========================================================
+
+export type AdminAppointmentStatus =
+  | "pending"
+  | "confirmed"
+  | "completed"
+  | "cancelled";
+
+export interface AdminAppointment {
+  id: string;
+  patient: string;
+  doctor: string;
+  specialty: string;
+  date: string;
+  time: string;
+  status: AdminAppointmentStatus;
+}
+
+// =========================================================
+// ADMIN PAGE
+// =========================================================
+
+export type AdminPage =
+  | "dashboard"
+  | "users"
+  | "doctors"
+  | "consultants"
+  | "clinics"
+  | "appointments"
+  | "settings";
+
+// =========================================================
+// MENU CARD
+// =========================================================
+
+export interface MenuCardProps {
+  title: string;
+  description: string;
+  icon: IconType;
+  color: string;
+}
+
+export type FeedbackType = "doctor" | "consultant" | "clinic";
+
+export type FeedbackSentiment = "positive" | "negative";
+
+export interface FeedbackFormProps {
+  type: FeedbackType;
+  entityId: number | string;
+  onSuccess?: () => void;
+}
+
+export interface FeedbackFormData {
+  rating: number;
+  positive_or_negative: FeedbackSentiment;
+  options: string[];
+  comment: string;
+}
+
+export interface FeedbackConfig {
+  title: string;
+  positiveOptions: string[];
+  negativeOptions: string[];
+}
+
+export interface FeedbackRatingProps {
+  rating: number;
+  onChange: (rating: number) => void;
+}
+
+export interface FeedbackTypeSelectorProps {
+  value: FeedbackSentiment;
+  onChange: (value: FeedbackSentiment) => void;
+}
+
+export interface FeedbackOptionsProps {
+  options: string[];
+  selectedOptions: string[];
+  sentiment: FeedbackSentiment;
+  onToggle: (option: string) => void;
+}
+
+export interface FeedbackCommentProps {
+  value: string;
+  onChange: (value: string) => void;
+  maxLength?: number;
+}

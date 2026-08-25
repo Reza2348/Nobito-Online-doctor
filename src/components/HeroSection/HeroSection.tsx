@@ -7,12 +7,10 @@ export const HeroSection = () => {
       className="flex flex-col bg-[#f5f5f5] rounded-2xl shadow-md transition-shadow overflow-hidden w-full lg:max-w-350 mx-auto mb-4"
       dir="rtl"
     >
-      {/* بخش بالا */}
       <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8 px-6 lg:px-16 py-8 lg:py-12">
-        {/* عکس - موبایل: اول | دسکتاپ: چپ */}
         <div className="shrink-0 w-full lg:w-auto order-1 lg:order-2" dir="ltr">
           <Image
-            src="/Pic20.svg"
+            src="https://yvafbrsbeisaqtdsdowr.supabase.co/storage/v1/object/public/publics/Pic%20(5).svg"
             alt="بیمه دکترتو"
             width={280}
             height={220}
@@ -20,8 +18,6 @@ export const HeroSection = () => {
             priority
           />
         </div>
-
-        {/* متن‌ها - موبایل: دوم | دسکتاپ: راست */}
         <div className="flex flex-col gap-4 flex-1 text-right order-2 lg:order-1">
           <h1 className="text-2xl lg:text-3xl font-bold text-[#2b2b2b] leading-tight">
             بیمه دکترتو در روزهای سخت
@@ -50,8 +46,6 @@ export const HeroSection = () => {
       </div>
 
       <div className="border-t border-gray-200 mx-6 lg:mx-16" />
-
-      {/* کارت‌ها - موبایل: ستونی | دسکتاپ: ردیفی */}
       <div className="flex flex-col lg:flex-row justify-center lg:justify-between gap-6 lg:gap-12 px-6 lg:px-16 py-8 lg:py-10">
         {/* کارت ۱ */}
         <div className="flex flex-col items-center lg:items-start text-center lg:text-right gap-3 lg:max-w-55">
@@ -66,8 +60,6 @@ export const HeroSection = () => {
             بااستفاده از طراحان گرافیک است.
           </p>
         </div>
-
-        {/* کارت ۲ */}
         <div className="flex flex-col items-center lg:items-start text-center lg:text-right gap-3 lg:max-w-55">
           <div className="w-14 h-14 bg-[#2e8b7a] rounded-xl flex items-center justify-center">
             <FiHeart className="w-7 h-7 text-white" />
@@ -80,8 +72,6 @@ export const HeroSection = () => {
             بااستفاده از طراحان گرافیک است.
           </p>
         </div>
-
-        {/* کارت ۳ */}
         <div className="flex flex-col items-center lg:items-start text-center lg:text-right gap-3 lg:max-w-55">
           <div className="w-14 h-14 bg-[#2e8b7a] rounded-xl flex items-center justify-center">
             <FiClipboard className="w-7 h-7 text-white" />

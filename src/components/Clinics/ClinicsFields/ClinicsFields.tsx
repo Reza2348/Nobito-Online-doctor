@@ -7,12 +7,34 @@ interface ClinicsFieldsProps {
 }
 
 const ClinicsFields: React.FC<ClinicsFieldsProps> = ({ fields }) => {
+  if (!fields || fields.length === 0) return null;
+
   return (
-    <div className="flex flex-wrap gap-2 mb-4 justify-center">
-      {fields.map((field, idx) => (
+    <div
+      className="
+      flex
+      min-h-15
+      flex-wrap
+      items-center
+      justify-center
+      gap-2
+      "
+    >
+      {fields.map((field) => (
         <span
-          key={idx}
-          className="bg-gray-100 text-gray-600 text-xs px-3 py-1.5 rounded-full text-center"
+          key={field}
+          className="
+          rounded-full
+          bg-teal-50
+          px-3
+          py-1.5
+          text-xs
+          font-semibold
+          text-teal-700
+          transition
+          hover:bg-teal-600
+          hover:text-white
+          "
         >
           {field}
         </span>

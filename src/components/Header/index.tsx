@@ -1,50 +1,67 @@
 "use client";
 
 import * as H from "@/Imports/HeaderImports/HeaderImports";
+import { useEffect, useState } from "react";
 
 const Header: H.React.FC = () => {
-  const pathname = H.usePathname();
   const { user, logout } = H.useUser();
 
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   return (
-    <nav className="bg-white w-full relative z-50">
-      <div className="border-b border-[#C0C0C0]">
-        <div className="max-w-7xl mx-auto flex items-center justify-between px-2 sm:px-6 lg:px-8 h-16 md:h-20 gap-1 md:gap-4">
+    <header className="sticky top-0 z-50 w-full bg-white/85 backdrop-blur-xl">
+      <nav className="border-b border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,.04)]">
+        <div className="mx-auto flex h-18 md:h-22 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           {/* LOGO */}
-          <H.Link href="/" className="shrink-0">
+          <H.Link
+            href="/"
+            className="shrink-0 transition-transform duration-300 hover:scale-105"
+          >
             <H.Image
               src="/Default.svg"
               alt="logo"
-              width={120}
-              height={120}
+              width={140}
+              height={140}
               priority
-              className="h-auto sm:w-27.5 md:w-32.5 lg:w-37.5"
+              className="h-auto w-24 sm:w-28 md:w-32 lg:w-36"
             />
           </H.Link>
 
-          {/* NAV CENTER */}
-          <div className="flex-1 flex justify-center overflow-visible">
-            <H.DesktopNav />
+          {/* DESKTOP NAV */}
+          <div className="hidden lg:flex flex-1 justify-center">
+            <div className="rounded-full bg-gray-50 px-6 py-2 border border-gray-100">
+              <H.DesktopNav />
+            </div>
           </div>
 
-          {/* USER + MOBILE */}
-          <div className="flex items-center gap-1 md:gap-3 shrink-0">
-            <H.UserMenu user={user} logout={logout} />
+          {/* USER AREA */}
+          <div className="flex items-center gap-2">
+            {/* DESKTOP */}
+            <div className="hidden sm:block rounded-full bg-emerald-50 px-2 py-1">
+              {mounted && <H.UserMenu user={user} logout={logout} />}
+            </div>
 
-            <div className="lg:hidden">
-              <H.MobileMenu user={user} logout={logout} />
+            {/* MOBILE */}
+            <div className="lg:hidden rounded-full bg-gray-50 p-1">
+              {mounted && <H.MobileMenu user={user} logout={logout} />}
             </div>
           </div>
         </div>
-      </div>
+      </nav>
 
       {/* SUB HEADER */}
       <div className="hidden lg:block">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2">
-          <H.SubHeader />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3">
+          <div className="rounded-2xl bg-linear-to-r from-emerald-50 to-teal-50 px-5 py-2 border border-emerald-100">
+            <H.SubHeader />
+          </div>
         </div>
       </div>
-    </nav>
+    </header>
   );
 };
 

@@ -4,9 +4,8 @@ import React, { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { CiFaceSmile, CiFaceFrown } from "react-icons/ci";
 import { LuClock3 } from "react-icons/lu";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaChevronDown } from "react-icons/fa";
 import type { Comment } from "@/Types/types";
-import { FaChevronDown } from "react-icons/fa";
 
 const Comments = () => {
   const [comments, setComments] = useState<Comment[]>([]);
@@ -20,7 +19,7 @@ const Comments = () => {
     const { data, error } = await supabase.from("Comments").select("*");
 
     if (error) {
-      console.log("Supabase Error:", error);
+      console.log(error);
     } else {
       setComments(data || []);
     }
@@ -30,91 +29,262 @@ const Comments = () => {
 
   if (loading) {
     return (
-      <p className="text-center text-gray-500 mt-10">در حال بارگذاری...</p>
+      <div
+        className="
+        py-10
+        text-center
+        text-gray-400
+        "
+      >
+        در حال بارگذاری نظرات...
+      </div>
     );
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 font-[tahoma] px-2 md:px-0">
+    <section
+      dir="rtl"
+      className="
+      mt-10
+      space-y-5
+      "
+    >
       {comments.map((item) => (
-        <div
+        <article
           key={item.id}
-          className="bg-white border border-gray-300 rounded-[28px] overflow-hidden shadow-sm"
+          className="
+            overflow-hidden
+            rounded-4xl
+            border
+            border-gray-100
+            bg-white
+            shadow-[0_12px_35px_rgba(0,0,0,.06)]
+            transition-all
+            hover:-translate-y-1
+            "
         >
-          <div className="p-5 md:p-6">
-            {/* HEADER */}
-            <div className="flex flex-col md:flex-row md:justify-between gap-4">
-              {/* USER INFO */}
-              <div className="flex items-center gap-4">
+          {/* TOP */}
+
+          <div
+            className="
+              p-6
+              "
+          >
+            <div
+              className="
+                flex
+                flex-col
+                md:flex-row
+                md:items-center
+                justify-between
+                gap-5
+                "
+            >
+              {/* USER */}
+
+              <div
+                className="
+                  flex
+                  items-center
+                  gap-4
+                  "
+              >
                 <img
                   src={item.photo_url || "/placeholder.jpg"}
                   alt={item.name}
-                  className="w-16 h-16 md:w-20 md:h-20 rounded-full object-cover"
+                  className="
+                    h-16
+                    w-16
+                    rounded-3xl
+                    object-cover
+                    ring-4
+                    ring-teal-50
+                    "
                 />
 
                 <div>
-                  <h3 className="text-sm md:text-base font-bold text-[#4a4a4a]">
+                  <h3
+                    className="
+                      font-black
+                      text-gray-800
+                      "
+                  >
                     {item.name}
                   </h3>
-                  <p className="text-xs md:text-sm text-gray-400 mt-1">
+
+                  <p
+                    className="
+                      mt-1
+                      text-xs
+                      text-gray-400
+                      "
+                  >
                     {item.date}
                   </p>
                 </div>
               </div>
 
-              {/* ACTIONS */}
-              <div className="flex md:flex-col items-center md:items-end justify-between md:justify-start w-full md:w-auto gap-3 md:gap-4">
-                <button className="w-full md:w-auto border border-teal-600 text-teal-700 rounded-full px-4 py-2 text-xs md:text-sm hover:bg-teal-50 transition">
-                  نوبت آنلاین
-                </button>
+              {/* RATING */}
 
-                <div className="flex items-center gap-2">
-                  <span className="font-bold text-gray-700 text-xl md:text-2xl">
+              <div
+                className="
+                  flex
+                  items-center
+                  gap-3
+                  "
+              >
+                <div
+                  className="
+                    flex
+                    items-center
+                    gap-2
+                    rounded-full
+                    bg-yellow-50
+                    px-4
+                    py-2
+                    "
+                >
+                  <span
+                    className="
+                      font-black
+                      text-yellow-700
+                      "
+                  >
                     {item.rating}
                   </span>
-                  <FaStar className="text-amber-400" size={18} />
+
+                  <FaStar
+                    className="
+                      text-yellow-400
+                      "
+                  />
                 </div>
+
+                <button
+                  className="
+                    rounded-full
+                    border
+                    border-teal-200
+                    px-4
+                    py-2
+                    text-xs
+                    font-bold
+                    text-teal-700
+                    transition
+                    hover:bg-teal-50
+                    "
+                >
+                  نوبت آنلاین
+                </button>
               </div>
             </div>
 
-            {/* TEXT */}
-            <div className="mt-5 md:mt-6 text-sm md:text-[18px] font-medium text-gray-600 leading-7">
+            {/* COMMENT */}
+
+            <p
+              className="
+                mt-6
+                text-sm
+                md:text-base
+                leading-8
+                text-gray-600
+                "
+            >
               {item.text}
-            </div>
+            </p>
           </div>
 
           {/* FOOTER */}
-          <div className="border-t border-gray-300 px-5 md:px-6 py-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-            {/* RECOMMENDATION */}
+
+          <div
+            className="
+              flex
+              flex-col
+              md:flex-row
+              items-center
+              justify-between
+              gap-4
+              border-t
+              border-gray-100
+              bg-gray-50/70
+              px-6
+              py-4
+              "
+          >
             <div
-              className={`flex items-center gap-2 ${
-                item.rating < 3 ? "text-[#C71A1A]" : "text-teal-700"
-              }`}
+              className={`
+                flex
+                items-center
+                gap-2
+                rounded-full
+                px-4
+                py-2
+                text-sm
+                font-bold
+                ${
+                  item.rating < 3
+                    ? "bg-red-50 text-red-600"
+                    : "bg-emerald-50 text-emerald-700"
+                }
+                `}
             >
               {item.rating < 3 ? (
                 <CiFaceFrown size={22} />
               ) : (
                 <CiFaceSmile size={22} />
               )}
-
-              <span className="font-medium text-sm md:text-base">
-                این پزشک را پیشنهاد می‌کنم
-              </span>
+              این پزشک را پیشنهاد می‌کنم
             </div>
 
-            {/* WAIT TIME */}
-            <div className="flex items-center gap-2 text-gray-500 text-sm">
-              <LuClock3 size={18} />
-              <span>زمان انتظار : ۱۵۰۰ دقیقه</span>
+            <div
+              className="
+                flex
+                items-center
+                gap-2
+                rounded-full
+                bg-white
+                px-4
+                py-2
+                text-xs
+                font-bold
+                text-gray-500
+                "
+            >
+              <LuClock3 />
+              زمان انتظار: ۱۵۰۰ دقیقه
             </div>
           </div>
-        </div>
+        </article>
       ))}
-      <button className="border border-black text-black w-full rounded-md py-2 flex items-center justify-center gap-2">
+
+      <button
+        className="
+        group
+        flex
+        w-full
+        items-center
+        justify-center
+        gap-3
+        rounded-2xl
+        border
+        border-teal-600
+        py-3
+        font-bold
+        text-teal-700
+        transition-all
+        hover:bg-teal-600
+        hover:text-white
+        "
+      >
         مشاهده بیشتر
-        <FaChevronDown />
+        <FaChevronDown
+          className="
+          transition-transform
+          group-hover:translate-y-1
+          "
+        />
       </button>
-    </div>
+    </section>
   );
 };
 

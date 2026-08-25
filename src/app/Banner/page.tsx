@@ -22,7 +22,7 @@ export default function InsuranceBanner() {
         <div className="flex flex-wrap justify-center gap-4 mb-6">
           {insuranceLogos.map((logo, index) => (
             <Image
-              key={index}
+              key={logo}
               src={logo}
               alt={`Insurance Logo ${index + 1}`}
               width={70}
@@ -62,7 +62,7 @@ export default function InsuranceBanner() {
         <div className="flex items-center gap-4 shrink-0">
           {insuranceLogos.map((logo, index) => (
             <Image
-              key={index}
+              key={logo}
               src={logo}
               alt={`Insurance Logo ${index + 1}`}
               width={70}

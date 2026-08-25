@@ -1,4 +1,5 @@
 "use client";
+
 import { useClinicProfile } from "@/hooks/useClinicProfile";
 import ClinicProfile from "@/components/ClinicsProfile/ClinicsProfile";
 
@@ -15,24 +16,28 @@ export default function ClinicsProfilePage() {
         <span className="text-gray-500 font-bold text-lg">
           در حال بارگذاری پروفایل کلینیک...
         </span>
-        <div className="w-10 h-10 border-4 border-gray-200 border-t-teal-600 rounded-full animate-spin" />
+
+        <div
+          className="w-10 h-10 border-4 border-gray-200 border-t-teal-600 rounded-full animate-spin"
+          aria-hidden="true"
+        />
       </div>
     );
   }
 
   if (error) {
     return (
-      <p className="text-center mt-10 text-red-500" role="alert">
-        خطا در دریافت اطلاعات: {error}
-      </p>
+      <div className="text-center mt-10 text-red-500" role="alert">
+        خطا در دریافت اطلاعات کلینیک.
+      </div>
     );
   }
 
   if (!clinic) {
     return (
-      <p className="text-center mt-10 text-gray-500">
+      <div className="text-center mt-10 text-gray-500">
         کلینیک مورد نظر پیدا نشد.
-      </p>
+      </div>
     );
   }
 

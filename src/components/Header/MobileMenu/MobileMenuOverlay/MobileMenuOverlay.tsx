@@ -10,10 +10,25 @@ type Props = {
 const MobileMenuOverlay: H.React.FC<Props> = ({ open, onClose }) => {
   return (
     <div
+      aria-hidden="true"
       onClick={onClose}
-      className={`fixed inset-0 bg-black/40 z-40 md:hidden transition-opacity duration-300 ${
-        open ? "opacity-100" : "opacity-0 pointer-events-none"
-      }`}
+      className={`
+        fixed
+        inset-0
+        z-40
+        md:hidden
+        bg-slate-950/45
+        backdrop-blur-[3px]
+        transition-opacity
+        duration-300
+        ease-out
+        motion-reduce:transition-none
+        ${
+          open
+            ? "pointer-events-auto opacity-100"
+            : "pointer-events-none opacity-0"
+        }
+      `}
     />
   );
 };

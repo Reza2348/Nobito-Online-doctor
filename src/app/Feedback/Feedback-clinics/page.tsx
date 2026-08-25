@@ -1,223 +1,47 @@
 "use client";
 
-import React from "react";
-import { useRouter } from "next/navigation";
-import { useClinics } from "@/context/ClinicsContext/ClinicsContext";
-import { supabase } from "@/lib/supabaseClient";
-import { FaStar, FaThumbsUp, FaThumbsDown } from "react-icons/fa";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import type {
-  Clinic,
-  FeedbackTab,
-  ClinicFeedbackPayload,
-  FeedbackOption,
-} from "@/Types/types";
+import { useSearchParams } from "next/navigation";
 
-// TODO: در صورت نیاز گزینه‌های اختصاصی کلینیک رو جایگزین کنید
-const feedbackOptions: FeedbackOption[] = [
-  "امکانات رفاهی",
-  "نظافت مطب",
-  "زمان انتظار",
-  "رفتار پرسنل",
-  "دسترسی و پارکینگ",
-  "نسخه الکترونیکی",
-];
+import FeedbackForm from "@/components/Feedback/FeedbackForm/FeedbackForm";
 
-const Page: React.FC = () => {
-  const router = useRouter();
-  const { selectedClinic } = useClinics();
-  const [clinics, setClinics] = React.useState<Clinic[]>([]);
-  const [rating, setRating] = React.useState<number>(0);
-  const [hovered, setHovered] = React.useState<number>(0);
-  const [selected, setSelected] = React.useState<string[]>([]);
-  const [activeTab, setActiveTab] = React.useState<FeedbackTab>("positive");
-  const [isWritingComment, setIsWritingComment] =
-    React.useState<boolean>(false);
-  const [comment, setComment] = React.useState<string>("");
+export default function FeedbackClinicsPage() {
+  const searchParams = useSearchParams();
 
-  React.useEffect(() => {
-    const fetchClinics = async (): Promise<void> => {
-      const { data } = await supabase.from("clinics").select("*");
-      if (data) setClinics(data as Clinic[]);
-    };
-    fetchClinics();
-  }, []);
+  const clinicId = searchParams.get("clinicId");
 
-  const selectedClinicData: Clinic | undefined = selectedClinic ?? undefined;
-
-  const toggleOption = (option: string): void => {
-    setSelected((prev) =>
-      prev.includes(option)
-        ? prev.filter((o) => o !== option)
-        : [...prev, option],
+  if (!clinicId) {
+    return (
+      <main
+        dir="rtl"
+        className="flex min-h-screen items-center justify-center bg-slate-50 p-6"
+      >
+        <div className="w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-sm">
+          <p className="font-bold text-red-600">شناسه کلینیک مشخص نشده است.</p>
+        </div>
+      </main>
     );
-  };
+  }
 
-  const handleCommentChange = (
-    e: React.ChangeEvent<HTMLTextAreaElement>,
-  ): void => {
-    setComment(e.target.value);
-  };
+  const entityId = Number(clinicId);
 
-  const handleSubmit = async (): Promise<void> => {
-    if (!selectedClinicData) return;
-
-    const payload: ClinicFeedbackPayload = {
-      clinic_id: selectedClinicData.id,
-      rating,
-      positive_or_negative: activeTab,
-      options: selected,
-      comment,
-    };
-
-    const { error } = await supabase.from("feedbacks_clinics").insert(payload);
-
-    if (error) {
-      toast.error("خطا در ثبت بازخورد");
-      return;
-    }
-
-    toast.success("نظر شما تایید شد");
-    setRating(0);
-    setSelected([]);
-    setComment("");
-    setIsWritingComment(false);
-
-    setTimeout(() => {
-      router.push("/");
-    }, 1500);
-  };
+  if (!Number.isInteger(entityId) || entityId <= 0) {
+    return (
+      <main
+        dir="rtl"
+        className="flex min-h-screen items-center justify-center bg-slate-50 p-6"
+      >
+        <div className="w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-sm">
+          <p className="font-bold text-red-600">شناسه کلینیک نامعتبر است.</p>
+        </div>
+      </main>
+    );
+  }
 
   return (
-    <div className="flex flex-col items-center gap-3 px-8 py-6 bg-white rounded-lg shadow-md w-full">
-      <ToastContainer position="top-center" rtl />
-      {!selectedClinicData ? (
-        <p>یک کلینیک انتخاب کنید</p>
-      ) : (
-        <>
-          {/* عکس */}
-          <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-md">
-            <img
-              src={selectedClinicData.photo_url ?? "/placeholder.png"}
-              className="w-full h-full object-cover"
-              alt={selectedClinicData.name}
-            />
-          </div>
-
-          {/* اسم */}
-          <p className="text-[#121212] font-bold text-lg leading-none">
-            {selectedClinicData.name}
-          </p>
-
-          {/* آدرس */}
-          <p className="text-gray-500 text-sm leading-none">
-            {selectedClinicData.address}
-          </p>
-
-          {/* متن توضیح */}
-          <p className="text-[#757575] text-sm text-center">
-            کاربر گرامی ضمن آرزوی سلامتی برای شما ؛ لطفا امتیاز خود را نسبت به
-            خدمات کلینیک {selectedClinicData.name} ثبت
-          </p>
-
-          {/* ستاره‌ها */}
-          <div className="flex gap-1">
-            {Array.from({ length: 5 }, (_, index) => {
-              const filled = index < (hovered || rating);
-              return (
-                <FaStar
-                  key={index}
-                  size={36}
-                  className={`cursor-pointer transition-colors ${
-                    filled ? "text-amber-400" : "text-gray-300"
-                  }`}
-                  onClick={() => setRating(index + 1)}
-                  onMouseEnter={() => setHovered(index + 1)}
-                  onMouseLeave={() => setHovered(0)}
-                />
-              );
-            })}
-          </div>
-
-          {/* تب‌های نکات قوت / نکات ضعف */}
-          <div className="flex w-full border-b border-gray-200">
-            <button
-              onClick={() => setActiveTab("positive")}
-              className={`flex items-center gap-1 flex-1 justify-center pb-2 text-sm font-medium transition-colors ${
-                activeTab === "positive"
-                  ? "text-[#1F7168] border-b-2 border-[#1F7168]"
-                  : "text-gray-400"
-              }`}
-            >
-              <FaThumbsUp size={14} />
-              نکات قوت
-            </button>
-            <button
-              onClick={() => setActiveTab("negative")}
-              className={`flex items-center gap-1 flex-1 justify-center pb-2 text-sm font-medium transition-colors ${
-                activeTab === "negative"
-                  ? "text-[#1F7168] border-b-2 border-[#1F7168]"
-                  : "text-gray-400"
-              }`}
-            >
-              <FaThumbsDown size={14} />
-              نکات ضعف
-            </button>
-          </div>
-
-          {/* عنوان سوال */}
-          <p className="text-[#121212] font-semibold text-sm text-center">
-            از کدام موارد رضایت داشته اید؟
-          </p>
-
-          {/* دکمه‌های بازخورد */}
-          <div className="grid grid-cols-3 gap-2 w-full">
-            {feedbackOptions.map((option) => (
-              <button
-                key={option}
-                onClick={() => toggleOption(option)}
-                className={`border rounded-full text-xs px-3 py-1.5 transition-colors whitespace-nowrap overflow-hidden text-ellipsis ${
-                  selected.includes(option)
-                    ? "bg-teal-600 text-white border-teal-600"
-                    : "text-gray-700 border-gray-300 hover:border-teal-400"
-                }`}
-              >
-                {option}
-              </button>
-            ))}
-          </div>
-
-          {/* باکس نوشتن نظر */}
-          {isWritingComment && (
-            <textarea
-              value={comment}
-              onChange={handleCommentChange}
-              placeholder="نظر خود را بنویسید..."
-              className="w-full border border-gray-300 rounded-lg p-2 text-sm text-gray-700 resize-none focus:outline-none focus:border-teal-500"
-              rows={3}
-            />
-          )}
-
-          {/* دکمه‌های پایین */}
-          <div className="flex gap-3 w-full mt-1">
-            <button
-              onClick={handleSubmit}
-              className="flex-2 bg-[#1F7168] text-white rounded-lg py-2.5 text-sm font-medium hover:bg-teal-700 transition"
-            >
-              ثبت بازخورد
-            </button>
-            <button
-              onClick={() => setIsWritingComment((prev) => !prev)}
-              className="flex-1 border border-gray-300 rounded-lg py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition"
-            >
-              {isWritingComment ? "بستن" : "نگارش نظر"}
-            </button>
-          </div>
-        </>
-      )}
-    </div>
+    <main dir="rtl" className="min-h-screen bg-slate-50 px-4 py-10">
+      <div className="mx-auto w-full max-w-2xl">
+        <FeedbackForm type="clinic" entityId={entityId} />
+      </div>
+    </main>
   );
-};
-
-export default Page;
+}

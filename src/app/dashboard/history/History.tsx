@@ -15,7 +15,7 @@ const iconMap: Record<HistoryIconType, React.ReactNode> = {
 };
 
 const History = () => {
-  const [activeTab, setActiveTab] = useState(0);
+  const [activeTab, setActiveTab] = useState(tabs[0]);
 
   return (
     <div
@@ -29,13 +29,13 @@ const History = () => {
           </h2>
 
           <div className="flex items-center justify-start gap-5 md:gap-6">
-            {tabs.map((t, index) => (
+            {tabs.map((t) => (
               <button
-                key={index}
+                key={t}
                 type="button"
-                onClick={() => setActiveTab(index)}
+                onClick={() => setActiveTab(t)}
                 className={`text-sm md:text-base transition-all pb-3 md:pb-4 ${
-                  activeTab === index
+                  activeTab === t
                     ? "text-[#1F7168] font-bold border-b-2 border-[#1F7168]"
                     : "text-[#919191]"
                 }`}

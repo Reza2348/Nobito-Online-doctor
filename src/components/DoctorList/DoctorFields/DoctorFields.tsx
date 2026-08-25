@@ -4,11 +4,32 @@ interface Props {
 
 const DoctorFields: React.FC<Props> = ({ fields }) => {
   return (
-    <div className="flex flex-wrap gap-2 mb-4 justify-center">
+    <div
+      className="
+      flex
+      flex-wrap
+      justify-start
+      gap-2
+      "
+    >
       {fields.map((field, idx) => (
         <span
           key={idx}
-          className="bg-gray-100 text-gray-600 text-xs px-3 py-1.5 rounded-full text-center"
+          className="
+          rounded-full
+          border
+          border-teal-100
+          bg-teal-50
+          px-3
+          py-1.5
+          text-xs
+          font-semibold
+          text-teal-700
+          transition-all
+          duration-300
+          hover:bg-teal-600
+          hover:text-white
+          "
         >
           {field}
         </span>

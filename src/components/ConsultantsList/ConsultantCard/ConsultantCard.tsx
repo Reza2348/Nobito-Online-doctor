@@ -1,9 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { FiArrowLeft } from "react-icons/fi";
+
 import type { Consultant } from "@/Types/types";
 import { useConsultant } from "@/context/ConsultantsContext/ConsultantsContext";
-import Image from "next/image";
+
+import ConsultantPhoto from "../ConsultantPhoto/ConsultantPhoto";
+import ConsultantRating from "../ConsultantRating/ConsultantRating";
+import ConsultantFields from "../ConsultantFields/ConsultantFields";
+import ConsultantStatus from "../ConsultantStatus/ConsultantStatus";
 
 interface ConsultantCardProps {
   consultant: Consultant;
@@ -12,8 +18,8 @@ interface ConsultantCardProps {
 export const ConsultantCard: React.FC<ConsultantCardProps> = ({
   consultant,
 }) => {
-  const { setConsultantId } = useConsultant();
   const router = useRouter();
+  const { setConsultantId } = useConsultant();
 
   const handleClick = () => {
     setConsultantId(consultant.id);
@@ -22,56 +28,99 @@ export const ConsultantCard: React.FC<ConsultantCardProps> = ({
 
   return (
     <div
-      className="bg-white rounded-2xl shadow-md border p-6 text-center relative 
-                 hover:shadow-2xl hover:scale-105 transition mt-8 mx-2 mb-4 
-                 flex flex-col items-center"
+      className="
+      group
+      flex
+      h-full
+      min-h-125
+      flex-col
+      items-center
+      rounded-3xl
+      border
+      border-gray-100
+      bg-white
+      p-6
+      text-center
+      shadow-[0_8px_30px_rgba(0,0,0,.06)]
+      transition-all
+      duration-500
+      hover:-translate-y-2
+      hover:border-teal-200
+      hover:shadow-[0_20px_50px_rgba(0,0,0,.12)]
+      "
     >
-      <div className="flex justify-center -mt-16 mb-4">
-        <div className="relative w-28 h-28 rounded-full border-4 border-white shadow-md overflow-hidden bg-gray-100">
-          <Image
-            src={consultant.photo_url || "/placeholder.jpg"}
-            alt={consultant.name}
-            fill
-            sizes="112px"
-            className="object-cover"
-          />
-        </div>
-      </div>
+      {/* PHOTO */}
 
-      <div className="flex flex-col items-center gap-1 mb-2">
-        <h2 className="text-lg font-bold text-black">{consultant.name}</h2>
-        <div className="flex items-center gap-1">
-          <span className="text-yellow-400 text-sm">★</span>
-          <span className="text-sm text-gray-600 font-medium">
-            {consultant.rating}
-          </span>
-        </div>
-      </div>
+      <ConsultantPhoto name={consultant.name} photoUrl={consultant.photo_url} />
 
-      <p className="text-gray-500 text-sm mb-3">{consultant.specialty}</p>
+      {/* NAME */}
 
-      {consultant.fields && (
-        <div className="flex flex-wrap justify-center gap-2 mb-4">
-          {consultant.fields.map((field, index) => (
-            <span
-              key={index}
-              className="bg-gray-100 text-gray-600 px-3 py-1 rounded-full text-xs"
-            >
-              {field}
-            </span>
-          ))}
-        </div>
-      )}
+      <h2
+        className="
+        mt-5
+        text-xl
+        font-extrabold
+        text-gray-900
+        "
+      >
+        {consultant.name}
+      </h2>
+
+      {/* SPECIALTY */}
+
+      <p
+        className="
+        mt-2
+        text-sm
+        text-gray-500
+        "
+      >
+        {consultant.specialty}
+      </p>
+
+      {/* RATING */}
+
+      <ConsultantRating rating={consultant.rating} />
+
+      {/* FIELDS */}
+
+      {consultant.fields && <ConsultantFields fields={consultant.fields} />}
+
+      {/* STATUS */}
+
+      <ConsultantStatus />
+
+      {/* BUTTON */}
 
       <button
         onClick={handleClick}
-        className="w-full sm:w-5/6 md:w-3/4 lg:w-3/5 xl:w-1/2 
-                   border border-black text-black 
-                   hover:bg-black hover:text-white 
-                   px-6 py-2 rounded-full 
-                   cursor-pointer transition-all duration-300"
+        className="
+        mt-auto
+        flex
+        w-full
+        items-center
+        justify-center
+        gap-2
+        rounded-2xl
+      bg-linear-to-r
+        from-teal-600
+        to-emerald-500
+        py-3
+        font-bold
+        text-white
+        transition-all
+        duration-300
+        hover:shadow-lg
+        "
       >
         دریافت نوبت
+        <FiArrowLeft
+          className="
+          transition-transform
+          duration-300
+          group-hover:-translate-x-1
+          "
+        />
       </button>
     </div>
   );

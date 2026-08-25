@@ -33,9 +33,9 @@ const OnlineConsultationTimeline = () => {
       </div>
 
       <div className="relative flex flex-col md:flex-row md:justify-between items-center max-w-5xl mx-auto">
-        {steps.map((step, index) => (
+        {steps.map((step) => (
           <div
-            key={index}
+            key={step.title}
             className="flex-1 flex flex-col items-center text-center mb-12 md:mb-0 relative"
           >
             <div className="bg-white p-4 rounded-full shadow-lg z-10 mb-4">

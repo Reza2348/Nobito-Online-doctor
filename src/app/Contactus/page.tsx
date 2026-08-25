@@ -1,24 +1,20 @@
 "use client";
 
+import Image from "next/image";
+
 import * as C from "@/Imports/Contact usImports/ContactusImports";
 
+const contactSchema = C.z.object({
+  name: C.z.string().min(1, "نام الزامی است"),
+  Lastname: C.z.string().min(1, "نام خانوادگی الزامی است"),
+  number: C.z.string().min(1, "شماره موبایل معتبر وارد کنید"),
+  email: C.z.string().email("ایمیل معتبر نمی‌باشد"),
+  message: C.z.string().min(1, "پیام الزامی است"),
+});
+
+type ContactFormData = C.z.infer<typeof contactSchema>;
+
 export default function Contact() {
-  const [mounted, setMounted] = C.useState(false);
-
-  C.useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  const contactSchema = C.z.object({
-    name: C.z.string().min(1, "نام الزامی است"),
-    Lastname: C.z.string().min(1, "نام خانوادگی الزامی است"),
-    number: C.z.string().min(1, "شماره موبایل معتبر وارد کنید"),
-    email: C.z.string().email("ایمیل معتبر نمی‌باشد"),
-    message: C.z.string().min(1, "پیام الزامی است"),
-  });
-
-  type ContactFormData = C.z.infer<typeof contactSchema>;
-
   const {
     register,
     handleSubmit,
@@ -46,6 +42,7 @@ export default function Contact() {
 
       if (result.success) {
         C.toast.success("پیام شما با موفقیت ارسال شد!");
+
         reset();
       } else {
         C.toast.error("ارسال پیام موفقیت‌آمیز نبود.");
@@ -55,139 +52,365 @@ export default function Contact() {
     }
   };
 
-  if (!mounted) return null;
-
   return (
-    <div className="py-12 px-4 bg-gray-50">
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
-        <div className="w-full md:w-1/2 space-y-6">
-          <div className="space-y-3 text-center md:text-right">
-            <h2 className="text-2xl font-bold text-gray-800">
-              اگر انتقاد یا پیشنهادی دارید می‌توانید با ما در میان بگذارید
-            </h2>
-            <p className="text-gray-500 text-sm">
-              لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با
-              استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله
-              در ستون و سطرآنچنان لازم است،
-            </p>
-          </div>
+    <section
+      dir="rtl"
+      className="
+relative
+overflow-hidden
+py-16
+md:py-24
+bg-gradient-to-br
+from-green-50
+via-white
+to-blue-50
+"
+    >
+      <div
+        className="
+absolute
+top-0
+left-0
+w-[500px]
+h-[500px]
+bg-green-200/30
+blur-3xl
+rounded-full
+"
+      />
 
-          <div className="md:hidden">
-            <img
-              src="/card1.png"
-              alt="contact"
-              className="w-full rounded-lg mt-4"
-            />
-          </div>
+      <div
+        className="
+relative
+max-w-7xl
+mx-auto
+px-4
+sm:px-6
+"
+      >
+        <div
+          className="
+flex
+flex-col
+md:flex-row
+items-center
+gap-12
+"
+        >
+          {/* FORM RIGHT */}
 
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="p-4 md:p-8 space-y-4 md:space-y-6 md:bg-white md:shadow-xl md:rounded-xl md:border"
+          <div
+            className="
+w-full
+md:w-1/2
+order-1
+space-y-6
+"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex flex-col space-y-1">
-                <label className="font-medium text-gray-700">نام</label>
-                <input
-                  type="text"
-                  {...register("name")}
-                  className="border border-gray-300 text-black rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="نام خود را وارد کنید"
-                />
-                {errors.name && (
-                  <span className="text-red-500 text-sm">
-                    {errors.name.message}
-                  </span>
-                )}
-              </div>
+            <div
+              className="
+text-center
+md:text-right
+"
+            >
+              <span
+                className="
+inline-flex
+items-center
+rounded-full
+bg-green-100
+px-4
+py-2
+text-sm
+font-medium
+text-green-700
+"
+              >
+                ارتباط امن با ما
+              </span>
 
-              <div className="flex flex-col space-y-1">
-                <label className="font-medium text-gray-700">
-                  نام خانوادگی
-                </label>
-                <input
-                  type="text"
-                  {...register("Lastname")}
-                  className="border border-gray-300 text-black rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="نام خانوادگی خود را وارد کنید"
-                />
-                {errors.Lastname && (
-                  <span className="text-red-500 text-sm">
-                    {errors.Lastname.message}
-                  </span>
-                )}
-              </div>
-            </div>
+              <h2
+                className="
+mt-5
+text-3xl
+md:text-5xl
+font-black
+text-gray-900
+leading-tight
+"
+              >
+                با ما در ارتباط باشید
+              </h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="flex flex-col space-y-1">
-                <label className="font-medium text-gray-700">ایمیل</label>
-                <input
-                  type="email"
-                  {...register("email")}
-                  className="border border-gray-300 text-black rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="ایمیل خود را وارد کنید"
-                />
-                {errors.email && (
-                  <span className="text-red-500 text-sm">
-                    {errors.email.message}
-                  </span>
-                )}
-              </div>
-
-              <div className="flex flex-col space-y-1">
-                <label className="font-medium text-gray-700">
-                  شماره موبایل
-                </label>
-                <input
-                  type="text"
-                  {...register("number")}
-                  className="border border-gray-300 text-black rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder="شماره موبایل خود را وارد کنید"
-                />
-                {errors.number && (
-                  <span className="text-red-500 text-sm">
-                    {errors.number.message}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <div className="flex flex-col space-y-1">
-              <label className="font-medium text-gray-700">پیام</label>
-              <textarea
-                rows={4}
-                {...register("message")}
-                className="border border-gray-300 text-black rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="پیام خود را بنویسید..."
-              ></textarea>
-              {errors.message && (
-                <span className="text-red-500 text-sm">
-                  {errors.message.message}
-                </span>
-              )}
-            </div>
-
-            <div className="flex flex-col md:flex-row items-center md:justify-between mt-4 gap-2">
-              <p className="text-gray-700 text-sm">
-                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ،
+              <p
+                className="
+mt-4
+text-gray-600
+leading-8
+"
+              >
+                اگر سوال، پیشنهاد یا انتقادی دارید، تیم ما آماده پاسخگویی به
+                شماست.
               </p>
+            </div>
+
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              className="
+rounded-[35px]
+bg-white/80
+backdrop-blur-xl
+border
+border-white
+shadow-xl
+p-6
+md:p-10
+space-y-6
+"
+            >
+              <div
+                className="
+grid
+grid-cols-1
+md:grid-cols-2
+gap-5
+"
+              >
+                <div>
+                  <input
+                    type="text"
+                    placeholder="نام"
+                    {...register("name")}
+                    className="
+w-full
+h-14
+rounded-2xl
+border
+border-gray-200
+px-5
+text-black
+outline-none
+transition
+focus:ring-2
+focus:ring-[#1F7168]
+"
+                  />
+
+                  {errors.name && (
+                    <p className="text-red-500 text-sm mt-2">
+                      {errors.name.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <input
+                    type="text"
+                    placeholder="نام خانوادگی"
+                    {...register("Lastname")}
+                    className="
+w-full
+h-14
+rounded-2xl
+border
+border-gray-200
+px-5
+text-black
+outline-none
+transition
+focus:ring-2
+focus:ring-[#1F7168]
+"
+                  />
+
+                  {errors.Lastname && (
+                    <p className="text-red-500 text-sm mt-2">
+                      {errors.Lastname.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <input
+                    type="email"
+                    placeholder="ایمیل"
+                    {...register("email")}
+                    className="
+w-full
+h-14
+rounded-2xl
+border
+border-gray-200
+px-5
+text-black
+outline-none
+transition
+focus:ring-2
+focus:ring-[#1F7168]
+"
+                  />
+
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-2">
+                      {errors.email.message}
+                    </p>
+                  )}
+                </div>
+
+                <div>
+                  <input
+                    type="tel"
+                    placeholder="شماره موبایل"
+                    {...register("number")}
+                    className="
+w-full
+h-14
+rounded-2xl
+border
+border-gray-200 text-right
+px-5
+text-black
+outline-none
+transition
+focus:ring-2
+focus:ring-[#1F7168]
+"
+                  />
+
+                  {errors.number && (
+                    <p className="text-red-500 text-sm mt-2">
+                      {errors.number.message}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <textarea
+                rows={5}
+                placeholder="پیام خود را بنویسید..."
+                {...register("message")}
+                className="
+w-full
+rounded-2xl
+border
+border-gray-200
+p-5
+text-black
+outline-none
+resize-none
+focus:ring-2
+focus:ring-[#1F7168]
+"
+              />
+
+              {errors.message && (
+                <p className="text-red-500 text-sm">{errors.message.message}</p>
+              )}
+
               <button
                 type="submit"
-                className="bg-[#1F7168] text-white text-sm md:text-base px-3 md:px-6 py-1 md:py-2 rounded hover:bg-blue-700 transition w-full md:w-auto"
+                disabled={isSubmitting}
+                className="
+w-full
+rounded-2xl
+bg-[#1F7168]
+py-4
+text-white
+font-bold
+transition-all
+duration-300
+hover:-translate-y-1
+hover:shadow-xl
+disabled:opacity-50
+"
               >
-                ارسال پیغام
+                {isSubmitting ? "در حال ارسال..." : "ارسال پیام"}
               </button>
+            </form>
+          </div>
+
+          {/* IMAGE LEFT */}
+
+          <div
+            className="
+hidden
+md:block
+w-full
+md:w-1/2
+order-2
+relative
+"
+          >
+            <div
+              className="
+absolute
+inset-5
+bg-green-300/30
+blur-3xl
+rounded-full
+"
+            />
+
+            <div
+              className="
+relative
+overflow-hidden
+rounded-[45px]
+border
+border-white
+shadow-2xl
+"
+            >
+              <Image
+                src="/card1.png"
+                alt="ارتباط با ما"
+                width={700}
+                height={700}
+                className="
+w-full
+object-cover
+"
+              />
             </div>
-          </form>
-        </div>
-        <div className="hidden md:block w-1/2">
-          <img src="/card1.png" alt="contact" className="w-full rounded-2xl" />
+
+            <div
+              className="
+absolute
+bottom-6
+right-6
+bg-white/90
+backdrop-blur-xl
+rounded-2xl
+px-5
+py-4
+shadow-xl
+"
+            >
+              <p
+                className="
+font-bold
+text-gray-900
+"
+              >
+                پشتیبانی مطمئن
+              </p>
+
+              <p
+                className="
+text-sm
+text-gray-500
+"
+              >
+                همراه شما در مسیر سلامت
+              </p>
+            </div>
+          </div>
         </div>
       </div>
 
       <C.Socialnetwork />
 
       <C.ToastContainer position="top-right" autoClose={3000} />
-    </div>
+    </section>
   );
 }

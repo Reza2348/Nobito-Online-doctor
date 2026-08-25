@@ -2,14 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { User } from "@supabase/supabase-js";
+import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabaseClient";
 
 const BROWSER_SESSION_FLAG = "nobito_browser_session_active";
 
 type Status = "loading" | "authenticated" | "unauthenticated";
 
-type FormattedUser = {
+export type FormattedUser = {
   id: string;
   email: string;
   username: string;
@@ -21,7 +21,7 @@ const formatUser = (user: User): FormattedUser => ({
   username:
     typeof user.user_metadata?.username === "string"
       ? user.user_metadata.username
-      : (user.email?.split("@")[0] ?? "US"),
+      : (user.email?.split("@")[0] ?? "کاربر"),
 });
 
 export function useUser(idleTime: number = 5 * 60 * 1000) {
@@ -31,7 +31,6 @@ export function useUser(idleTime: number = 5 * 60 * 1000) {
   const [status, setStatus] = useState<Status>("loading");
 
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const initializedRef = useRef(false);
 
   const clearIdleTimer = useCallback(() => {
     if (timerRef.current) {
@@ -40,19 +39,17 @@ export function useUser(idleTime: number = 5 * 60 * 1000) {
     }
   }, []);
 
-  const startIdleTimer = useCallback(() => {
-    clearIdleTimer();
+  const updateAuthState = useCallback((session: Session | null) => {
+    console.log("🔐 AUTH STATE CHANGED:", session?.user);
 
-    timerRef.current = setTimeout(() => {
-      router.replace("/auth/signup");
-    }, idleTime);
-  }, [clearIdleTimer, idleTime, router]);
-
-  const updateAuthState = useCallback((session: any) => {
     if (session?.user) {
       sessionStorage.setItem(BROWSER_SESSION_FLAG, "1");
 
-      setUser(formatUser(session.user));
+      const formattedUser = formatUser(session.user);
+
+      console.log("👤 FORMATTED USER:", formattedUser);
+
+      setUser(formattedUser);
       setStatus("authenticated");
     } else {
       sessionStorage.removeItem(BROWSER_SESSION_FLAG);
@@ -61,19 +58,6 @@ export function useUser(idleTime: number = 5 * 60 * 1000) {
       setStatus("unauthenticated");
     }
   }, []);
-
-  const logout = useCallback(async () => {
-    clearIdleTimer();
-
-    await supabase.auth.signOut();
-
-    sessionStorage.removeItem(BROWSER_SESSION_FLAG);
-
-    setUser(null);
-    setStatus("unauthenticated");
-
-    router.replace("/");
-  }, [router, clearIdleTimer]);
 
   useEffect(() => {
     let mounted = true;
@@ -86,20 +70,11 @@ export function useUser(idleTime: number = 5 * 60 * 1000) {
 
         if (!mounted) return;
 
-        const firstBrowserOpen =
-          !initializedRef.current &&
-          sessionStorage.getItem(BROWSER_SESSION_FLAG) === null;
-
-        initializedRef.current = true;
-
-        if (session && firstBrowserOpen) {
-          await supabase.auth.signOut();
-          return;
-        }
+        console.log("🔵 INITIAL SESSION:", session?.user);
 
         updateAuthState(session);
       } catch (error) {
-        console.error(error);
+        console.error("❌ Auth initialization error:", error);
 
         if (!mounted) return;
 
@@ -112,50 +87,57 @@ export function useUser(idleTime: number = 5 * 60 * 1000) {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       if (!mounted) return;
+
+      console.log("🔥 SUPABASE AUTH EVENT:", event);
+      console.log("🔥 SESSION USER:", session?.user);
+
       updateAuthState(session);
     });
 
     return () => {
       mounted = false;
       subscription.unsubscribe();
-      clearIdleTimer();
     };
-  }, [clearIdleTimer, updateAuthState]);
+  }, [updateAuthState]);
+
+  const logout = useCallback(async () => {
+    clearIdleTimer();
+
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("❌ Logout error:", error);
+      return;
+    }
+
+    setUser(null);
+    setStatus("unauthenticated");
+
+    sessionStorage.removeItem(BROWSER_SESSION_FLAG);
+
+    router.replace("/");
+  }, [clearIdleTimer, router]);
 
   useEffect(() => {
-    if (status === "loading") return;
-
-    if (status === "authenticated") {
+    if (status !== "unauthenticated") {
       clearIdleTimer();
       return;
     }
 
-    const events = [
-      "mousemove",
-      "mousedown",
-      "keydown",
-      "scroll",
-      "touchstart",
-    ] as const;
-
-    const handleActivity = () => startIdleTimer();
-
-    events.forEach((event) =>
-      window.addEventListener(event, handleActivity, { passive: true }),
-    );
-
-    startIdleTimer();
-
-    return () => {
-      events.forEach((event) =>
-        window.removeEventListener(event, handleActivity),
-      );
-
+    const startTimer = () => {
       clearIdleTimer();
+
+      timerRef.current = setTimeout(() => {
+        router.replace("/auth/signup");
+      }, idleTime);
     };
-  }, [status, startIdleTimer, clearIdleTimer]);
+
+    startTimer();
+
+    return clearIdleTimer;
+  }, [status, idleTime, router, clearIdleTimer]);
 
   return {
     user,

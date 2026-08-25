@@ -6,9 +6,42 @@ interface Props {
 
 const DoctorRating: React.FC<Props> = ({ rating }) => {
   return (
-    <div className="flex items-center gap-1">
-      <span className="font-bold text-gray-700 text-sm">{rating ?? "۴/۵"}</span>
-      <D.FaStar className="text-amber-400" size={18} />
+    <div
+      className="
+      flex
+      items-center
+      gap-2
+      rounded-full
+      bg-yellow-50
+      px-3
+      py-1.5
+      "
+    >
+      <D.FaStar
+        className="
+        text-yellow-400
+        "
+        size={16}
+      />
+
+      <span
+        className="
+        text-sm
+        font-extrabold
+        text-yellow-700
+        "
+      >
+        {rating ?? "۴.۸"}
+      </span>
+
+      <span
+        className="
+        text-xs
+        text-yellow-600
+        "
+      >
+        عالی
+      </span>
     </div>
   );
 };
