@@ -3,21 +3,6 @@ import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
 // --------------------------------------------------
-// Redis (shared client، فقط یک بار ساخته می‌شود)
-// --------------------------------------------------
-
-const UPSTASH_REDIS_REST_URL = process.env.UPSTASH_REDIS_REST_URL;
-const UPSTASH_REDIS_REST_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
-
-export const redis =
-  UPSTASH_REDIS_REST_URL && UPSTASH_REDIS_REST_TOKEN
-    ? new Redis({
-        url: UPSTASH_REDIS_REST_URL,
-        token: UPSTASH_REDIS_REST_TOKEN,
-      })
-    : null;
-
-// --------------------------------------------------
 // Client IP
 // --------------------------------------------------
 
@@ -54,7 +39,31 @@ export function createRateLimiter(
   limit: number,
   window: `${number} ${"ms" | "s" | "m" | "h" | "d"}`,
 ): Ratelimit | null {
-  if (!redis) return null;
+  // Environment variables را هنگام اجرای درخواست می‌خوانیم
+  const url = process.env.UPSTASH_REDIS_REST_URL?.trim();
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
+
+  // اگر تنظیم نشده باشند، Rate Limit غیرفعال می‌شود
+  if (!url || !token) {
+    console.error("[rateLimit] Upstash environment variables are missing.");
+
+    return null;
+  }
+
+  // URL باید حتماً https باشد
+  if (!url.startsWith("https://")) {
+    console.error(
+      "[rateLimit] UPSTASH_REDIS_REST_URL must start with https://",
+    );
+
+    return null;
+  }
+
+  // Redis فقط هنگام اجرای درخواست ساخته می‌شود
+  const redis = new Redis({
+    url,
+    token,
+  });
 
   return new Ratelimit({
     redis,
