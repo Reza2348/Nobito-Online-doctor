@@ -4,25 +4,39 @@ import { createSupabaseRouteClient } from "@/lib/Server";
 import { createRateLimiter, getClientIp, getRetryAfter } from "@/lib/rateLimit";
 
 // --------------------------------------------------
-// Rate Limit
+// POST /api/auth/verify-otp
 // --------------------------------------------------
-
-// حداکثر 10 تلاش از هر IP در 10 دقیقه
-const ipRateLimit = createRateLimiter("auth:verify-otp:ip", 10, "10 m");
-
-// حداکثر 5 تلاش برای هر ایمیل/شماره در 10 دقیقه
-// (جلوگیری از حدس زدن brute-force کد OTP، مستقل از محدودیت داخلی Supabase)
-const identifierRateLimit = createRateLimiter(
-  "auth:verify-otp:identifier",
-  5,
-  "10 m",
-);
 
 export async function POST(request: NextRequest) {
   try {
+    // ------------------------------------------------
+    // Rate Limit
+    // ------------------------------------------------
+
+    // Rate limiter را داخل درخواست می‌سازیم
+    // تا هنگام build شدن Route، Redis initialize نشود.
+
+    // حداکثر 10 تلاش از هر IP در 10 دقیقه
+    const ipRateLimit = createRateLimiter("auth:verify-otp:ip", 10, "10 m");
+
+    // حداکثر 5 تلاش برای هر ایمیل/شماره در 10 دقیقه
+    const identifierRateLimit = createRateLimiter(
+      "auth:verify-otp:identifier",
+      5,
+      "10 m",
+    );
+
+    // ------------------------------------------------
+    // Parse body
+    // ------------------------------------------------
+
     const body = await request.json().catch(() => null);
 
     const otp = typeof body?.otp === "string" ? body.otp.trim() : "";
+
+    // ------------------------------------------------
+    // OTP cookie
+    // ------------------------------------------------
 
     const cookieStore = await cookies();
 
@@ -36,6 +50,10 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
+
+    // ------------------------------------------------
+    // Validate OTP
+    // ------------------------------------------------
 
     if (!otp) {
       return NextResponse.json(
@@ -94,16 +112,25 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // ------------------------------------------------
+    // Supabase
+    // ------------------------------------------------
+
     /*
      * مهم:
-     * همان response را به Supabase می‌دهیم تا
-     * کوکی‌های Auth روی همان response ثبت شوند.
+     * همان response را به Supabase می‌دهیم
+     * تا کوکی‌های Auth روی همان response ثبت شوند.
      */
+
     const response = NextResponse.json({
       ok: true,
     });
 
     const supabase = createSupabaseRouteClient(cookieStore, response);
+
+    // ------------------------------------------------
+    // Verify OTP
+    // ------------------------------------------------
 
     const isEmail = identifier.includes("@");
 
@@ -121,6 +148,10 @@ export async function POST(request: NextRequest) {
           },
     );
 
+    // ------------------------------------------------
+    // Supabase error
+    // ------------------------------------------------
+
     if (error || !data.session) {
       console.error("[verify-otp] Supabase error:", error?.message);
 
@@ -132,9 +163,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    /*
-     * حذف کوکی موقت OTP
-     */
+    // ------------------------------------------------
+    // Remove temporary OTP cookie
+    // ------------------------------------------------
+
     response.cookies.set("otp_identifier", "", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -143,18 +175,18 @@ export async function POST(request: NextRequest) {
       maxAge: 0,
     });
 
+    // ------------------------------------------------
+    // Session
+    // ------------------------------------------------
+
     /*
      * Session را برای Client برمی‌گردانیم.
      *
      * Client بعداً با setSession()
      * این Session را در Supabase Browser Client
      * قرار می‌دهد.
-     *
-     * توجه: access/refresh token اینجا در بدنه‌ی پاسخ برگردانده
-     * می‌شوند چون کلاینت برای setSession() به آن‌ها نیاز دارد؛
-     * این توکن‌ها کوتاه‌عمر هستند و تنها بلافاصله بعد از تایید
-     * موفق OTP یک‌بار ارسال می‌شوند (نه در هر درخواست).
      */
+
     const session = data.session;
 
     const finalResponse = NextResponse.json({
@@ -171,13 +203,22 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    // ------------------------------------------------
+    // Transfer Supabase cookies
+    // ------------------------------------------------
+
     /*
      * کوکی‌های Supabase که روی response اصلی ایجاد شده‌اند
      * به response نهایی منتقل می‌شوند.
      */
+
     response.cookies.getAll().forEach((cookie) => {
       finalResponse.cookies.set(cookie);
     });
+
+    // ------------------------------------------------
+    // Success
+    // ------------------------------------------------
 
     return finalResponse;
   } catch (error) {
