@@ -21,50 +21,6 @@ const irPhoneRegex = /^(?:0|98|\+98)?9\d{9}$/;
 const OTP_SESSION_MAX_AGE_SECONDS = 60 * 10;
 
 // --------------------------------------------------
-// Environment
-// --------------------------------------------------
-
-const UPSTASH_REDIS_REST_URL = process.env.UPSTASH_REDIS_REST_URL;
-
-const UPSTASH_REDIS_REST_TOKEN = process.env.UPSTASH_REDIS_REST_TOKEN;
-
-// --------------------------------------------------
-// Redis
-// --------------------------------------------------
-
-const redis =
-  UPSTASH_REDIS_REST_URL && UPSTASH_REDIS_REST_TOKEN
-    ? new Redis({
-        url: UPSTASH_REDIS_REST_URL,
-        token: UPSTASH_REDIS_REST_TOKEN,
-      })
-    : null;
-
-// --------------------------------------------------
-// Rate Limit
-// --------------------------------------------------
-
-// حداکثر 5 درخواست از هر IP در 10 دقیقه
-const ipRateLimit = redis
-  ? new Ratelimit({
-      redis,
-      limiter: Ratelimit.slidingWindow(5, "10 m"),
-      analytics: true,
-      prefix: "auth:send-otp:ip",
-    })
-  : null;
-
-// حداکثر 3 درخواست برای هر ایمیل/شماره در 10 دقیقه
-const identifierRateLimit = redis
-  ? new Ratelimit({
-      redis,
-      limiter: Ratelimit.slidingWindow(3, "10 m"),
-      analytics: true,
-      prefix: "auth:send-otp:identifier",
-    })
-  : null;
-
-// --------------------------------------------------
 // Client IP
 // --------------------------------------------------
 
@@ -129,17 +85,15 @@ function getRetryAfter(reset: number): string {
 export async function POST(request: NextRequest) {
   try {
     // ------------------------------------------------
-    // Environment validation
+    // Upstash Environment
     // ------------------------------------------------
 
-    if (
-      !UPSTASH_REDIS_REST_URL ||
-      !UPSTASH_REDIS_REST_TOKEN ||
-      !redis ||
-      !ipRateLimit ||
-      !identifierRateLimit
-    ) {
-      console.error("[send-otp] Upstash environment variables are missing.");
+    const redisUrl = process.env.UPSTASH_REDIS_REST_URL?.trim();
+    const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
+
+    // بررسی وجود و معتبر بودن URL
+    if (!redisUrl || !redisToken || !redisUrl.startsWith("https://")) {
+      console.error("[send-otp] Invalid Upstash configuration.");
 
       return NextResponse.json(
         {
@@ -150,6 +104,39 @@ export async function POST(request: NextRequest) {
         },
       );
     }
+
+    // ------------------------------------------------
+    // Redis
+    // ------------------------------------------------
+
+    const redis = new Redis({
+      url: redisUrl,
+      token: redisToken,
+    });
+
+    // ------------------------------------------------
+    // Rate Limit - IP
+    // ------------------------------------------------
+
+    // حداکثر 5 درخواست از هر IP در 10 دقیقه
+    const ipRateLimit = new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(5, "10 m"),
+      analytics: true,
+      prefix: "auth:send-otp:ip",
+    });
+
+    // ------------------------------------------------
+    // Rate Limit - Identifier
+    // ------------------------------------------------
+
+    // حداکثر 3 درخواست برای هر ایمیل/شماره در 10 دقیقه
+    const identifierRateLimit = new Ratelimit({
+      redis,
+      limiter: Ratelimit.slidingWindow(3, "10 m"),
+      analytics: true,
+      prefix: "auth:send-otp:identifier",
+    });
 
     // ------------------------------------------------
     // Client IP
@@ -271,7 +258,6 @@ export async function POST(request: NextRequest) {
     if (isEmail) {
       const result = await supabase.auth.signInWithOtp({
         email: normalizedIdentifier,
-
         options: {
           shouldCreateUser: true,
         },
@@ -281,7 +267,6 @@ export async function POST(request: NextRequest) {
     } else {
       const result = await supabase.auth.signInWithOtp({
         phone: normalizedIdentifier,
-
         options: {
           shouldCreateUser: true,
         },
@@ -313,13 +298,9 @@ export async function POST(request: NextRequest) {
 
     response.cookies.set("otp_identifier", normalizedIdentifier, {
       httpOnly: true,
-
       secure: process.env.NODE_ENV === "production",
-
       sameSite: "lax",
-
       path: "/",
-
       maxAge: OTP_SESSION_MAX_AGE_SECONDS,
     });
 
