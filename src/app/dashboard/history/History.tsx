@@ -1,103 +1,117 @@
 "use client";
 
-import React, { useState } from "react";
-import { FaPhoneAlt, FaVideo, FaUserMd } from "react-icons/fa";
-import { FaChevronDown } from "react-icons/fa6";
-import { historyList } from "@/app/dashboard/history/historyitem";
-import { HistoryItem, HistoryIconType } from "@/Types/types";
+import { useMemo, useState } from "react";
 
-const tabs = ["جاری", "انجام شده", "لغو شده"];
+import { historyList } from "./historyitem";
+import HistoryCard from "./HistoryCard";
+import HistoryEmpty from "./HistoryEmpty";
 
-const iconMap: Record<HistoryIconType, React.ReactNode> = {
-  phone: <FaPhoneAlt className="w-3.5 h-3.5" />,
-  video: <FaVideo className="w-3.5 h-3.5" />,
-  doctor: <FaUserMd className="w-3.5 h-3.5" />,
-};
+import { HistoryStatus } from "@/Types/types";
+
+const tabs: {
+  key: HistoryStatus;
+  label: string;
+}[] = [
+  {
+    key: "current",
+    label: "جاری",
+  },
+  {
+    key: "completed",
+    label: "انجام شده",
+  },
+  {
+    key: "cancelled",
+    label: "لغو شده",
+  },
+];
 
 const History = () => {
-  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [activeTab, setActiveTab] = useState<HistoryStatus>("current");
+
+  const [openId, setOpenId] = useState<number | null>(null);
+
+  const filteredHistory = useMemo(() => {
+    return historyList.filter((item) => item.status === activeTab);
+  }, [activeTab]);
+
+  const handleTabChange = (tab: HistoryStatus) => {
+    setActiveTab(tab);
+    setOpenId(null);
+  };
+
+  const handleToggle = (id: number) => {
+    setOpenId((currentId) => (currentId === id ? null : id));
+  };
 
   return (
-    <div
+    <main
       dir="rtl"
-      className="w-full min-h-screen px-4 md:px-12 py-6 md:py-12 font-[Tahoma]"
+      className="min-h-screen w-full bg-[#F8FAFA] px-4 py-6 font-[Tahoma] md:px-12 md:py-12"
     >
-      <div className="bg-white rounded-[20px] md:rounded-[30px] shadow-sm border border-gray-100 overflow-hidden">
-        <div className="flex flex-col gap-3 px-4 md:px-8 pt-4 md:pt-6 border-b border-[#E4E4E4]">
-          <h2 className="text-lg md:text-xl font-bold text-gray-700">
-            تاریخچه نوبت ها
-          </h2>
+      <section className="mx-auto w-full max-w-5xl overflow-hidden rounded-[20px] border border-gray-100 bg-white shadow-sm md:rounded-[30px]">
+        {/* Header */}
+        <header className="border-b border-[#E4E4E4] px-4 pt-5 md:px-8 md:pt-7">
+          <h1 className="text-lg font-bold text-gray-700 md:text-xl">
+            تاریخچه نوبت‌ها
+          </h1>
 
-          <div className="flex items-center justify-start gap-5 md:gap-6">
-            {tabs.map((t) => (
-              <button
-                key={t}
-                type="button"
-                onClick={() => setActiveTab(t)}
-                className={`text-sm md:text-base transition-all pb-3 md:pb-4 ${
-                  activeTab === t
-                    ? "text-[#1F7168] font-bold border-b-2 border-[#1F7168]"
-                    : "text-[#919191]"
-                }`}
-              >
-                {t}
-              </button>
-            ))}
-          </div>
-        </div>
+          {/* Tabs */}
+          <div
+            role="tablist"
+            aria-label="وضعیت نوبت‌ها"
+            className="mt-5 flex gap-6 overflow-x-auto"
+          >
+            {tabs.map((tab) => {
+              const isActive = activeTab === tab.key;
 
-        <div className="px-4 md:px-8">
-          {historyList.map((item: HistoryItem) => (
-            <div
-              key={item.id}
-              className="py-4 md:py-5 border-b border-[#E4E4E4] last:border-0"
-            >
-              <div className="flex justify-between items-start gap-3">
-                <div className="flex items-center gap-3">
-                  <img
-                    src={item.avatar}
-                    alt={item.doctorName}
-                    className="w-12 h-12 md:w-14 md:h-14 rounded-full object-cover shrink-0"
-                  />
-                  <div className="text-right">
-                    <h3 className="text-[#414141] font-bold text-sm md:text-base">
-                      {item.doctorName}
-                    </h3>
-                    <p className="text-[#919191] text-xs md:text-sm mt-0.5">
-                      {item.specialty}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-1.5 text-[#1F7168] text-xs md:text-sm">
-                  {iconMap[item.iconType]}
-                  {item.type}
-                </div>
-              </div>
-
-              <p className="text-[#414141] text-xs md:text-sm mt-3 leading-6">
-                <span className="font-bold">نظر پزشک : </span>
-                {item.note}
-              </p>
-
-              <div className="flex justify-between items-center mt-3">
-                <span className="text-[#919191] text-[11px] md:text-xs">
-                  {item.date}
-                </span>
-
+              return (
                 <button
+                  key={tab.key}
                   type="button"
-                  className="flex items-center gap-1 text-[#0683C9] text-xs md:text-sm"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => handleTabChange(tab.key)}
+                  className={`
+                    relative
+                    whitespace-nowrap
+                    border-b-2
+                    pb-3
+                    text-sm
+                    transition-colors
+                    md:pb-4
+                    md:text-base
+                    ${
+                      isActive
+                        ? "border-[#1F7168] font-bold text-[#1F7168]"
+                        : "border-transparent text-[#919191] hover:text-[#1F7168]"
+                    }
+                  `}
                 >
-                  <FaChevronDown className="w-3 h-3" />
-                  جزئیات بیشتر
+                  {tab.label}
                 </button>
-              </div>
-            </div>
-          ))}
+              );
+            })}
+          </div>
+        </header>
+
+        {/* History list */}
+        <div className="px-4 md:px-8">
+          {filteredHistory.length === 0 ? (
+            <HistoryEmpty />
+          ) : (
+            filteredHistory.map((item) => (
+              <HistoryCard
+                key={item.id}
+                item={item}
+                isOpen={openId === item.id}
+                onToggle={() => handleToggle(item.id)}
+              />
+            ))
+          )}
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   );
 };
 

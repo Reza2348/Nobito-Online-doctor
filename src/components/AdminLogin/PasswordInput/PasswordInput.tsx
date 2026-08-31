@@ -24,6 +24,7 @@ export default function PasswordInput({
         value={password}
         onChange={(e) => onChange(e.target.value)}
         placeholder="رمز عبور"
+        autoComplete="current-password"
         className="w-full rounded-2xl border bg-gray-50 py-3 pr-12 pl-12 text-black outline-none focus:border-teal-500"
       />
 

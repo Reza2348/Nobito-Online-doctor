@@ -14,7 +14,6 @@ export function useLogin() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // جلوگیری از ارسال چندباره‌ی فرم با کلیک‌های سریع پشت‌سرهم
   const isSubmittingRef = useRef(false);
 
   const handleLogin = useCallback(async () => {
@@ -22,7 +21,7 @@ export function useLogin() {
 
     setError("");
 
-    if (!username.trim() || !password) {
+    if (!username.trim() || !password.trim()) {
       setError("لطفاً اطلاعات ورود را کامل کنید");
       return;
     }
@@ -59,9 +58,6 @@ export function useLogin() {
         return;
       }
 
-      // loading را عمداً false نمی‌کنیم چون کامپوننت به‌زودی
-      // در اثر ناوبری unmount می‌شود؛ ریست زودهنگام باعث
-      // چشمک‌زدن دکمه قبل از تغییر صفحه می‌شود.
       router.replace(data.path);
       router.refresh();
     } catch {

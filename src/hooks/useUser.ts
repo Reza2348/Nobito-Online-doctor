@@ -1,8 +1,11 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+
 import { useRouter } from "next/navigation";
+
 import type { Session, User } from "@supabase/supabase-js";
+
 import { supabase } from "@/lib/supabaseClient";
 
 const BROWSER_SESSION_FLAG = "nobito_browser_session_active";
@@ -24,30 +27,21 @@ const formatUser = (user: User): FormattedUser => ({
       : (user.email?.split("@")[0] ?? "کاربر"),
 });
 
-export function useUser(idleTime: number = 5 * 60 * 1000) {
+export function useUser() {
   const router = useRouter();
 
   const [user, setUser] = useState<FormattedUser | null>(null);
+
   const [status, setStatus] = useState<Status>("loading");
 
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  const clearIdleTimer = useCallback(() => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-      timerRef.current = null;
-    }
-  }, []);
-
+  /**
+   * تغییر وضعیت احراز هویت
+   */
   const updateAuthState = useCallback((session: Session | null) => {
-    console.log("🔐 AUTH STATE CHANGED:", session?.user);
-
     if (session?.user) {
       sessionStorage.setItem(BROWSER_SESSION_FLAG, "1");
 
       const formattedUser = formatUser(session.user);
-
-      console.log("👤 FORMATTED USER:", formattedUser);
 
       setUser(formattedUser);
       setStatus("authenticated");
@@ -59,6 +53,9 @@ export function useUser(idleTime: number = 5 * 60 * 1000) {
     }
   }, []);
 
+  /**
+   * دریافت Session اولیه
+   */
   useEffect(() => {
     let mounted = true;
 
@@ -69,8 +66,6 @@ export function useUser(idleTime: number = 5 * 60 * 1000) {
         } = await supabase.auth.getSession();
 
         if (!mounted) return;
-
-        console.log("🔵 INITIAL SESSION:", session?.user);
 
         updateAuthState(session);
       } catch (error) {
@@ -85,13 +80,13 @@ export function useUser(idleTime: number = 5 * 60 * 1000) {
 
     initialize();
 
+    /**
+     * گوش دادن به تغییرات Auth
+     */
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!mounted) return;
-
-      console.log("🔥 SUPABASE AUTH EVENT:", event);
-      console.log("🔥 SESSION USER:", session?.user);
 
       updateAuthState(session);
     });
@@ -102,13 +97,15 @@ export function useUser(idleTime: number = 5 * 60 * 1000) {
     };
   }, [updateAuthState]);
 
+  /**
+   * خروج از حساب
+   */
   const logout = useCallback(async () => {
-    clearIdleTimer();
-
     const { error } = await supabase.auth.signOut();
 
     if (error) {
       console.error("❌ Logout error:", error);
+
       return;
     }
 
@@ -118,26 +115,7 @@ export function useUser(idleTime: number = 5 * 60 * 1000) {
     sessionStorage.removeItem(BROWSER_SESSION_FLAG);
 
     router.replace("/");
-  }, [clearIdleTimer, router]);
-
-  useEffect(() => {
-    if (status !== "unauthenticated") {
-      clearIdleTimer();
-      return;
-    }
-
-    const startTimer = () => {
-      clearIdleTimer();
-
-      timerRef.current = setTimeout(() => {
-        router.replace("/auth/signup");
-      }, idleTime);
-    };
-
-    startTimer();
-
-    return clearIdleTimer;
-  }, [status, idleTime, router, clearIdleTimer]);
+  }, [router]);
 
   return {
     user,

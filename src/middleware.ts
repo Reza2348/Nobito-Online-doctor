@@ -1,77 +1,91 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { createServerClient } from "@supabase/ssr";
+
 import { verifyToken } from "@/lib/jwt";
+
+const ADMIN_LOGIN_PATH = "/Admin";
+
+const roleRouteMap: Record<string, string> = {
+  "/Admin/dashboard": "admin",
+  "/Admin/Consultant": "consultant",
+  "/Admin/Content": "content",
+};
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  if (pathname.startsWith("/api/login")) {
-    return NextResponse.next();
-  }
+  /**
+   * ==============================
+   * ADMIN PROTECTED ROUTES
+   * ==============================
+   */
 
-  const adminProtectedRoutes = [
-    "/Admin/dashboard",
-    "/Admin/Consultant",
-    "/Admin/Content",
-  ];
-
-  const isAdminProtected = adminProtectedRoutes.some((route) =>
+  const adminProtectedRoute = Object.keys(roleRouteMap).find((route) =>
     pathname.startsWith(route),
   );
 
-  if (isAdminProtected) {
+  if (adminProtectedRoute) {
     const token = request.cookies.get("auth-token")?.value;
-    const user = token ? await verifyToken(token) : null;
 
+    let user: {
+      role?: string;
+    } | null = null;
+
+    /**
+     * بررسی JWT
+     */
+    if (token) {
+      try {
+        user = await verifyToken(token);
+      } catch {
+        /**
+         * Token نامعتبر یا منقضی شده
+         */
+        user = null;
+      }
+    }
+
+    /**
+     * کاربر وارد نشده
+     */
     if (!user) {
-      return NextResponse.redirect(new URL("/Admin", request.url));
+      return NextResponse.redirect(new URL(ADMIN_LOGIN_PATH, request.url));
     }
 
-    const role = user.role;
-    if (pathname.startsWith("/Admin/dashboard") && role !== "admin") {
-      return NextResponse.redirect(new URL("/unauthorized", request.url));
-    }
-    if (pathname.startsWith("/Admin/Consultant") && role !== "consultant") {
-      return NextResponse.redirect(new URL("/unauthorized", request.url));
-    }
-    if (pathname.startsWith("/Admin/Content") && role !== "content") {
+    /**
+     * Role مورد نیاز
+     */
+    const requiredRole = roleRouteMap[adminProtectedRoute];
+
+    /**
+     * بررسی Role
+     */
+    if (user.role !== requiredRole) {
       return NextResponse.redirect(new URL("/unauthorized", request.url));
     }
 
     return NextResponse.next();
   }
 
+  /**
+   * ==============================
+   * DASHBOARD
+   * ==============================
+   *
+   * اینجا عمداً هیچ redirect نداریم.
+   *
+   * چون می‌خواهیم DashboardLayout
+   * ابتدا پیام عدم ورود را نمایش دهد
+   * و بعد از 2 ثانیه کاربر را به
+   * /auth/signup منتقل کند.
+   */
+
   if (pathname.startsWith("/dashboard")) {
-    let response = NextResponse.next({ request });
-
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          getAll: () => request.cookies.getAll(),
-          setAll: (cookiesToSet) => {
-            cookiesToSet.forEach(({ name, value }) =>
-              request.cookies.set(name, value),
-            );
-            response = NextResponse.next({ request });
-            cookiesToSet.forEach(({ name, value, options }) =>
-              response.cookies.set(name, value, options),
-            );
-          },
-        },
-      },
-    );
-
-    const { data } = await supabase.auth.getUser();
-
-    if (!data.user) {
-      return NextResponse.redirect(new URL("/auth/signup", request.url));
-    }
-
-    return response;
+    return NextResponse.next();
   }
 
+  /**
+   * سایر مسیرها
+   */
   return NextResponse.next();
 }
 

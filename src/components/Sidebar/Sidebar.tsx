@@ -63,7 +63,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       id: 1,
       title: "اطلاعات حساب کاربری",
       icon: HiOutlineUser,
-      href: "/dashboard",
+      href: "/dashboard/profile",
     },
     {
       id: 2,
@@ -81,7 +81,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
       id: 4,
       title: "پرونده پزشکی",
       icon: HiOutlineDocumentText,
-      href: "/dashboard/medical-records",
+      href: "/dashboard/Medicalrecord",
     },
     {
       id: 5,

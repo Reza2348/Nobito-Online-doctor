@@ -1,6 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createSupabaseRouteClient } from "@/lib/Server";
+import { createRateLimiter, getClientIp, getRetryAfter } from "@/lib/rateLimit";
+
+// --------------------------------------------------
+// Rate Limit
+// --------------------------------------------------
+
+// حداکثر 10 تلاش از هر IP در 10 دقیقه
+const ipRateLimit = createRateLimiter("auth:verify-otp:ip", 10, "10 m");
+
+// حداکثر 5 تلاش برای هر ایمیل/شماره در 10 دقیقه
+// (جلوگیری از حدس زدن brute-force کد OTP، مستقل از محدودیت داخلی Supabase)
+const identifierRateLimit = createRateLimiter(
+  "auth:verify-otp:identifier",
+  5,
+  "10 m",
+);
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,6 +44,54 @@ export async function POST(request: NextRequest) {
         },
         { status: 400 },
       );
+    }
+
+    // ------------------------------------------------
+    // Rate Limit - IP
+    // ------------------------------------------------
+
+    if (ipRateLimit) {
+      const ip = getClientIp(request);
+
+      const ipLimit = await ipRateLimit.limit(ip);
+
+      if (!ipLimit.success) {
+        return NextResponse.json(
+          {
+            error:
+              "تعداد تلاش‌ها بیش از حد مجاز است. لطفا چند دقیقه بعد دوباره تلاش کنید.",
+          },
+          {
+            status: 429,
+            headers: {
+              "Retry-After": getRetryAfter(ipLimit.reset),
+            },
+          },
+        );
+      }
+    }
+
+    // ------------------------------------------------
+    // Rate Limit - Identifier
+    // ------------------------------------------------
+
+    if (identifierRateLimit) {
+      const identifierLimit = await identifierRateLimit.limit(identifier);
+
+      if (!identifierLimit.success) {
+        return NextResponse.json(
+          {
+            error:
+              "تعداد تلاش‌های نامعتبر برای این حساب زیاد است. لطفا کد جدید درخواست کنید.",
+          },
+          {
+            status: 429,
+            headers: {
+              "Retry-After": getRetryAfter(identifierLimit.reset),
+            },
+          },
+        );
+      }
     }
 
     /*
@@ -85,6 +149,11 @@ export async function POST(request: NextRequest) {
      * Client بعداً با setSession()
      * این Session را در Supabase Browser Client
      * قرار می‌دهد.
+     *
+     * توجه: access/refresh token اینجا در بدنه‌ی پاسخ برگردانده
+     * می‌شوند چون کلاینت برای setSession() به آن‌ها نیاز دارد؛
+     * این توکن‌ها کوتاه‌عمر هستند و تنها بلافاصله بعد از تایید
+     * موفق OTP یک‌بار ارسال می‌شوند (نه در هر درخواست).
      */
     const session = data.session;
 

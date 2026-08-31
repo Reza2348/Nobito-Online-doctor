@@ -105,6 +105,8 @@ export interface Doctor {
   satisfied_percent?: string;
   bio?: string;
   slug: string;
+  city?: string;
+  medical_license_number?: string;
 }
 
 // =========================================================
@@ -260,17 +262,36 @@ export type FeedbackOption = string;
 // HISTORY
 // =========================================================
 
+export type HistoryStatus = "current" | "completed" | "cancelled";
+
 export type HistoryIconType = "phone" | "video" | "doctor";
 
 export interface HistoryItem {
   id: number;
-  type: string;
-  iconType: HistoryIconType;
   doctorName: string;
   specialty: string;
   avatar: string;
+  iconType: HistoryIconType;
+  type: string;
   note: string;
   date: string;
+  status: HistoryStatus;
+}
+
+// =========================================================
+// MEDICAL RECORDS
+// =========================================================
+
+export type MedicalRecordType = "test" | "prescription" | "diagnosis";
+
+export interface MedicalRecord {
+  id: number;
+  type: MedicalRecordType;
+  title: string;
+  doctorName: string;
+  specialty: string;
+  date: string;
+  description: string;
 }
 
 // =========================================================
@@ -301,6 +322,13 @@ export type PopularArticle = {
 // =========================================================
 // ADMIN HEALTHCARE
 // =========================================================
+
+export interface AdminUser {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+}
 
 export interface AdminDoctor {
   id: string;
@@ -369,7 +397,8 @@ export type AdminPage =
   | "consultants"
   | "clinics"
   | "appointments"
-  | "settings";
+  | "settings"
+  | "manage-add";
 
 // =========================================================
 // MENU CARD

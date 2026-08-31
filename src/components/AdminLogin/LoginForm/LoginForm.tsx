@@ -1,7 +1,6 @@
 "use client";
 
 import { FaUser } from "react-icons/fa";
-
 import PasswordInput from "@/components/AdminLogin/PasswordInput/PasswordInput";
 
 type Props = {
@@ -30,6 +29,7 @@ export default function LoginForm({
           value={username}
           onChange={(e) => onUsernameChange(e.target.value)}
           placeholder="نام کاربری"
+          autoComplete="username"
           className="w-full rounded-2xl border bg-gray-50 py-3 pr-12 text-black outline-none focus:border-teal-500"
         />
       </div>

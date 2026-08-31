@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+
 import {
   FaBars,
   FaUserShield,
@@ -30,31 +32,56 @@ export default function AdminHeader({
   breadcrumb = ["داشبورد"],
   onLogout,
 }: AdminHeaderProps) {
+  const router = useRouter();
+
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // بستن منو با کلیک بیرون
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
         setMenuOpen(false);
       }
     }
+
     function handleEscape(e: KeyboardEvent) {
-      if (e.key === "Escape") setMenuOpen(false);
+      if (e.key === "Escape") {
+        setMenuOpen(false);
+      }
     }
 
     document.addEventListener("mousedown", handleClickOutside);
     document.addEventListener("keydown", handleEscape);
+
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
       document.removeEventListener("keydown", handleEscape);
     };
   }, []);
 
+  // =========================
+  // خروج از حساب
+  // =========================
+  const handleLogoutClick = () => {
+    // بستن منوی کاربر
+    setMenuOpen(false);
+
+    // اگر والد تابع خروج داشته باشد اجرا می‌شود
+    onLogout?.();
+
+    // رفتن به صفحه Admin
+    router.push("/Admin");
+  };
+
   return (
-    <div className="flex h-20 items-center justify-between gap-3 border-b border-gray-100 bg-white px-4 sm:px-6 lg:px-8">
-      {/* Left cluster (RTL: راست) — منوی موبایل + بردکرامب */}
+    <div
+      dir="rtl"
+      className="flex h-20 items-center justify-between gap-3 border-b border-gray-100 bg-white px-4 sm:px-6 lg:px-8"
+    >
+      {/* سمت راست - منوی موبایل و مسیر صفحه */}
       <div className="flex min-w-0 items-center gap-3">
+        {/* منوی موبایل */}
         <button
           type="button"
           onClick={onMenuClick}
@@ -65,21 +92,25 @@ export default function AdminHeader({
           <FaBars className="text-lg" />
         </button>
 
+        {/* عنوان */}
         <div className="min-w-0">
           <div className="flex items-center gap-2">
             <h1 className="truncate text-lg font-black text-gray-800">
               پنل مدیریت
             </h1>
+
             <span className="shrink-0 rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-bold text-emerald-700">
               {userRole}
             </span>
           </div>
 
+          {/* Breadcrumb */}
           <nav aria-label="مسیر صفحه" className="mt-1">
             <ol className="flex items-center gap-1.5 text-sm text-gray-500">
               {breadcrumb.map((item, i) => (
-                <li key={item} className="flex items-center gap-1.5">
+                <li key={`${item}-${i}`} className="flex items-center gap-1.5">
                   {i > 0 && <span className="text-gray-300">/</span>}
+
                   <span
                     className={
                       i === breadcrumb.length - 1
@@ -96,8 +127,9 @@ export default function AdminHeader({
         </div>
       </div>
 
-      {/* Right cluster (RTL: چپ) — نوتیفیکیشن + کاربر */}
+      {/* سمت چپ - اعلان و کاربر */}
       <div className="flex shrink-0 items-center gap-2">
+        {/* اعلان‌ها */}
         <button
           type="button"
           aria-label={
@@ -108,25 +140,30 @@ export default function AdminHeader({
           className="relative flex h-11 w-11 items-center justify-center rounded-xl text-gray-500 transition hover:bg-gray-100 active:scale-95"
         >
           <FaBell className="text-lg" />
+
           {notificationCount > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 flexh-4.5 min-w-4.5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white ring-2 ring-white">
+            <span className="absolute -right-0.5 -top-0.5 flex h-4.5 min-w-4.5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white ring-2 ring-white">
               {notificationCount > 9 ? "9+" : notificationCount}
             </span>
           )}
         </button>
 
+        {/* منوی کاربر */}
         <div className="relative" ref={menuRef}>
+          {/* دکمه پروفایل */}
           <button
             type="button"
-            onClick={() => setMenuOpen((v) => !v)}
+            onClick={() => setMenuOpen((value) => !value)}
             aria-haspopup="menu"
             aria-expanded={menuOpen}
             className="flex items-center gap-2 rounded-xl py-1.5 pl-2 pr-1.5 transition hover:bg-gray-100 active:scale-[0.98]"
           >
+            {/* آیکون کاربر */}
             <div className="relative shrink-0">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20">
                 <FaUserShield className="text-base" />
               </div>
+
               <span
                 className={
                   "absolute -bottom-0.5 -left-0.5 h-3 w-3 rounded-full border-2 border-white " +
@@ -136,15 +173,18 @@ export default function AdminHeader({
               />
             </div>
 
+            {/* اطلاعات کاربر */}
             <div className="hidden text-right sm:block">
               <p className="text-sm font-bold leading-tight text-gray-800">
                 {userName}
               </p>
+
               <p className="text-xs leading-tight text-gray-400">
                 {isOnline ? "آنلاین" : "آفلاین"}
               </p>
             </div>
 
+            {/* فلش */}
             <FaChevronDown
               className={
                 "hidden text-xs text-gray-400 transition-transform duration-200 sm:block " +
@@ -153,44 +193,50 @@ export default function AdminHeader({
             />
           </button>
 
+          {/* Dropdown */}
           {menuOpen && (
             <div
               role="menu"
               className="absolute left-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-gray-100 bg-white py-2 shadow-xl shadow-black/5"
             >
+              {/* اطلاعات کاربر */}
               <div className="border-b border-gray-100 px-4 py-3">
                 <p className="text-sm font-bold text-gray-800">{userName}</p>
+
                 <p className="text-xs text-gray-400">{userRole}</p>
               </div>
 
+              {/* پروفایل */}
               <button
                 type="button"
                 role="menuitem"
                 className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 transition hover:bg-gray-50"
               >
                 <FaUser className="text-gray-400" />
-                پروفایل من
+                <span>پروفایل من</span>
               </button>
 
+              {/* تنظیمات */}
               <button
                 type="button"
                 role="menuitem"
                 className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm text-gray-700 transition hover:bg-gray-50"
               >
                 <FaGear className="text-gray-400" />
-                تنظیمات
+                <span>تنظیمات</span>
               </button>
 
               <div className="my-1 border-t border-gray-100" />
 
+              {/* خروج */}
               <button
                 type="button"
                 role="menuitem"
-                onClick={onLogout}
-                className="flex w-full items-center gap-2.5 px-4 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50"
+                onClick={handleLogoutClick}
+                className="flex w-full items-center gap-2.5 rounded-xl px-4 py-2.5 text-sm font-medium text-red-600 transition hover:bg-red-50"
               >
-                <FaRightFromBracket />
-                خروج از حساب
+                <FaRightFromBracket className="text-lg" />
+                <span>خروج از حساب</span>
               </button>
             </div>
           )}

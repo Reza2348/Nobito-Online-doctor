@@ -1,5 +1,5 @@
 import History from "./History";
 
-export default function HistoryPage() {
+export default function Page() {
   return <History />;
 }
