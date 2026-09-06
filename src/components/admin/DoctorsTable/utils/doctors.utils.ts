@@ -1,4 +1,10 @@
-import type { AdminDoctor, EditDoctorFormData, DoctorRow } from "@/Types/types";
+import type {
+  AdminDoctor,
+  EditDoctorFormData,
+  DoctorRow as BaseDoctorRow,
+} from "@/Types/types";
+
+export type DoctorRow = BaseDoctorRow;
 
 export function parseFields(fields: unknown): string[] {
   if (!fields) {

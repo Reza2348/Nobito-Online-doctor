@@ -1,8 +1,12 @@
-import type { AdminConsultant, ConsultantRow } from "@/Types/types";
+import type {
+  AdminConsultant,
+  ConsultantRow as BaseConsultantRow,
+} from "@/Types/types";
 
 /**
- * تبدیل fields به آرایه‌ای تمیز از رشته‌ها
+ * Export مجدد ConsultantRow
  */
+export type ConsultantRow = BaseConsultantRow;
 export function parseFields(fields: unknown): string[] {
   if (!fields) {
     return [];

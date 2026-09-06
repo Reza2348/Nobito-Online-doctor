@@ -1,4 +1,7 @@
-import type { AdminClinic, ClinicRow } from "@/Types/types";
+import type { AdminClinic, ClinicRow as BaseClinicRow } from "@/Types/types";
+
+export type ClinicRow = BaseClinicRow;
+
 export function getFields(fields: ClinicRow["fields"]): string[] {
   if (!fields) {
     return [];
