@@ -13,6 +13,8 @@ import {
   SettingsPanel,
 } from "@/components/admin/AdminDashboard/AdminDynamicPages/AdminDynamicPages";
 
+import AddPage from "@/components/admin/add/AddPage/AddPage";
+
 interface AdminPageRendererProps {
   page: AdminPage;
 }
@@ -39,6 +41,9 @@ export default function AdminPageRenderer({ page }: AdminPageRendererProps) {
 
     case "settings":
       return <SettingsPanel />;
+
+    case "add":
+      return <AddPage />;
 
     default:
       return <DashboardHome />;

@@ -1,8 +1,13 @@
 "use client";
 
-import { FC, useState, useRef, useEffect } from "react";
+import { FC, useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { FiSearch } from "react-icons/fi";
-import { IoLocationOutline, IoChevronDownOutline } from "react-icons/io5";
+import {
+  IoChevronDownOutline,
+  IoCloseOutline,
+  IoLocationOutline,
+} from "react-icons/io5";
 
 const CITIES = [
   { value: "tehran", label: "تهران" },
@@ -26,184 +31,507 @@ const CITIES = [
 
 type Props = {
   search: string;
-  setSearch: (v: string) => void;
+  setSearch: (value: string) => void;
   city: string;
-  setCity: (v: string) => void;
+  setCity: (value: string) => void;
 };
 
 const SearchBox: FC<Props> = ({ search, setSearch, city, setCity }) => {
   const [open, setOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-  // --- drag-to-dismiss ---
-  const sheetRef = useRef<HTMLDivElement>(null);
-  const dragStartY = useRef(0);
-  const dragCurrentY = useRef(0);
-  const isDragging = useRef(false);
+  const cityButtonRef = useRef<HTMLButtonElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
-  const onDragStart = (clientY: number) => {
-    isDragging.current = true;
-    dragStartY.current = clientY;
-    dragCurrentY.current = 0;
-  };
+  const id = useId();
 
-  const onDragMove = (clientY: number) => {
-    if (!isDragging.current || !sheetRef.current) return;
-    const delta = clientY - dragStartY.current;
-    dragCurrentY.current = delta;
-    if (delta > 0) {
-      sheetRef.current.style.transform = `translateY(${delta}px)`;
-      sheetRef.current.style.transition = "none";
-    }
-  };
-
-  const onDragEnd = () => {
-    if (!isDragging.current || !sheetRef.current) return;
-    isDragging.current = false;
-    if (dragCurrentY.current > 80) {
-      setOpen(false);
-    } else {
-      sheetRef.current.style.transition = "transform 0.3s ease";
-      sheetRef.current.style.transform = "translateY(0)";
-    }
-  };
-
-  // Reset sheet position when opened
-  useEffect(() => {
-    if (open && sheetRef.current) {
-      sheetRef.current.style.transform = "translateY(0)";
-      sheetRef.current.style.transition = "transform 0.3s ease";
-    }
-  }, [open]);
-
-  // Close on backdrop click or Escape
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, []);
+  const searchId = `doctor-search-${id}`;
+  const sheetId = `city-sheet-${id}`;
+  const titleId = `city-title-${id}`;
 
   const selectedLabel =
-    CITIES.find((c) => c.value === city)?.label ?? "انتخاب شهر";
+    CITIES.find((item) => item.value === city)?.label ?? "انتخاب شهر";
 
-  return (
-    <>
-      {/* ── Search bar ─────────────────────────────────── */}
+  /* ---------------------------------------
+     Mount
+  --------------------------------------- */
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  /* ---------------------------------------
+     Lock page scroll
+  --------------------------------------- */
+
+  useEffect(() => {
+    if (!open) return;
+
+    const html = document.documentElement;
+    const body = document.body;
+
+    const oldHtmlOverflow = html.style.overflow;
+    const oldBodyOverflow = body.style.overflow;
+
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+
+    return () => {
+      html.style.overflow = oldHtmlOverflow;
+      body.style.overflow = oldBodyOverflow;
+    };
+  }, [open]);
+
+  /* ---------------------------------------
+     Escape
+  --------------------------------------- */
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleEscape);
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [open]);
+
+  /* ---------------------------------------
+     Focus
+  --------------------------------------- */
+
+  useEffect(() => {
+    if (!open) return;
+
+    const timer = window.setTimeout(() => {
+      closeButtonRef.current?.focus();
+    }, 50);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [open]);
+
+  /* ---------------------------------------
+     Select city
+  --------------------------------------- */
+
+  const selectCity = (value: string) => {
+    setCity(value);
+    setOpen(false);
+
+    window.setTimeout(() => {
+      cityButtonRef.current?.focus();
+    }, 0);
+  };
+
+  /* ---------------------------------------
+     Search Box
+  --------------------------------------- */
+
+  const searchBox = (
+    <div
+      dir="rtl"
+      className="
+        w-full
+        rounded-2xl
+        border
+        border-gray-100
+        bg-white
+        p-2
+        shadow-lg
+        shadow-black/5
+        md:p-3
+      "
+    >
       <div
         className="
-          bg-white rounded-2xl shadow-2xl border border-gray-100
-          p-2 md:p-3 flex flex-col md:flex-row gap-2 items-stretch
+          flex
+          flex-col
+          gap-2
+          md:flex-row
+          md:items-center
         "
       >
         {/* Search input */}
-        <div className="flex-1 flex items-center px-3 rounded-xl bg-white">
-          <FiSearch className="text-gray-400 shrink-0 ml-2" size={22} />
+
+        <div
+          className="
+            flex
+            min-w-0
+            flex-1
+            items-center
+            rounded-xl
+            bg-gray-50
+            px-3
+            focus-within:bg-gray-100
+          "
+        >
+          <FiSearch
+            size={21}
+            aria-hidden="true"
+            className="
+              ml-2
+              shrink-0
+              text-gray-400
+            "
+          />
+
+          <label htmlFor={searchId} className="sr-only">
+            جستجوی پزشک، درمانگر یا کلینیک
+          </label>
+
           <input
-            type="text"
+            id={searchId}
+            type="search"
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="جستجو پزشک، درمانگر، کلینیک..."
-            className="w-full h-12 outline-none text-sm md:text-base placeholder:text-gray-400 text-right text-black"
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="جستجوی پزشک، درمانگر، کلینیک..."
+            autoComplete="off"
+            enterKeyHint="search"
+            className="
+              h-12
+              w-full
+              min-w-0
+              bg-transparent
+              text-right
+              text-sm
+              text-gray-900
+              outline-none
+              placeholder:text-gray-400
+              md:text-base
+            "
           />
         </div>
 
-        {/* City trigger button */}
+        {/* City */}
+
         <button
+          ref={cityButtonRef}
           type="button"
           onClick={() => setOpen(true)}
+          aria-haspopup="dialog"
+          aria-expanded={open}
+          aria-controls={sheetId}
           className="
-            flex items-center gap-2
-            border border-[#0F766E]/30 rounded-xl
-            px-3 py-3 md:w-45
-            text-[#0F766E] cursor-pointer
-            hover:bg-[#0F766E]/5 transition-colors
+            flex
+            h-12
+            w-full
+            shrink-0
+            items-center
+            gap-2
+            rounded-xl
+            border
+            border-[#0F766E]/20
+            bg-white
+            px-3
+            text-[#0F766E]
+            transition
+            hover:bg-[#0F766E]/5
+            active:scale-[0.98]
+            focus-visible:outline-none
+            focus-visible:ring-2
+            focus-visible:ring-[#0F766E]/30
+            md:w-48
           "
         >
-          <IoLocationOutline size={20} />
-          <span className="text-sm flex-1 text-center">{selectedLabel}</span>
+          <IoLocationOutline
+            size={20}
+            aria-hidden="true"
+            className="shrink-0"
+          />
+
+          <span
+            className="
+              flex-1
+              truncate
+              text-center
+              text-sm
+              font-medium
+            "
+          >
+            {selectedLabel}
+          </span>
+
           <IoChevronDownOutline
-            size={16}
-            className={`shrink-0 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+            size={17}
+            aria-hidden="true"
+            className={`
+              shrink-0
+              transition-transform
+              duration-200
+              ${open ? "rotate-180" : ""}
+            `}
           />
         </button>
       </div>
+    </div>
+  );
 
-      {/* ── Bottom sheet ───────────────────────────────── */}
-      {open && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-40 bg-black/40"
-            onClick={() => setOpen(false)}
-          />
+  /* ---------------------------------------
+     Bottom Sheet
+  --------------------------------------- */
 
-          {/* Sheet */}
+  const sheet =
+    mounted && open
+      ? createPortal(
           <div
-            ref={sheetRef}
-            className="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl shadow-2xl"
-            style={{ maxHeight: "80vh" }}
+            dir="rtl"
+            className="
+              fixed
+              inset-0
+              z-99999
+              h-dvh
+              w-screen
+              overflow-hidden
+            "
           >
-            {/* ── Drag handle ── */}
+            {/* Backdrop */}
+
+            <button
+              type="button"
+              aria-label="بستن انتخاب شهر"
+              onClick={() => setOpen(false)}
+              className="
+                absolute
+                inset-0
+                h-full
+                w-full
+                border-0
+                bg-black/40
+                p-0
+                backdrop-blur-[2px]
+                animate-backdrop-in
+              "
+            />
+
+            {/* Bottom Sheet */}
+
             <div
-              className="flex justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing touch-none"
-              onMouseDown={(e) => onDragStart(e.clientY)}
-              onMouseMove={(e) => onDragMove(e.clientY)}
-              onMouseUp={onDragEnd}
-              onMouseLeave={onDragEnd}
-              onTouchStart={(e) => onDragStart(e.touches[0].clientY)}
-              onTouchMove={(e) => onDragMove(e.touches[0].clientY)}
-              onTouchEnd={onDragEnd}
+              id={sheetId}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby={titleId}
+              className="
+                fixed
+                bottom-0
+                left-0
+                right-0
+                z-100000
+                flex
+                w-screen
+                max-w-none
+                flex-col
+                overflow-hidden
+                rounded-t-3xl
+                bg-white
+                shadow-[0_-10px_40px_rgba(0,0,0,0.18)]
+                animate-sheet-in
+                pb-[env(safe-area-inset-bottom)]
+              "
+              style={{
+                maxHeight: "85dvh",
+              }}
             >
-              <div className="w-10 h-1.5 bg-gray-300 rounded-full" />
-            </div>
+              {/* Handle */}
 
-            {/* Sheet header */}
-            <p className="text-center text-sm font-medium text-gray-700 py-3 border-b border-gray-100">
-              انتخاب شهر
-            </p>
+              <div
+                className="
+                  flex
+                  shrink-0
+                  justify-center
+                  px-4
+                  pb-2
+                  pt-3
+                "
+              >
+                <div
+                  className="
+                    h-1.5
+                    w-10
+                    rounded-full
+                    bg-gray-300
+                  "
+                />
+              </div>
 
-            {/* City list */}
-            <ul
-              className="overflow-y-auto"
-              style={{ maxHeight: "calc(80vh - 80px)" }}
-            >
-              <li>
+              {/* Header */}
+
+              <header
+                className="
+                  flex
+                  shrink-0
+                  items-center
+                  justify-between
+                  border-b
+                  border-gray-100
+                  px-5
+                  py-3
+                "
+              >
                 <button
+                  ref={closeButtonRef}
                   type="button"
-                  onClick={() => {
-                    setCity("");
-                    setOpen(false);
-                  }}
-                  className={`
-                    w-full text-right px-5 py-3.5 text-sm border-b border-gray-50
-                    transition-colors
-                    ${city === "" ? "bg-teal-50 text-[#0F766E] font-medium" : "text-gray-700 hover:bg-gray-50"}
-                  `}
+                  onClick={() => setOpen(false)}
+                  aria-label="بستن انتخاب شهر"
+                  className="
+                    flex
+                    h-10
+                    w-10
+                    shrink-0
+                    items-center
+                    justify-center
+                    rounded-full
+                    text-gray-500
+                    transition
+                    hover:bg-gray-100
+                    active:scale-95
+                    focus-visible:outline-none
+                    focus-visible:ring-2
+                    focus-visible:ring-[#0F766E]/30
+                  "
                 >
-                  همه شهرها
+                  <IoCloseOutline size={23} aria-hidden="true" />
                 </button>
-              </li>
-              {CITIES.map((c) => (
-                <li key={c.value}>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setCity(c.value);
-                      setOpen(false);
-                    }}
-                    className={`
-                      w-full text-right px-5 py-3.5 text-sm border-b border-gray-50
-                      transition-colors
-                      ${city === c.value ? "bg-teal-50 text-[#0F766E] font-medium" : "text-gray-700 hover:bg-gray-50"}
-                    `}
-                  >
-                    {c.label}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </>
-      )}
+
+                <h2
+                  id={titleId}
+                  className="
+                    text-base
+                    font-bold
+                    text-gray-800
+                  "
+                >
+                  انتخاب شهر
+                </h2>
+
+                <div aria-hidden="true" className="h-10 w-10" />
+              </header>
+
+              {/* Cities */}
+
+              <div
+                className="
+                  min-h-0
+                  flex-1
+                  overflow-y-auto
+                  overscroll-contain
+                  [-webkit-overflow-scrolling:touch]
+                "
+              >
+                <ul>
+                  {/* All */}
+
+                  <li>
+                    <button
+                      type="button"
+                      onClick={() => selectCity("")}
+                      className={`
+                        flex
+                        min-h-14
+                        w-full
+                        items-center
+                        justify-between
+                        border-b
+                        border-gray-100
+                        px-5
+                        py-4
+                        text-right
+                        text-sm
+                        transition
+                        ${
+                          city === ""
+                            ? "bg-teal-50 font-bold text-[#0F766E]"
+                            : "text-gray-700 hover:bg-gray-50"
+                        }
+                      `}
+                    >
+                      <span>همه شهرها</span>
+
+                      {city === "" && (
+                        <span
+                          className="
+                            h-2.5
+                            w-2.5
+                            rounded-full
+                            bg-[#0F766E]
+                          "
+                        />
+                      )}
+                    </button>
+                  </li>
+
+                  {/* Cities */}
+
+                  {CITIES.map((item) => {
+                    const selected = city === item.value;
+
+                    return (
+                      <li key={item.value}>
+                        <button
+                          type="button"
+                          onClick={() => selectCity(item.value)}
+                          aria-current={selected ? "true" : undefined}
+                          className={`
+                            flex
+                            min-h-14
+                            w-full
+                            items-center
+                            justify-between
+                            border-b
+                            border-gray-100
+                            px-5
+                            py-4
+                            text-right
+                            text-sm
+                            transition
+                            focus-visible:outline-none
+                            focus-visible:ring-2
+                            focus-visible:ring-inset
+                            focus-visible:ring-[#0F766E]/30
+                            ${
+                              selected
+                                ? "bg-teal-50 font-bold text-[#0F766E]"
+                                : "text-gray-700 hover:bg-gray-50"
+                            }
+                          `}
+                        >
+                          <span>{item.label}</span>
+
+                          {selected && (
+                            <span
+                              aria-hidden="true"
+                              className="
+                                h-2.5
+                                w-2.5
+                                shrink-0
+                                rounded-full
+                                bg-[#0F766E]
+                              "
+                            />
+                          )}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </div>
+          </div>,
+          document.body,
+        )
+      : null;
+
+  return (
+    <>
+      {searchBox}
+      {sheet}
     </>
   );
 };

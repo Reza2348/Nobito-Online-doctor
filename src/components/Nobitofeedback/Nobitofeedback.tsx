@@ -128,8 +128,48 @@ const Nobitofeedback = () => {
       </div>
 
       {/* Floating chat icon */}
-      <button className="fixed bottom-8 left-8 w-14 h-14 bg-[#1F7168] rounded-full flex items-center justify-center shadow-lg hover:opacity-90">
-        <FiMessageCircle size={24} className="text-white" />
+      <button
+        type="button"
+        aria-label="پشتیبانی"
+        className="
+    group fixed bottom-6 left-6 z-50
+    w-14 h-14
+    rounded-2xl
+    bg-[#1F7168]
+    text-white
+    flex items-center justify-center
+    shadow-[0_8px_30px_rgba(31,113,104,0.35)]
+    ring-1 ring-white/20
+    transition-all duration-300 ease-out
+    hover:scale-110
+    hover:rounded-full
+    hover:shadow-[0_12px_40px_rgba(31,113,104,0.5)]
+    active:scale-95
+  "
+      >
+        <FiMessageCircle
+          size={25}
+          strokeWidth={1.8}
+          className="
+      transition-transform duration-300
+      group-hover:scale-110
+      group-hover:-rotate-6
+    "
+        />
+
+        {/* Glow */}
+        <span
+          className="
+      absolute inset-0 -z-10
+      rounded-2xl
+      bg-[#1F7168]
+      opacity-30
+      blur-xl
+      transition-all duration-300
+      group-hover:opacity-60
+      group-hover:scale-125
+    "
+        />
       </button>
     </div>
   );

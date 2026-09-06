@@ -4,7 +4,14 @@ export default function FooterTop() {
   return (
     <div className="mx-9 px-4 py-10 flex flex-col md:flex-row gap-8 items-center">
       <F.Link href="/">
-        <F.Image src="/logo1.svg" alt="logo" width={90} height={90} />
+        <F.Image
+          src="/logo1.svg"
+          alt="logo"
+          width={90}
+          height={90}
+          style={{ width: "auto", height: "auto" }}
+          priority
+        />
       </F.Link>
 
       <div

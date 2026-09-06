@@ -10,6 +10,7 @@ import {
   MdLocalHospital,
   MdCalendarMonth,
   MdSettings,
+  MdAddCircle,
   MdLogout,
 } from "react-icons/md";
 
@@ -54,6 +55,11 @@ export default function AdminSidebar({ setPage }: Props) {
       page: "appointments",
     },
     {
+      title: "افزودن",
+      icon: MdAddCircle,
+      page: "add",
+    },
+    {
       title: "تنظیمات",
       icon: MdSettings,
       page: "settings",
@@ -70,9 +76,14 @@ export default function AdminSidebar({ setPage }: Props) {
 
   return (
     <div className="p-4">
-      <aside className="w-64 h-[calc(100vh-32px)] bg-teal-700 text-white p-5 rounded-2xl shadow-lg flex flex-col">
-        <h2 className="text-xl font-bold mb-8">Nobito Admin</h2>
+      <aside
+        dir="rtl"
+        className="flex h-[calc(100vh-32px)] w-64 flex-col rounded-2xl bg-teal-700 p-5 text-white shadow-lg"
+      >
+        {/* Logo / Title */}
+        <h2 className="mb-8 text-xl font-bold">Nobito Admin</h2>
 
+        {/* Menu */}
         <nav className="flex-1">
           {menu.map((item) => {
             const Icon = item.icon;
@@ -80,8 +91,9 @@ export default function AdminSidebar({ setPage }: Props) {
             return (
               <button
                 key={item.page}
+                type="button"
                 onClick={() => setPage(item.page as AdminPage)}
-                className="w-full flex items-center gap-3 text-right p-3 rounded-lg hover:bg-teal-600 mb-2 transition"
+                className="mb-2 flex w-full items-center gap-3 rounded-lg p-3 text-right transition hover:bg-teal-600"
               >
                 <Icon size={22} />
 
@@ -91,36 +103,38 @@ export default function AdminSidebar({ setPage }: Props) {
           })}
         </nav>
 
+        {/* Logout */}
         <button
+          type="button"
           onClick={handleLogout}
           className="
-  w-full
-  flex
-  items-center
-  justify-center
-  gap-3
-  p-3
-  rounded-xl
-  bg-red-500/20
-  text-red-100
-  border
-  border-red-400/30
-  hover:bg-red-500
-  hover:text-white
-  hover:shadow-lg
-  hover:shadow-red-500/30
-  transition-all
-  duration-300
-  group
-  "
+            group
+            flex
+            w-full
+            items-center
+            justify-center
+            gap-3
+            rounded-xl
+            border
+            border-red-400/30
+            bg-red-500/20
+            p-3
+            text-red-100
+            transition-all
+            duration-300
+            hover:bg-red-500
+            hover:text-white
+            hover:shadow-lg
+            hover:shadow-red-500/30
+          "
         >
           <MdLogout
             size={22}
             className="
-    group-hover:translate-x-1
-    transition-transform
-    duration-300
-    "
+              transition-transform
+              duration-300
+              group-hover:translate-x-1
+            "
           />
 
           <span className="font-medium">خروج</span>

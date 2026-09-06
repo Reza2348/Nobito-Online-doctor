@@ -18,7 +18,7 @@ type Props = {
 
 const DEFAULT_NAV_LINKS: H.NavLink[] = [
   {
-    href: "/Online consultation",
+    href: "/Onlineconsultation",
     label: "مشاوره آنلاین",
   },
   {
@@ -30,7 +30,7 @@ const DEFAULT_NAV_LINKS: H.NavLink[] = [
     label: "نیکوکاری",
   },
   {
-    href: "/Notifications",
+    href: "/notifications",
     label: "اعلان‌ها",
   },
 ];
@@ -161,9 +161,9 @@ const MobileMenuContent: H.React.FC<Props> = ({
             loading="eager"
             decoding="async"
             className="
-              h-auto w-[100px]
+              h-auto w-25
               object-contain
-              sm:w-[120px]
+              sm:w-30
             "
           />
         </H.Link>

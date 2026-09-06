@@ -51,6 +51,7 @@ export default function InsuranceBanner() {
             alt="person"
             width={170}
             height={300}
+            style={{ width: "auto", height: "auto" }}
           />
         </div>
 

@@ -49,7 +49,7 @@ export default function LoginCard() {
         type="button"
         onClick={handleLogin}
         disabled={loading}
-        className="mt-2 w-full rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+        className="mt-2 w-full rounded-2xl bg-linear-to-r from-emerald-600 to-teal-500 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
       >
         {loading ? "در حال ورود..." : "ورود به پنل"}
       </button>

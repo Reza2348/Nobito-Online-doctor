@@ -6,33 +6,37 @@ import {
   FaComments,
   FaGear,
 } from "react-icons/fa6";
+import { useRouter } from "next/navigation";
 
 export default function ConsultantPanel() {
+  const router = useRouter();
+
   const menu = [
     {
       title: "پروفایل من",
       description: "مدیریت اطلاعات شخصی مشاور",
       icon: FaUserDoctor,
     },
-
     {
       title: "مشاوره‌ها",
       description: "جلسات و گفتگو با کاربران",
       icon: FaComments,
     },
-
     {
       title: "نوبت‌ها",
       description: "مدیریت زمان‌بندی جلسات",
       icon: FaCalendarCheck,
     },
-
     {
       title: "تنظیمات",
       description: "تنظیمات حساب کاربری",
       icon: FaGear,
     },
   ];
+
+  const handleLogout = (): void => {
+    router.push("/Admin");
+  };
 
   return (
     <main
@@ -49,8 +53,28 @@ export default function ConsultantPanel() {
             </p>
           </div>
 
-          <div className="rounded-2xl bg-teal-600 px-5 py-3 font-bold text-white shadow-lg">
-            Consultant
+          <div className="flex items-center gap-3">
+            <div className="rounded-2xl bg-teal-600 px-5 py-3 font-bold text-white shadow-lg">
+              Consultant
+            </div>
+
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="
+                rounded-2xl
+                bg-red-600
+                px-5
+                py-3
+                font-bold
+                text-white
+                shadow-lg
+                transition
+                hover:bg-red-700
+              "
+            >
+              خروج
+            </button>
           </div>
         </div>
 

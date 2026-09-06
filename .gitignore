@@ -31,8 +31,7 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# vercel
-.vercel
+
 
 # typescript
 *.tsbuildinfo
@@ -40,3 +39,4 @@ next-env.d.ts
 
 # sensitive scripts (contains hardcoded plaintext passwords)
 scripts/hash-password.ts
+.env*
