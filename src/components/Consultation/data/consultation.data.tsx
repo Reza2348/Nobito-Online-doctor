@@ -8,9 +8,9 @@ import {
   FiCalendar,
 } from "react-icons/fi";
 
-import type { ConsultationType, FeatureProps } from "@/Types/types";
+import type { ConsultationTypeItem, FeatureProps } from "@/Types/types";
 
-export const consultationTypes: ConsultationType[] = [
+export const consultationTypes: ConsultationTypeItem[] = [
   {
     icon: <FiVideo size={22} />,
     title: "مشاوره تصویری",
