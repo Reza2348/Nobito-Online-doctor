@@ -3,7 +3,7 @@ import type {
   EntityFieldConfig,
   EntityFormData,
   EntityType,
-} from "../types/entity-form.types";
+} from "@/Types/types";
 
 // =========================================================
 // ENTITY FORM CONFIG
