@@ -1,6 +1,6 @@
 export type NotificationType = "doctor" | "consultant" | "clinic" | "system";
 
-export interface NotificationRow {
+export interface Notification {
   id: number;
   type: NotificationType;
   title: string;
