@@ -1,4 +1,4 @@
-import type { Message } from "@/lib/support/support-types";
+import type { Message } from "@/Types/types";
 
 type Props = {
   messages: Message[];
