@@ -5,9 +5,9 @@ export default function NotFound() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen flex items-center justify-center px-4 bg-gradient-to-br from-emerald-50 via-white to-blue-50 relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center px-4 bg-linear-to-br from-emerald-50 via-white to-blue-50 relative overflow-hidden"
     >
-      <div className="absolute top-0 right-0 w-[450px] h-[450px] bg-emerald-200/40 blur-3xl rounded-full" />
+      <div className="absolute top-0 right-0 w-112.5 h-112.5 bg-emerald-200/40 blur-3xl rounded-full" />
 
       <div className="relative max-w-xl w-full text-center bg-white/80 backdrop-blur-xl border border-white shadow-2xl rounded-[40px] p-8 md:p-12">
         <div className="mx-auto w-20 h-20 rounded-3xl bg-emerald-100 flex items-center justify-center">

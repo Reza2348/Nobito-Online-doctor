@@ -84,5 +84,5 @@ export type AdminPage =
   | "consultants"
   | "clinics"
   | "appointments"
-  | "settings"
-  | "add";
+  | "add"
+  | "settings";

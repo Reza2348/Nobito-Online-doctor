@@ -40,12 +40,6 @@ const Header: H.React.FC = () => {
 
           {/* USER AREA */}
           <div className="flex items-center gap-2">
-            {/* DESKTOP */}
-            {/* =========================
-                ⚠️ رپر مشترک (bg-emerald-50 + rounded-full) که باعث میشد
-                زنگوله و دکمه‌ی ورود توی یک قاب دیده بشن، حذف شد.
-                حالا این div فقط یک container خنثی (بدون پس‌زمینه) است.
-            ========================== */}
             <div className="hidden sm:block">
               {mounted && <H.UserMenu user={user} logout={logout} />}
             </div>

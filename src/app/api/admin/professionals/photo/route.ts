@@ -22,6 +22,10 @@ type StorageConfig = {
   table: "doctors" | "consultants" | "clinics";
 };
 
+/* =========================================================
+   Storage Config
+========================================================= */
+
 function getStorageConfig(type: string): StorageConfig | null {
   switch (type) {
     case "doctor":
@@ -50,6 +54,10 @@ function getStorageConfig(type: string): StorageConfig | null {
   }
 }
 
+/* =========================================================
+   Image Validation
+========================================================= */
+
 function isAllowedImageType(type: string): boolean {
   return (ALLOWED_IMAGE_TYPES as readonly string[]).includes(type);
 }
@@ -75,31 +83,41 @@ function generateFileName(fileName: string): string {
   return `${Date.now()}-${crypto.randomUUID()}.${extension}`;
 }
 
+/* =========================================================
+   Admin Authentication
+========================================================= */
+
 async function getAdmin() {
-  const cookieStore = await cookies();
+  try {
+    const cookieStore = await cookies();
 
-  const token = cookieStore.get("auth-token")?.value;
+    const token = cookieStore.get("auth-token")?.value;
 
-  if (!token) {
+    if (!token) {
+      return null;
+    }
+
+    const user = await verifyToken(token);
+
+    if (!user) {
+      return null;
+    }
+
+    if (user.role !== "admin") {
+      return null;
+    }
+
+    return user;
+  } catch (error) {
+    console.error("[admin/photo] Authentication error:", error);
     return null;
   }
-
-  const user = await verifyToken(token);
-
-  if (!user) {
-    return null;
-  }
-
-  if (user.role !== "admin") {
-    return null;
-  }
-
-  return user;
 }
 
-/**
- * تبدیل خطاهای Supabase به متن قابل نمایش
- */
+/* =========================================================
+   Supabase Error Helper
+========================================================= */
+
 function getSupabaseError(error: unknown): string {
   if (!error) {
     return "خطای نامشخص";
@@ -111,6 +129,7 @@ function getSupabaseError(error: unknown): string {
       details?: string;
       hint?: string;
       code?: string;
+      statusCode?: string | number;
     };
 
     return [
@@ -118,6 +137,9 @@ function getSupabaseError(error: unknown): string {
       supabaseError.details,
       supabaseError.hint,
       supabaseError.code ? `code=${supabaseError.code}` : undefined,
+      supabaseError.statusCode
+        ? `status=${supabaseError.statusCode}`
+        : undefined,
     ]
       .filter(Boolean)
       .join(" | ");
@@ -127,34 +149,63 @@ function getSupabaseError(error: unknown): string {
 }
 
 /* =========================================================
+   Response Helpers
+========================================================= */
+
+function errorResponse(
+  message: string,
+  status = 500,
+  extra?: Record<string, unknown>,
+) {
+  return NextResponse.json(
+    {
+      ok: false,
+      error: message,
+      ...extra,
+    },
+    { status },
+  );
+}
+
+function successResponse(data: Record<string, unknown>, status = 200) {
+  return NextResponse.json(
+    {
+      ok: true,
+      ...data,
+    },
+    { status },
+  );
+}
+
+/* =========================================================
    POST
-   آپلود عکس متخصص - فقط ادمین
+   Upload Professional Photo
 ========================================================= */
 
 export async function POST(request: NextRequest) {
+  let supabaseAdmin: ReturnType<typeof getSupabaseAdmin> | null = null;
+
   let uploadedPath: string | null = null;
-  let supabaseAdmin;
+
+  let uploadedBucket: "doctor-photos" | "consultants" | "clinics" | null = null;
 
   try {
-    // -----------------------------------------------------
-    // 1. بررسی ادمین
-    // -----------------------------------------------------
+    /* -----------------------------------------------------
+       1. Admin Authentication
+    ----------------------------------------------------- */
 
     const admin = await getAdmin();
 
     if (!admin) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "دسترسی غیرمجاز. فقط ادمین می‌تواند تصویر آپلود کند.",
-        },
-        { status: 403 },
+      return errorResponse(
+        "دسترسی غیرمجاز. فقط ادمین می‌تواند تصویر آپلود کند.",
+        403,
       );
     }
 
-    // -----------------------------------------------------
-    // 2. ساخت Supabase Admin Client
-    // -----------------------------------------------------
+    /* -----------------------------------------------------
+       2. Supabase Admin Client
+    ----------------------------------------------------- */
 
     try {
       supabaseAdmin = getSupabaseAdmin();
@@ -164,135 +215,102 @@ export async function POST(request: NextRequest) {
         error,
       );
 
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "اتصال مدیریتی به Supabase برقرار نشد.",
-          details: getSupabaseError(error),
-        },
-        { status: 500 },
-      );
+      return errorResponse("اتصال مدیریتی به Supabase برقرار نشد.", 500, {
+        details: getSupabaseError(error),
+      });
     }
 
-    // -----------------------------------------------------
-    // 3. دریافت FormData
-    // -----------------------------------------------------
+    /* -----------------------------------------------------
+       3. Parse FormData
+    ----------------------------------------------------- */
 
-    const formData = await request.formData();
+    let formData: FormData;
+
+    try {
+      formData = await request.formData();
+    } catch (error) {
+      console.error("[admin/photo] FormData parsing error:", error);
+
+      return errorResponse("اطلاعات آپلود تصویر قابل دریافت نیست.", 400, {
+        details: getSupabaseError(error),
+      });
+    }
 
     const file = formData.get("file");
     const professionalId = formData.get("professionalId");
     const type = formData.get("type");
 
-    // -----------------------------------------------------
-    // 4. بررسی فایل
-    // -----------------------------------------------------
+    /* -----------------------------------------------------
+       4. Validate File
+    ----------------------------------------------------- */
 
     if (!(file instanceof File)) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "فایل تصویر ارسال نشده است.",
-        },
-        { status: 400 },
-      );
+      return errorResponse("فایل تصویر ارسال نشده است.", 400);
     }
 
-    // -----------------------------------------------------
-    // 5. بررسی ID
-    // -----------------------------------------------------
+    if (file.size <= 0) {
+      return errorResponse("فایل تصویر خالی است.", 400);
+    }
+
+    if (file.size > MAX_FILE_SIZE) {
+      return errorResponse("حجم تصویر نباید بیشتر از ۵ مگابایت باشد.", 400);
+    }
+
+    /* -----------------------------------------------------
+       5. Validate Professional ID
+    ----------------------------------------------------- */
 
     if (typeof professionalId !== "string" || !professionalId.trim()) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "شناسه متخصص ارسال نشده است.",
-        },
-        { status: 400 },
-      );
+      return errorResponse("شناسه متخصص ارسال نشده است.", 400);
     }
 
     const normalizedProfessionalId = professionalId.trim();
 
-    // -----------------------------------------------------
-    // 6. بررسی نوع متخصص
-    // -----------------------------------------------------
+    /* -----------------------------------------------------
+       6. Validate Professional Type
+    ----------------------------------------------------- */
 
     if (typeof type !== "string" || !type.trim()) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "نوع متخصص مشخص نشده است.",
-        },
-        { status: 400 },
-      );
+      return errorResponse("نوع متخصص مشخص نشده است.", 400);
     }
 
-    const normalizedType = type.trim().toLowerCase();
+    const normalizedType = type.trim().toLowerCase() as ProfessionalType;
 
     const config = getStorageConfig(normalizedType);
 
     if (!config) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "نوع متخصص باید doctor، consultant یا clinic باشد.",
-        },
-        { status: 400 },
+      return errorResponse(
+        "نوع متخصص باید doctor، consultant یا clinic باشد.",
+        400,
       );
     }
 
-    // -----------------------------------------------------
-    // 7. بررسی حجم فایل
-    // -----------------------------------------------------
-
-    if (file.size === 0) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "فایل تصویر خالی است.",
-        },
-        { status: 400 },
-      );
-    }
-
-    if (file.size > MAX_FILE_SIZE) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "حجم تصویر نباید بیشتر از ۵ مگابایت باشد.",
-        },
-        { status: 400 },
-      );
-    }
-
-    // -----------------------------------------------------
-    // 8. بررسی فرمت
-    // -----------------------------------------------------
+    /* -----------------------------------------------------
+       7. Validate Image MIME Type
+    ----------------------------------------------------- */
 
     if (!isAllowedImageType(file.type)) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "فرمت تصویر باید JPG، PNG یا WEBP باشد.",
-        },
-        { status: 400 },
-      );
+      return errorResponse("فرمت تصویر باید JPG، PNG یا WEBP باشد.", 400);
     }
 
-    // -----------------------------------------------------
-    // 9. پیدا کردن متخصص
-    //
-    // فقط id را می‌گیریم.
-    // این کار باعث می‌شود اگر photo_url مشکل داشته باشد،
-    // مرحله پیدا کردن متخصص خراب نشود.
-    // -----------------------------------------------------
+    /* -----------------------------------------------------
+       8. Log Request
+    ----------------------------------------------------- */
 
-    console.log("[admin/photo] Looking for professional:", {
+    console.log("[admin/photo] Upload request:", {
+      admin: admin.email ?? admin.id ?? "admin",
       table: config.table,
-      id: normalizedProfessionalId,
+      bucket: config.bucket,
       type: normalizedType,
+      professionalId: normalizedProfessionalId,
+      fileName: file.name,
+      fileSize: file.size,
+      mimeType: file.type,
     });
+
+    /* -----------------------------------------------------
+       9. Check Professional
+    ----------------------------------------------------- */
 
     const { data: professional, error: professionalError } = await supabaseAdmin
       .from(config.table)
@@ -306,16 +324,11 @@ export async function POST(request: NextRequest) {
         professionalError,
       );
 
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "خطا در دریافت اطلاعات متخصص.",
-          details: getSupabaseError(professionalError),
-          table: config.table,
-          professionalId: normalizedProfessionalId,
-        },
-        { status: 500 },
-      );
+      return errorResponse("خطا در دریافت اطلاعات متخصص.", 500, {
+        details: getSupabaseError(professionalError),
+        table: config.table,
+        professionalId: normalizedProfessionalId,
+      });
     }
 
     if (!professional) {
@@ -324,20 +337,50 @@ export async function POST(request: NextRequest) {
         id: normalizedProfessionalId,
       });
 
-      return NextResponse.json(
+      return errorResponse("متخصص موردنظر پیدا نشد.", 404, {
+        table: config.table,
+        professionalId: normalizedProfessionalId,
+      });
+    }
+
+    /* -----------------------------------------------------
+       10. Verify Storage Bucket
+    ----------------------------------------------------- */
+
+    console.log("[admin/photo] Checking storage bucket:", config.bucket);
+
+    const { data: buckets, error: bucketsError } =
+      await supabaseAdmin.storage.listBuckets();
+
+    if (bucketsError) {
+      console.error("[admin/photo] LIST BUCKETS ERROR:", bucketsError);
+
+      return errorResponse("امکان بررسی Storage در Supabase وجود ندارد.", 500, {
+        details: getSupabaseError(bucketsError),
+        bucket: config.bucket,
+      });
+    }
+
+    const bucketExists = buckets?.some(
+      (bucket) => bucket.name === config.bucket,
+    );
+
+    if (!bucketExists) {
+      console.error("[admin/photo] STORAGE BUCKET NOT FOUND:", config.bucket);
+
+      return errorResponse(
+        `Bucket با نام "${config.bucket}" در Supabase وجود ندارد.`,
+        500,
         {
-          ok: false,
-          error: "متخصص موردنظر پیدا نشد.",
-          table: config.table,
-          professionalId: normalizedProfessionalId,
+          bucket: config.bucket,
+          availableBuckets: buckets?.map((bucket) => bucket.name) ?? [],
         },
-        { status: 404 },
       );
     }
 
-    // -----------------------------------------------------
-    // 10. ساخت مسیر فایل
-    // -----------------------------------------------------
+    /* -----------------------------------------------------
+       11. Generate File Path
+    ----------------------------------------------------- */
 
     const fileName = generateFileName(file.name);
 
@@ -345,27 +388,40 @@ export async function POST(request: NextRequest) {
       `${config.pathPrefix}/` + `${normalizedProfessionalId}/` + fileName;
 
     uploadedPath = filePath;
+    uploadedBucket = config.bucket;
 
-    console.log("[admin/photo] Uploading file:", {
+    console.log("[admin/photo] Generated file path:", filePath);
+
+    /* -----------------------------------------------------
+       12. Convert File To Buffer
+    ----------------------------------------------------- */
+
+    let fileBuffer: Buffer;
+
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+
+      fileBuffer = Buffer.from(arrayBuffer);
+    } catch (error) {
+      console.error("[admin/photo] FILE BUFFER ERROR:", error);
+
+      return errorResponse("خواندن فایل تصویر انجام نشد.", 400, {
+        details: getSupabaseError(error),
+      });
+    }
+
+    /* -----------------------------------------------------
+       13. Upload To Supabase Storage
+    ----------------------------------------------------- */
+
+    console.log("[admin/photo] Uploading to Storage:", {
       bucket: config.bucket,
       path: filePath,
       size: file.size,
       type: file.type,
     });
 
-    // -----------------------------------------------------
-    // 11. تبدیل فایل به Buffer
-    // -----------------------------------------------------
-
-    const arrayBuffer = await file.arrayBuffer();
-
-    const fileBuffer = Buffer.from(arrayBuffer);
-
-    // -----------------------------------------------------
-    // 12. آپلود به Storage
-    // -----------------------------------------------------
-
-    const { error: uploadError } = await supabaseAdmin.storage
+    const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
       .from(config.bucket)
       .upload(filePath, fileBuffer, {
         contentType: file.type,
@@ -376,49 +432,49 @@ export async function POST(request: NextRequest) {
     if (uploadError) {
       console.error("[admin/photo] STORAGE UPLOAD ERROR:", uploadError);
 
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "آپلود تصویر در Storage انجام نشد.",
-          details: getSupabaseError(uploadError),
-          bucket: config.bucket,
-          path: filePath,
-        },
-        { status: 500 },
-      );
+      uploadedPath = null;
+      uploadedBucket = null;
+
+      return errorResponse("آپلود تصویر در Storage انجام نشد.", 500, {
+        details: getSupabaseError(uploadError),
+        bucket: config.bucket,
+        path: filePath,
+      });
     }
 
-    console.log("[admin/photo] File uploaded successfully.");
+    console.log("[admin/photo] Storage upload successful:", uploadData);
 
-    // -----------------------------------------------------
-    // 13. گرفتن Public URL
-    // -----------------------------------------------------
+    /* -----------------------------------------------------
+       14. Get Public URL
+    ----------------------------------------------------- */
 
     const { data: publicUrlData } = supabaseAdmin.storage
       .from(config.bucket)
       .getPublicUrl(filePath);
 
-    const publicUrl = publicUrlData?.publicUrl;
-
-    console.log("[admin/photo] Public URL:", publicUrl);
+    const publicUrl = publicUrlData?.publicUrl?.trim();
 
     if (!publicUrl) {
+      console.error("[admin/photo] PUBLIC URL NOT FOUND:", {
+        bucket: config.bucket,
+        path: filePath,
+      });
+
+      /* Cleanup uploaded file */
+
       await supabaseAdmin.storage.from(config.bucket).remove([filePath]);
 
       uploadedPath = null;
+      uploadedBucket = null;
 
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "آدرس عمومی تصویر ساخته نشد.",
-        },
-        { status: 500 },
-      );
+      return errorResponse("آدرس عمومی تصویر ساخته نشد.", 500);
     }
 
-    // -----------------------------------------------------
-    // 14. ذخیره URL در Database
-    // -----------------------------------------------------
+    console.log("[admin/photo] Public URL generated:", publicUrl);
+
+    /* -----------------------------------------------------
+       15. Update Database
+    ----------------------------------------------------- */
 
     console.log("[admin/photo] Updating photo_url:", {
       table: config.table,
@@ -426,256 +482,339 @@ export async function POST(request: NextRequest) {
       url: publicUrl,
     });
 
-    const { error: updateError } = await supabaseAdmin
-      .from(config.table)
-      .update({
-        photo_url: publicUrl,
-      })
-      .eq("id", normalizedProfessionalId);
+    const { data: updatedProfessional, error: updateError } =
+      await supabaseAdmin
+        .from(config.table)
+        .update({
+          photo_url: publicUrl,
+        })
+        .eq("id", normalizedProfessionalId)
+        .select("id, photo_url")
+        .maybeSingle();
 
     if (updateError) {
       console.error("[admin/photo] PHOTO URL UPDATE ERROR:", updateError);
 
-      // اگر ثبت URL شکست خورد، فایل آپلودشده را پاک کن
-      await supabaseAdmin.storage.from(config.bucket).remove([filePath]);
+      /* Cleanup Storage */
+
+      const { error: cleanupError } = await supabaseAdmin.storage
+        .from(config.bucket)
+        .remove([filePath]);
+
+      if (cleanupError) {
+        console.error("[admin/photo] CLEANUP ERROR:", cleanupError);
+      }
 
       uploadedPath = null;
+      uploadedBucket = null;
 
-      return NextResponse.json(
+      return errorResponse(
+        "عکس آپلود شد اما آدرس آن در پایگاه داده ذخیره نشد.",
+        500,
         {
-          ok: false,
-          error: "عکس آپلود شد اما آدرس آن در پایگاه داده ذخیره نشد.",
           details: getSupabaseError(updateError),
           table: config.table,
+          professionalId: normalizedProfessionalId,
         },
-        { status: 500 },
       );
     }
 
-    // -----------------------------------------------------
-    // 15. موفقیت
-    // -----------------------------------------------------
+    if (!updatedProfessional) {
+      console.error("[admin/photo] DATABASE UPDATE RETURNED NO ROW:", {
+        table: config.table,
+        id: normalizedProfessionalId,
+      });
+
+      /* Cleanup Storage */
+
+      await supabaseAdmin.storage.from(config.bucket).remove([filePath]);
+
+      uploadedPath = null;
+      uploadedBucket = null;
+
+      return errorResponse("آدرس تصویر در پایگاه داده ذخیره نشد.", 500, {
+        table: config.table,
+        professionalId: normalizedProfessionalId,
+      });
+    }
+
+    /* -----------------------------------------------------
+       16. Success
+    ----------------------------------------------------- */
+
+    uploadedPath = null;
+    uploadedBucket = null;
 
     console.log("[admin/photo] PHOTO UPLOAD COMPLETE:", {
-      id: normalizedProfessionalId,
+      admin: admin.email ?? admin.id ?? "admin",
+      professionalId: normalizedProfessionalId,
       type: normalizedType,
+      table: config.table,
       bucket: config.bucket,
       path: filePath,
       url: publicUrl,
     });
 
-    return NextResponse.json(
-      {
-        ok: true,
-        message: "تصویر با موفقیت آپلود و ذخیره شد.",
-        url: publicUrl,
-        path: filePath,
-        professionalId: normalizedProfessionalId,
-        type: normalizedType,
-      },
-      { status: 200 },
-    );
+    return successResponse({
+      message: "تصویر با موفقیت آپلود و ذخیره شد.",
+      url: publicUrl,
+      path: filePath,
+      professionalId: normalizedProfessionalId,
+      type: normalizedType,
+    });
   } catch (error) {
     console.error("[admin/photo] UNEXPECTED ERROR:", error);
 
-    // اگر فایل آپلود شده ولی خطای غیرمنتظره رخ داده،
-    // تلاش برای حذف فایل
-    if (uploadedPath && supabaseAdmin) {
-      try {
-        const typeFromRequest = request.headers.get("x-professional-type");
+    /* -----------------------------------------------------
+       Cleanup unexpected upload
+    ----------------------------------------------------- */
 
-        console.error("[admin/photo] Uploaded file may need cleanup:", {
-          uploadedPath,
-          typeFromRequest,
+    if (uploadedPath && uploadedBucket && supabaseAdmin) {
+      try {
+        console.error("[admin/photo] Attempting cleanup:", {
+          bucket: uploadedBucket,
+          path: uploadedPath,
         });
-      } catch {
-        // ignore cleanup logging error
+
+        const { error: cleanupError } = await supabaseAdmin.storage
+          .from(uploadedBucket)
+          .remove([uploadedPath]);
+
+        if (cleanupError) {
+          console.error(
+            "[admin/photo] UNEXPECTED CLEANUP ERROR:",
+            cleanupError,
+          );
+        }
+      } catch (cleanupException) {
+        console.error("[admin/photo] CLEANUP EXCEPTION:", cleanupException);
       }
     }
 
-    return NextResponse.json(
-      {
-        ok: false,
-        error: "خطایی هنگام آپلود تصویر رخ داد.",
-        details: getSupabaseError(error),
-      },
-      { status: 500 },
-    );
+    return errorResponse("خطایی هنگام آپلود تصویر رخ داد.", 500, {
+      details: getSupabaseError(error),
+    });
   }
 }
 
 /* =========================================================
    DELETE
-   حذف عکس - فقط ادمین
+   Delete Professional Photo
 ========================================================= */
 
 export async function DELETE(request: NextRequest) {
-  let supabaseAdmin;
+  let supabaseAdmin: ReturnType<typeof getSupabaseAdmin> | null = null;
 
   try {
-    // -----------------------------------------------------
-    // 1. بررسی ادمین
-    // -----------------------------------------------------
+    /* -----------------------------------------------------
+       1. Admin Authentication
+    ----------------------------------------------------- */
 
     const admin = await getAdmin();
 
     if (!admin) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "دسترسی غیرمجاز.",
-        },
-        { status: 403 },
-      );
+      return errorResponse("دسترسی غیرمجاز.", 403);
     }
 
-    // -----------------------------------------------------
-    // 2. Supabase Admin
-    // -----------------------------------------------------
+    /* -----------------------------------------------------
+       2. Supabase Admin
+    ----------------------------------------------------- */
 
     try {
       supabaseAdmin = getSupabaseAdmin();
     } catch (error) {
       console.error("[admin/photo DELETE] Supabase Admin error:", error);
 
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "اتصال مدیریتی به Supabase برقرار نشد.",
-          details: getSupabaseError(error),
-        },
-        { status: 500 },
-      );
+      return errorResponse("اتصال مدیریتی به Supabase برقرار نشد.", 500, {
+        details: getSupabaseError(error),
+      });
     }
 
-    // -----------------------------------------------------
-    // 3. دریافت اطلاعات
-    // -----------------------------------------------------
+    /* -----------------------------------------------------
+       3. Parse JSON
+    ----------------------------------------------------- */
 
-    const body = await request.json();
+    let body: unknown;
 
-    const path = typeof body.path === "string" ? body.path.trim() : "";
+    try {
+      body = await request.json();
+    } catch (error) {
+      console.error("[admin/photo DELETE] JSON parse error:", error);
+
+      return errorResponse("اطلاعات حذف تصویر معتبر نیست.", 400);
+    }
+
+    if (typeof body !== "object" || body === null) {
+      return errorResponse("اطلاعات حذف تصویر معتبر نیست.", 400);
+    }
+
+    const deleteBody = body as {
+      path?: unknown;
+      type?: unknown;
+      professionalId?: unknown;
+    };
+
+    const path =
+      typeof deleteBody.path === "string" ? deleteBody.path.trim() : "";
 
     const type =
-      typeof body.type === "string" ? body.type.trim().toLowerCase() : "";
+      typeof deleteBody.type === "string"
+        ? deleteBody.type.trim().toLowerCase()
+        : "";
 
     const professionalId =
-      typeof body.professionalId === "string" ? body.professionalId.trim() : "";
+      typeof deleteBody.professionalId === "string"
+        ? deleteBody.professionalId.trim()
+        : "";
 
-    // -----------------------------------------------------
-    // 4. اعتبارسنجی
-    // -----------------------------------------------------
+    /* -----------------------------------------------------
+       4. Validate Path
+    ----------------------------------------------------- */
 
     if (!path) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "مسیر تصویر مشخص نشده است.",
-        },
-        { status: 400 },
-      );
+      return errorResponse("مسیر تصویر مشخص نشده است.", 400);
     }
 
+    /* -----------------------------------------------------
+       5. Validate Professional ID
+    ----------------------------------------------------- */
+
     if (!professionalId) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "شناسه متخصص مشخص نشده است.",
-        },
-        { status: 400 },
-      );
+      return errorResponse("شناسه متخصص مشخص نشده است.", 400);
     }
+
+    /* -----------------------------------------------------
+       6. Validate Type
+    ----------------------------------------------------- */
 
     const config = getStorageConfig(type);
 
     if (!config) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "نوع متخصص باید doctor، consultant یا clinic باشد.",
-        },
-        { status: 400 },
+      return errorResponse(
+        "نوع متخصص باید doctor، consultant یا clinic باشد.",
+        400,
       );
     }
 
-    // -----------------------------------------------------
-    // 5. جلوگیری از حذف فایل خارج از پوشه متخصص
-    // -----------------------------------------------------
+    /* -----------------------------------------------------
+       7. Validate Path Security
+    ----------------------------------------------------- */
 
     const expectedPrefix = `${config.pathPrefix}/${professionalId}/`;
 
     if (!path.startsWith(expectedPrefix)) {
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "مسیر تصویر معتبر نیست.",
-        },
-        { status: 400 },
-      );
+      console.error("[admin/photo DELETE] Invalid path:", {
+        path,
+        expectedPrefix,
+      });
+
+      return errorResponse("مسیر تصویر معتبر نیست.", 400);
     }
 
-    // -----------------------------------------------------
-    // 6. حذف فایل
-    // -----------------------------------------------------
+    /* -----------------------------------------------------
+       8. Check Professional
+    ----------------------------------------------------- */
 
-    const { error: deleteError } = await supabaseAdmin.storage
+    const { data: professional, error: professionalError } = await supabaseAdmin
+      .from(config.table)
+      .select("id")
+      .eq("id", professionalId)
+      .maybeSingle();
+
+    if (professionalError) {
+      console.error(
+        "[admin/photo DELETE] PROFESSIONAL LOOKUP ERROR:",
+        professionalError,
+      );
+
+      return errorResponse("خطا در دریافت اطلاعات متخصص.", 500, {
+        details: getSupabaseError(professionalError),
+      });
+    }
+
+    if (!professional) {
+      return errorResponse("متخصص موردنظر پیدا نشد.", 404);
+    }
+
+    /* -----------------------------------------------------
+       9. Delete From Storage
+    ----------------------------------------------------- */
+
+    console.log("[admin/photo DELETE] Removing file:", {
+      bucket: config.bucket,
+      path,
+    });
+
+    const { data: deleteData, error: deleteError } = await supabaseAdmin.storage
       .from(config.bucket)
       .remove([path]);
 
     if (deleteError) {
       console.error("[admin/photo DELETE] STORAGE DELETE ERROR:", deleteError);
 
-      return NextResponse.json(
-        {
-          ok: false,
-          error: "حذف تصویر از Storage انجام نشد.",
-          details: getSupabaseError(deleteError),
-        },
-        { status: 500 },
-      );
+      return errorResponse("حذف تصویر از Storage انجام نشد.", 500, {
+        details: getSupabaseError(deleteError),
+        bucket: config.bucket,
+        path,
+      });
     }
 
-    // -----------------------------------------------------
-    // 7. خالی کردن photo_url
-    // -----------------------------------------------------
+    console.log("[admin/photo DELETE] Storage delete result:", deleteData);
 
-    const { error: updateError } = await supabaseAdmin
-      .from(config.table)
-      .update({
-        photo_url: null,
-      })
-      .eq("id", professionalId);
+    /* -----------------------------------------------------
+       10. Clear photo_url
+    ----------------------------------------------------- */
+
+    const { data: updatedProfessional, error: updateError } =
+      await supabaseAdmin
+        .from(config.table)
+        .update({
+          photo_url: null,
+        })
+        .eq("id", professionalId)
+        .select("id, photo_url")
+        .maybeSingle();
 
     if (updateError) {
       console.error("[admin/photo DELETE] DATABASE UPDATE ERROR:", updateError);
 
-      return NextResponse.json(
+      return errorResponse(
+        "تصویر حذف شد اما آدرس تصویر از پایگاه داده پاک نشد.",
+        500,
         {
-          ok: false,
-          error: "تصویر حذف شد اما آدرس تصویر از پایگاه داده پاک نشد.",
           details: getSupabaseError(updateError),
+          table: config.table,
         },
-        { status: 500 },
       );
     }
 
-    return NextResponse.json(
-      {
-        ok: true,
-        message: "تصویر با موفقیت حذف شد.",
-      },
-      { status: 200 },
-    );
+    if (!updatedProfessional) {
+      return errorResponse("آدرس تصویر از پایگاه داده پاک نشد.", 500, {
+        table: config.table,
+        professionalId,
+      });
+    }
+
+    /* -----------------------------------------------------
+       11. Success
+    ----------------------------------------------------- */
+
+    console.log("[admin/photo DELETE] PHOTO DELETE COMPLETE:", {
+      admin: admin.email ?? admin.id ?? "admin",
+      professionalId,
+      type,
+      bucket: config.bucket,
+      path,
+    });
+
+    return successResponse({
+      message: "تصویر با موفقیت حذف شد.",
+    });
   } catch (error) {
     console.error("[admin/photo DELETE] UNEXPECTED ERROR:", error);
 
-    return NextResponse.json(
-      {
-        ok: false,
-        error: "خطایی هنگام حذف تصویر رخ داد.",
-        details: getSupabaseError(error),
-      },
-      { status: 500 },
-    );
+    return errorResponse("خطایی هنگام حذف تصویر رخ داد.", 500, {
+      details: getSupabaseError(error),
+    });
   }
 }

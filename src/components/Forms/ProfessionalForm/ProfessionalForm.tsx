@@ -2,11 +2,8 @@
 
 import { useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
-
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-import type { ProfessionalFormProps as GlobalProfessionalFormProps } from "@/Types/types";
 
 import { useProfessionalForm } from "@/hooks/useProfessionalForm";
 import { useProfessionalPhoto } from "@/hooks/useProfessionalPhoto";
@@ -20,7 +17,12 @@ import ProfessionalDescription from "@/components/Forms/professional/Professiona
 import ProfessionalSubmit from "@/components/Forms/professional/ProfessionalSubmit/ProfessionalSubmit";
 import ProfessionalStatus from "@/components/Forms/professional/ProfessionalStatus/ProfessionalStatus";
 
-type ProfessionalFormProps = GlobalProfessionalFormProps;
+import { ClinicInformation } from "../ProfessionalForm/ClinicInformation/ClinicInformation";
+import { ClinicServices } from "../ProfessionalForm/ClinicServices/ClinicServices";
+import { FormError } from "../ProfessionalForm/FormError/FormError";
+import { FormHeader } from "../ProfessionalForm/FormHeader/FormHeader";
+
+import type { ProfessionalFormProps } from "@/Types/types";
 
 export default function ProfessionalForm({
   type,
@@ -45,6 +47,8 @@ export default function ProfessionalForm({
     photo,
     photoPreview,
     photoError,
+    uploadProgress,
+    isUploading,
     handlePhotoChange,
     removePhoto,
     uploadProfessionalPhoto,
@@ -52,40 +56,30 @@ export default function ProfessionalForm({
 
   const title = isDoctor ? "پزشک" : isConsultant ? "مشاور" : "کلینیک";
 
-  /**
-   * Submit
-   *
-   * ترتیب:
-   * 1. ابتدا اطلاعات متخصص ثبت می‌شود.
-   * 2. اگر عکس جدید انتخاب شده باشد، بعد از گرفتن ID آپلود می‌شود.
-   * 3. سپس photo_url رکورد آپدیت می‌شود.
-   */
+  const handlePhotoChangeSafe = (event: ChangeEvent<HTMLInputElement>) => {
+    handlePhotoChange(event);
+    setPhotoUrl(null);
+  };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (loading) return;
+    if (loading) {
+      return;
+    }
 
     try {
-      // ----------------------------------------------
-      // 1. ثبت اطلاعات فرم
-      // ----------------------------------------------
       const result = await submit(photoUrl);
 
       if (!result) {
         return;
       }
 
-      // ----------------------------------------------
-      // 2. آپلود عکس
-      // ----------------------------------------------
       if (photo) {
         try {
           const uploadedUrl = await uploadProfessionalPhoto(result.id);
 
           if (uploadedUrl) {
-            // ----------------------------------------
-            // 3. ذخیره آدرس عکس
-            // ----------------------------------------
             await updatePhotoUrl(result.id, uploadedUrl);
 
             setPhotoUrl(uploadedUrl);
@@ -113,44 +107,24 @@ export default function ProfessionalForm({
     }
   };
 
-  /**
-   * Photo change
-   */
-  const handlePhotoChangeSafe = (event: ChangeEvent<HTMLInputElement>) => {
-    handlePhotoChange(event);
-    setPhotoUrl(null);
-  };
-
   return (
     <>
       <ToastContainer position="top-right" autoClose={4000} rtl />
 
       <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Header */}
-        <div>
-          <h2 className="text-2xl font-bold">ثبت {title}</h2>
+        <FormHeader title={title} />
 
-          <p className="mt-2 text-sm text-gray-500">
-            اطلاعات {title} را وارد کنید.
-          </p>
-        </div>
+        <FormError error={error || photoError} />
 
-        {/* Error */}
-        {(error || photoError) && (
-          <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-            {error || photoError}
-          </div>
-        )}
-
-        {/* Photo */}
         <ProfessionalPhoto
           title={title}
           photoPreview={photoPreview}
           onRemove={removePhoto}
           onChange={handlePhotoChangeSafe}
+          isUploading={isUploading}
+          uploadProgress={uploadProgress}
         />
 
-        {/* Personal Information */}
         {!isClinic && (
           <ProfessionalPersonalInfo
             formData={formData}
@@ -158,42 +132,14 @@ export default function ProfessionalForm({
           />
         )}
 
-        {/* Clinic Information */}
         {isClinic && (
-          <section className="space-y-4">
-            <h3 className="text-lg font-semibold">اطلاعات کلینیک</h3>
-
-            <div className="grid gap-4 md:grid-cols-2">
-              {/* Clinic Name */}
-              <div>
-                <label className="mb-2 block text-sm">نام کلینیک</label>
-
-                <input
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  className="w-full rounded-lg border p-3"
-                  placeholder="نام کلینیک"
-                />
-              </div>
-
-              {/* Clinic Type */}
-              <div>
-                <label className="mb-2 block text-sm">نوع کلینیک</label>
-
-                <input
-                  name="type"
-                  value={formData.type}
-                  onChange={handleChange}
-                  className="w-full rounded-lg border p-3"
-                  placeholder="مثلاً پوست و مو"
-                />
-              </div>
-            </div>
-          </section>
+          <ClinicInformation
+            name={formData.name}
+            type={formData.type}
+            onChange={handleChange}
+          />
         )}
 
-        {/* Professional Information */}
         {!isClinic && (
           <ProfessionalInfo
             formData={formData}
@@ -202,37 +148,22 @@ export default function ProfessionalForm({
           />
         )}
 
-        {/* Contact */}
         <ProfessionalContact
           formData={formData}
           isClinic={isClinic}
           onChange={handleChange}
         />
 
-        {/* Location */}
         <ProfessionalLocation
           formData={formData}
           isClinic={isClinic}
           onChange={handleChange}
         />
 
-        {/* Clinic Services */}
         {isClinic && (
-          <section className="space-y-4">
-            <h3 className="text-lg font-semibold">خدمات</h3>
-
-            <textarea
-              name="services"
-              value={formData.services}
-              onChange={handleChange}
-              className="w-full rounded-lg border p-3"
-              placeholder="مثلاً لیزر، جوانسازی، تزریق ژل"
-              rows={4}
-            />
-          </section>
+          <ClinicServices value={formData.services} onChange={handleChange} />
         )}
 
-        {/* Description / Bio */}
         <ProfessionalDescription
           title={title}
           isClinic={isClinic}
@@ -241,14 +172,12 @@ export default function ProfessionalForm({
           onChange={handleChange}
         />
 
-        {/* Active Status */}
         <ProfessionalStatus
           title={title}
           isActive={formData.isActive}
           onChange={setActive}
         />
 
-        {/* Submit */}
         <ProfessionalSubmit title={title} loading={loading} />
       </form>
     </>

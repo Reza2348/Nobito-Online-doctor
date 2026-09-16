@@ -17,15 +17,11 @@ import { validateProfessionalForm } from "@/components/Forms/utils/professionalV
 
 interface UseProfessionalFormReturn {
   formData: ProfessionalFormData;
-
   loading: boolean;
-
   error: string | null;
 
   isDoctor: boolean;
-
   isConsultant: boolean;
-
   isClinic: boolean;
 
   handleChange: (
@@ -79,14 +75,9 @@ export function useProfessionalForm(
       >,
     ) => {
       const target = event.target;
-
       const name = target.name;
 
       if (!name) return;
-
-      // -------------------------------------------------
-      // CHECKBOX
-      // -------------------------------------------------
 
       if (target instanceof HTMLInputElement && target.type === "checkbox") {
         const checked = target.checked;
@@ -100,10 +91,6 @@ export function useProfessionalForm(
 
         return;
       }
-
-      // -------------------------------------------------
-      // INPUT / TEXTAREA / SELECT
-      // -------------------------------------------------
 
       setFormData((previous) => ({
         ...previous,
@@ -199,10 +186,6 @@ export function useProfessionalForm(
 
       setError(null);
 
-      // -------------------------------------------------
-      // VALIDATION
-      // -------------------------------------------------
-
       const validationError = validate();
 
       if (validationError) {
@@ -213,22 +196,39 @@ export function useProfessionalForm(
       setLoading(true);
 
       try {
-        // -------------------------------------------------
-        // PHOTO URL
-        // -------------------------------------------------
-
         const finalPhotoUrl = submittedPhotoUrl ?? photoUrl ?? "";
 
         let data: Record<string, unknown> | null = null;
 
-        // -------------------------------------------------
+        // =================================================
         // DOCTOR
-        // -------------------------------------------------
+        // =================================================
 
         if (type === "doctor") {
-          const payload = {
-            name: `${formData.firstName} ${formData.lastName}`.trim(),
+          const fullName = `${formData.firstName} ${formData.lastName}`.trim();
 
+          /*
+           * profile_id
+           *
+           * اگر فرم ثبت پزشک برای یک profile موجود است،
+           * باید مقدار آن را از formData دریافت کنیم.
+           *
+           * اگر در ProfessionalFormData نام فیلد متفاوت است،
+           * همین قسمت را با نام واقعی آن عوض کن.
+           */
+          const profileId =
+            "profile_id" in formData
+              ? String(
+                  (
+                    formData as ProfessionalFormData & {
+                      profile_id?: string | null;
+                    }
+                  ).profile_id ?? "",
+                ).trim()
+              : "";
+
+          const payload = {
+            name: fullName,
             specialty: formData.specialty.trim(),
 
             patients_satisfied: 0,
@@ -243,8 +243,13 @@ export function useProfessionalForm(
 
             photo_url: finalPhotoUrl,
 
-            // وضعیت فعال / غیرفعال
             is_active: Boolean(formData.isActive),
+
+            ...(profileId
+              ? {
+                  profile_id: profileId,
+                }
+              : {}),
           };
 
           console.log("DOCTOR PAYLOAD:", payload);
@@ -273,12 +278,25 @@ export function useProfessionalForm(
           data = result.data as Record<string, unknown> | null;
         }
 
-        // -------------------------------------------------
+        // =================================================
         // CONSULTANT
-        // -------------------------------------------------
+        // =================================================
         else if (type === "consultant") {
+          const fullName = `${formData.firstName} ${formData.lastName}`.trim();
+
+          const profileId =
+            "profile_id" in formData
+              ? String(
+                  (
+                    formData as ProfessionalFormData & {
+                      profile_id?: string | null;
+                    }
+                  ).profile_id ?? "",
+                ).trim()
+              : "";
+
           const payload = {
-            name: `${formData.firstName} ${formData.lastName}`.trim(),
+            name: fullName,
 
             specialty: formData.specialty.trim(),
 
@@ -291,6 +309,12 @@ export function useProfessionalForm(
             photo_url: finalPhotoUrl,
 
             is_active: Boolean(formData.isActive),
+
+            ...(profileId
+              ? {
+                  profile_id: profileId,
+                }
+              : {}),
           };
 
           console.log("CONSULTANT PAYLOAD:", payload);
@@ -319,14 +343,25 @@ export function useProfessionalForm(
           data = result.data as Record<string, unknown> | null;
         }
 
-        // -------------------------------------------------
+        // =================================================
         // CLINIC
-        // -------------------------------------------------
+        // =================================================
         else if (type === "clinic") {
           const fields = formData.services
             .split(/[,،|]/)
             .map((item) => item.trim())
             .filter(Boolean);
+
+          const profileId =
+            "profile_id" in formData
+              ? String(
+                  (
+                    formData as ProfessionalFormData & {
+                      profile_id?: string | null;
+                    }
+                  ).profile_id ?? "",
+                ).trim()
+              : "";
 
           const payload = {
             name: formData.name.trim(),
@@ -346,6 +381,12 @@ export function useProfessionalForm(
             photo_url: finalPhotoUrl,
 
             is_active: Boolean(formData.isActive),
+
+            ...(profileId
+              ? {
+                  profile_id: profileId,
+                }
+              : {}),
           };
 
           console.log("CLINIC PAYLOAD:", payload);
@@ -374,17 +415,17 @@ export function useProfessionalForm(
           data = result.data as Record<string, unknown> | null;
         }
 
-        // -------------------------------------------------
-        // NO DATA
-        // -------------------------------------------------
+        // =================================================
+        // CHECK RESULT
+        // =================================================
 
         if (!data) {
           throw new Error("اطلاعات ثبت شد اما داده‌ای از سرور دریافت نشد.");
         }
 
-        // -------------------------------------------------
+        // =================================================
         // SUCCESS DATA
-        // -------------------------------------------------
+        // =================================================
 
         const firstName =
           typeof formData.firstName === "string" ? formData.firstName : "";
@@ -417,15 +458,30 @@ export function useProfessionalForm(
             typeof data.photo_url === "string" ? data.photo_url : finalPhotoUrl,
         };
 
-        // -------------------------------------------------
-        // SUCCESS CALLBACK
-        // -------------------------------------------------
+        // =================================================
+        // NOTIFICATION
+        // =================================================
+        //
+        // اینجا createNotification را عمداً صدا نمی‌زنیم.
+        //
+        // چون در Supabase برای doctors / consultants /
+        // clinics Database Trigger ساخته‌ایم.
+        //
+        // بنابراین بعد از INSERT موفق:
+        //
+        // doctors
+        //    ↓
+        // trigger
+        //    ↓
+        // notifications
+        //    ↓
+        // Supabase Realtime
+        //
+        // به این ترتیب اعلان دقیقاً زمانی ساخته می‌شود
+        // که ثبت اطلاعات در دیتابیس موفق شده باشد.
+        // =================================================
 
         onSuccess?.(successData);
-
-        // -------------------------------------------------
-        // RESET
-        // -------------------------------------------------
 
         resetForm();
 
@@ -462,19 +518,15 @@ export function useProfessionalForm(
     isClinic,
 
     handleChange,
-
     setFormData,
-
     setActive,
 
     validate,
-
     submit,
 
     updatePhotoUrl,
 
     resetForm,
-
     setError,
   };
 }

@@ -16,29 +16,18 @@ export default function ConsultantInfo({
   return (
     <div className="min-w-0 flex-1">
       {/* نام */}
-      <div
-        className="
-          mb-3
-          flex
-          flex-wrap
-          items-center
-          gap-2
-        "
-      >
-        <MdPsychology
-          className="
-            shrink-0
-            text-purple-600
-          "
-          size={23}
-        />
+      <div className="mb-3 flex flex-wrap items-center gap-2">
+        <MdPsychology className="shrink-0 text-purple-600" size={23} />
 
         <h3
           className="
+            min-w-0
+            flex-1
             truncate
-            text-xl
+            text-lg
             font-extrabold
             text-slate-900
+            sm:text-xl
           "
         >
           {name || "نام مشاور ثبت نشده"}
@@ -46,6 +35,7 @@ export default function ConsultantInfo({
 
         <span
           className="
+            shrink-0
             rounded-full
             bg-purple-50
             px-2.5
@@ -60,84 +50,34 @@ export default function ConsultantInfo({
       </div>
 
       {/* تخصص */}
-      <div
-        className="
-          mb-3
-          flex
-          items-center
-          gap-2
-          text-sm
-          text-slate-600
-        "
-      >
-        <span
-          className="
-            font-bold
-            text-slate-800
-          "
-        >
-          تخصص:
-        </span>
-
-        <span>{specialty || "ثبت نشده"}</span>
-      </div>
+      <p className="mb-3 text-sm leading-6 text-slate-600">
+        <span className="font-bold text-slate-800">تخصص: </span>
+        {specialty || "ثبت نشده"}
+      </p>
 
       {/* آدرس */}
-      <div
-        className="
-          mb-4
-          flex
-          items-start
-          gap-2
-          text-sm
-          text-slate-500
-        "
-      >
-        <MdLocationOn
-          className="
-            mt-0.5
-            shrink-0
-            text-red-500
-          "
-          size={20}
-        />
+      <div className="mb-4 flex items-start gap-2 text-sm text-slate-500">
+        <MdLocationOn className="mt-0.5 shrink-0 text-red-500" size={20} />
 
-        <span
-          className="
-            leading-6
-          "
-        >
-          {address || "آدرس ثبت نشده"}
-        </span>
+        <p className="leading-6">{address || "آدرس ثبت نشده"}</p>
       </div>
 
       {/* زمینه‌های تخصصی */}
       <div>
-        <div
-          className="
-            mb-2
-            text-sm
-            font-bold
-            text-slate-700
-          "
-        >
+        <div className="mb-2 text-sm font-bold text-slate-700">
           زمینه‌های تخصصی
         </div>
 
         {fields.length > 0 ? (
-          <div
-            className="
-              flex
-              flex-wrap
-              gap-2
-            "
-          >
+          <div className="flex flex-wrap gap-2">
             {fields.map((field, index) => (
               <span
                 key={`${field}-${index}`}
                 className="
                   inline-flex
+                  max-w-full
                   items-center
+                  truncate
                   rounded-full
                   border
                   border-purple-100
@@ -157,14 +97,7 @@ export default function ConsultantInfo({
             ))}
           </div>
         ) : (
-          <span
-            className="
-              text-sm
-              text-slate-400
-            "
-          >
-            ثبت نشده
-          </span>
+          <span className="text-sm text-slate-400">ثبت نشده</span>
         )}
       </div>
     </div>

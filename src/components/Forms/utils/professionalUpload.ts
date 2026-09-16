@@ -1,3 +1,9 @@
+"use client";
+
+import axios, { AxiosError } from "axios";
+
+import { axiosClient } from "@/lib/axiosClient";
+
 import type { ProfessionalType } from "@/Types/types";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -22,6 +28,8 @@ interface ApiResponse {
   message?: string;
 }
 
+export type UploadProgressCallback = (percent: number) => void;
+
 // =========================================================
 // Helpers
 // =========================================================
@@ -45,38 +53,97 @@ function normalizeProfessionalType(type: ProfessionalType): ProfessionalType {
   return normalizedType as ProfessionalType;
 }
 
-/**
- * پاسخ API را به شکل امن می‌خواند.
- *
- * اگر سرور JSON برگرداند، همان را parse می‌کند.
- * اگر HTML یا متن خطا برگرداند، متن واقعی سرور را در Console نمایش می‌دهد.
- */
-async function readApiResponse(response: Response): Promise<ApiResponse> {
-  const responseText = await response.text();
+// =========================================================
+// Resolve API Error
+// =========================================================
 
-  console.log("[professionalUpload] API response:", {
-    status: response.status,
-    statusText: response.statusText,
-    contentType: response.headers.get("content-type"),
-    body: responseText,
-  });
+function resolveApiError(error: unknown, fallback: string): string {
+  if (!axios.isAxiosError(error)) {
+    if (error instanceof Error) {
+      return error.message;
+    }
 
-  if (!responseText.trim()) {
-    return {};
+    return fallback;
   }
 
-  try {
-    return JSON.parse(responseText) as ApiResponse;
-  } catch (error) {
-    console.error("[professionalUpload] Server did not return valid JSON:", {
-      status: response.status,
-      statusText: response.statusText,
-      contentType: response.headers.get("content-type"),
-      body: responseText,
-      parseError: error,
-    });
+  const axiosError = error as AxiosError<ApiResponse>;
 
-    throw new Error(`سرور پاسخ JSON برنگرداند. کد خطا: ${response.status}`);
+  // ---------------------------------------------
+  // Request did not reach server
+  // ---------------------------------------------
+
+  if (!axiosError.response) {
+    if (axiosError.code === "ECONNABORTED") {
+      return "زمان اتصال به سرور به پایان رسید.";
+    }
+
+    if (axiosError.code === "ERR_NETWORK") {
+      return "ارتباط با سرور برقرار نشد. لطفاً اتصال اینترنت را بررسی کنید.";
+    }
+
+    return "ارتباط با سرور برقرار نشد. لطفاً دوباره تلاش کنید.";
+  }
+
+  // ---------------------------------------------
+  // Server response
+  // ---------------------------------------------
+
+  const responseData = axiosError.response.data;
+
+  // JSON response
+  if (responseData && typeof responseData === "object") {
+    if (typeof responseData.error === "string" && responseData.error.trim()) {
+      return responseData.error;
+    }
+
+    if (
+      typeof responseData.message === "string" &&
+      responseData.message.trim()
+    ) {
+      return responseData.message;
+    }
+  }
+
+  // String response
+  const data: unknown = responseData;
+
+  if (typeof data === "string" && data.trim()) {
+    return data;
+  }
+
+  // ---------------------------------------------
+  // HTTP status messages
+  // ---------------------------------------------
+
+  switch (axiosError.response.status) {
+    case 400:
+      return "اطلاعات ارسال‌شده برای آپلود تصویر نامعتبر است.";
+
+    case 401:
+      return "برای آپلود تصویر باید وارد حساب کاربری شوید.";
+
+    case 403:
+      return "شما اجازه آپلود تصویر را ندارید.";
+
+    case 404:
+      return "سرویس آپلود تصویر پیدا نشد.";
+
+    case 413:
+      return "حجم تصویر بیش از حد مجاز است.";
+
+    case 415:
+      return "فرمت تصویر پشتیبانی نمی‌شود.";
+
+    case 500:
+      return "خطای داخلی سرور هنگام آپلود تصویر رخ داد.";
+
+    case 502:
+    case 503:
+    case 504:
+      return "سرویس آپلود تصویر موقتاً در دسترس نیست.";
+
+    default:
+      return `${fallback} کد خطا: ${axiosError.response.status}`;
   }
 }
 
@@ -114,6 +181,7 @@ export async function uploadPhoto(
   file: File,
   professionalId: string,
   type: ProfessionalType,
+  onProgress?: UploadProgressCallback,
 ): Promise<UploadPhotoResult> {
   // -------------------------------------------------------
   // Validate file
@@ -136,7 +204,7 @@ export async function uploadPhoto(
   }
 
   // -------------------------------------------------------
-  // Normalize professional type
+  // Normalize type
   // -------------------------------------------------------
 
   const normalizedType = normalizeProfessionalType(type);
@@ -148,96 +216,96 @@ export async function uploadPhoto(
   const formData = new FormData();
 
   formData.append("file", file);
+
   formData.append("professionalId", normalizedProfessionalId);
+
   formData.append("type", normalizedType);
 
   // -------------------------------------------------------
-  // Send request
+  // Upload
   // -------------------------------------------------------
 
-  let response: Response;
-
   try {
-    response = await fetch("/api/admin/professionals/photo", {
-      method: "POST",
-      body: formData,
-      credentials: "include",
-      cache: "no-store",
+    /*
+     * مهم:
+     *
+     * Content-Type را دستی تنظیم نمی‌کنیم.
+     *
+     * Axios باید multipart/form-data را با boundary
+     * صحیح خودش تنظیم کند.
+     */
+
+    const response = await axiosClient.post<ApiResponse>(
+      "/api/admin/professionals/photo",
+      formData,
+      {
+        onUploadProgress: (progressEvent) => {
+          if (!onProgress || !progressEvent.total) {
+            return;
+          }
+
+          const percent = Math.round(
+            (progressEvent.loaded * 100) / progressEvent.total,
+          );
+
+          onProgress(Math.min(100, Math.max(0, percent)));
+        },
+      },
+    );
+
+    const result = response.data;
+
+    // -----------------------------------------------------
+    // Validate API success
+    // -----------------------------------------------------
+
+    if (!result || result.ok !== true) {
+      throw new Error(
+        result?.error ?? result?.message ?? "آپلود تصویر توسط سرور تایید نشد.",
+      );
+    }
+
+    // -----------------------------------------------------
+    // Validate URL
+    // -----------------------------------------------------
+
+    if (typeof result.url !== "string" || !result.url.trim()) {
+      console.error("[uploadPhoto] Missing URL:", result);
+
+      throw new Error("آدرس تصویر از سرور دریافت نشد.");
+    }
+
+    // -----------------------------------------------------
+    // Validate path
+    // -----------------------------------------------------
+
+    if (typeof result.path !== "string" || !result.path.trim()) {
+      console.error("[uploadPhoto] Missing path:", result);
+
+      throw new Error("مسیر تصویر از سرور دریافت نشد.");
+    }
+
+    // -----------------------------------------------------
+    // Success
+    // -----------------------------------------------------
+
+    if (onProgress) {
+      onProgress(100);
+    }
+
+    return {
+      url: result.url.trim(),
+      path: result.path.trim(),
+    };
+  } catch (error) {
+    console.error("[uploadPhoto] Upload failed:", {
+      error,
+      status: axios.isAxiosError(error) ? error.response?.status : undefined,
+      response: axios.isAxiosError(error) ? error.response?.data : undefined,
     });
-  } catch (error) {
-    console.error("[uploadPhoto] Network error:", error);
 
-    throw new Error(
-      "ارتباط با سرور برقرار نشد. لطفاً اتصال اینترنت را بررسی کنید.",
-    );
+    throw new Error(resolveApiError(error, "آپلود تصویر انجام نشد."));
   }
-
-  // -------------------------------------------------------
-  // Read response safely
-  // -------------------------------------------------------
-
-  let result: ApiResponse;
-
-  try {
-    result = await readApiResponse(response);
-  } catch (error) {
-    console.error("[uploadPhoto] Failed to read API response:", error);
-
-    throw error instanceof Error
-      ? error
-      : new Error("پاسخ نامعتبر از سرور دریافت شد.");
-  }
-
-  // -------------------------------------------------------
-  // HTTP error
-  // -------------------------------------------------------
-
-  if (!response.ok) {
-    throw new Error(
-      result.error ??
-        result.message ??
-        `آپلود تصویر انجام نشد. کد خطا: ${response.status}`,
-    );
-  }
-
-  // -------------------------------------------------------
-  // API error
-  // -------------------------------------------------------
-
-  if (result.ok !== true) {
-    throw new Error(
-      result.error ?? result.message ?? "آپلود تصویر توسط سرور تایید نشد.",
-    );
-  }
-
-  // -------------------------------------------------------
-  // Validate returned URL
-  // -------------------------------------------------------
-
-  if (typeof result.url !== "string" || !result.url.trim()) {
-    console.error("[uploadPhoto] Missing URL in API response:", result);
-
-    throw new Error("آدرس تصویر از سرور دریافت نشد.");
-  }
-
-  // -------------------------------------------------------
-  // Validate returned path
-  // -------------------------------------------------------
-
-  if (typeof result.path !== "string" || !result.path.trim()) {
-    console.error("[uploadPhoto] Missing path in API response:", result);
-
-    throw new Error("مسیر تصویر از سرور دریافت نشد.");
-  }
-
-  // -------------------------------------------------------
-  // Success
-  // -------------------------------------------------------
-
-  return {
-    url: result.url,
-    path: result.path,
-  };
 }
 
 // =========================================================
@@ -276,68 +344,39 @@ export async function deleteUploadedPhoto(
   }
 
   // -------------------------------------------------------
-  // Send delete request
+  // Delete request
   // -------------------------------------------------------
 
-  let response: Response;
-
   try {
-    response = await fetch("/api/admin/professionals/photo", {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await axiosClient.delete<ApiResponse>(
+      "/api/admin/professionals/photo",
+      {
+        data: {
+          path: normalizedPath,
+          type: normalizedType,
+          professionalId: normalizedProfessionalId,
+        },
       },
-      credentials: "include",
-      cache: "no-store",
-      body: JSON.stringify({
-        path: normalizedPath,
-        type: normalizedType,
-        professionalId: normalizedProfessionalId,
-      }),
+    );
+
+    const result = response.data;
+
+    // -----------------------------------------------------
+    // Validate API success
+    // -----------------------------------------------------
+
+    if (!result || result.ok !== true) {
+      throw new Error(
+        result?.error ?? result?.message ?? "حذف تصویر توسط سرور تایید نشد.",
+      );
+    }
+  } catch (error) {
+    console.error("[deleteUploadedPhoto] Delete failed:", {
+      error,
+      status: axios.isAxiosError(error) ? error.response?.status : undefined,
+      response: axios.isAxiosError(error) ? error.response?.data : undefined,
     });
-  } catch (error) {
-    console.error("[deleteUploadedPhoto] Network error:", error);
 
-    throw new Error(
-      "ارتباط با سرور برقرار نشد. لطفاً اتصال اینترنت را بررسی کنید.",
-    );
-  }
-
-  // -------------------------------------------------------
-  // Read response safely
-  // -------------------------------------------------------
-
-  let result: ApiResponse;
-
-  try {
-    result = await readApiResponse(response);
-  } catch (error) {
-    console.error("[deleteUploadedPhoto] Failed to read API response:", error);
-
-    throw error instanceof Error
-      ? error
-      : new Error("پاسخ نامعتبر از سرور دریافت شد.");
-  }
-
-  // -------------------------------------------------------
-  // HTTP error
-  // -------------------------------------------------------
-
-  if (!response.ok) {
-    throw new Error(
-      result.error ??
-        result.message ??
-        `حذف تصویر انجام نشد. کد خطا: ${response.status}`,
-    );
-  }
-
-  // -------------------------------------------------------
-  // API error
-  // -------------------------------------------------------
-
-  if (result.ok !== true) {
-    throw new Error(
-      result.error ?? result.message ?? "حذف تصویر توسط سرور تایید نشد.",
-    );
+    throw new Error(resolveApiError(error, "حذف تصویر انجام نشد."));
   }
 }

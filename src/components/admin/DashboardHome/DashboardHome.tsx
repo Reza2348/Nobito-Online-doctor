@@ -29,7 +29,7 @@ const RAW_CARDS: Omit<DashboardCard, "trend" | "updatedAt">[] = [
     title: "کاربران",
     value: 120,
     icon: MdPeople,
-    href: "/admin/users",
+    href: "/Admin/users", // 👈 باید A بزرگ باشه
     color: "from-teal-500 to-emerald-400",
     glow: "shadow-emerald-500/25",
   },
@@ -171,7 +171,7 @@ export default function DashboardHome() {
                     <div
                       className={`
                         flex h-14 w-14 items-center justify-center
-                        rounded-2xl bg-gradient-to-br ${card.color}
+                        rounded-2xl bg-linear-to-br ${card.color}
                         text-white shadow-lg ${card.glow}
                         transition group-hover:scale-110
                       `}

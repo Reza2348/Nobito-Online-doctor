@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+
 import { createSupabaseRouteClient } from "@/lib/Server";
+import { generateOtp } from "@/lib/generateOtp";
+import { saveOtp } from "@/lib/otpStore";
 
 // --------------------------------------------------
 // Validation
@@ -11,13 +15,14 @@ import { createSupabaseRouteClient } from "@/lib/Server";
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // شماره موبایل ایران:
+//
 // 09123456789
 // 9123456789
 // 989123456789
 // +989123456789
+
 const irPhoneRegex = /^(?:0|98|\+98)?9\d{9}$/;
 
-// عمر کوکی موقت OTP
 const OTP_SESSION_MAX_AGE_SECONDS = 60 * 10;
 
 // --------------------------------------------------
@@ -47,17 +52,20 @@ function getClientIp(request: NextRequest): string {
 function normalizePhone(phone: string): string {
   const value = phone.replace(/\s/g, "");
 
-  // 09123456789 -> +989123456789
+  // 09123456789
+  // -> +989123456789
   if (value.startsWith("09")) {
     return `+98${value.slice(1)}`;
   }
 
-  // 9123456789 -> +989123456789
+  // 9123456789
+  // -> +989123456789
   if (/^9\d{9}$/.test(value)) {
     return `+98${value}`;
   }
 
-  // 989123456789 -> +989123456789
+  // 989123456789
+  // -> +989123456789
   if (value.startsWith("98")) {
     return `+${value}`;
   }
@@ -71,7 +79,7 @@ function normalizePhone(phone: string): string {
 }
 
 // --------------------------------------------------
-// Retry-After
+// Retry After
 // --------------------------------------------------
 
 function getRetryAfter(reset: number): string {
@@ -89,9 +97,9 @@ export async function POST(request: NextRequest) {
     // ------------------------------------------------
 
     const redisUrl = process.env.UPSTASH_REDIS_REST_URL?.trim();
+
     const redisToken = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
 
-    // بررسی وجود و معتبر بودن URL
     if (!redisUrl || !redisToken || !redisUrl.startsWith("https://")) {
       console.error("[send-otp] Invalid Upstash configuration.");
 
@@ -115,10 +123,9 @@ export async function POST(request: NextRequest) {
     });
 
     // ------------------------------------------------
-    // Rate Limit - IP
+    // IP Rate Limit
     // ------------------------------------------------
 
-    // حداکثر 5 درخواست از هر IP در 10 دقیقه
     const ipRateLimit = new Ratelimit({
       redis,
       limiter: Ratelimit.slidingWindow(5, "10 m"),
@@ -127,10 +134,9 @@ export async function POST(request: NextRequest) {
     });
 
     // ------------------------------------------------
-    // Rate Limit - Identifier
+    // Identifier Rate Limit
     // ------------------------------------------------
 
-    // حداکثر 3 درخواست برای هر ایمیل/شماره در 10 دقیقه
     const identifierRateLimit = new Ratelimit({
       redis,
       limiter: Ratelimit.slidingWindow(3, "10 m"),
@@ -145,16 +151,38 @@ export async function POST(request: NextRequest) {
     const ip = getClientIp(request);
 
     // ------------------------------------------------
-    // Parse body
+    // Cookies
+    // ------------------------------------------------
+
+    const cookieStore = await cookies();
+
+    // ------------------------------------------------
+    // Parse Body
     // ------------------------------------------------
 
     const body = await request.json().catch(() => null);
 
-    const rawIdentifier =
+    // ------------------------------------------------
+    // Identifier
+    //
+    // اولویت:
+    // 1. identifier داخل body
+    // 2. otp_identifier داخل Cookie
+    //
+    // این باعث می‌شود Resend بتواند
+    // بدون ارسال ایمیل از Client کار کند.
+    // ------------------------------------------------
+
+    const bodyIdentifier =
       typeof body?.identifier === "string" ? body.identifier.trim() : "";
 
+    const cookieIdentifier =
+      cookieStore.get("otp_identifier")?.value?.trim() || "";
+
+    const rawIdentifier = bodyIdentifier || cookieIdentifier;
+
     // ------------------------------------------------
-    // Validate identifier
+    // Validate Identifier
     // ------------------------------------------------
 
     if (!rawIdentifier) {
@@ -186,7 +214,7 @@ export async function POST(request: NextRequest) {
     }
 
     // ------------------------------------------------
-    // Normalize identifier
+    // Normalize Identifier
     // ------------------------------------------------
 
     const normalizedIdentifier = isEmail
@@ -237,70 +265,76 @@ export async function POST(request: NextRequest) {
     }
 
     // ------------------------------------------------
-    // Supabase
+    // Response
     // ------------------------------------------------
-
-    const cookieStore = await cookies();
 
     const response = NextResponse.json({
       ok: true,
       channel: isEmail ? "email" : "sms",
     });
 
+    // ------------------------------------------------
+    // Supabase Client
+    // ------------------------------------------------
+
     const supabase = createSupabaseRouteClient(cookieStore, response);
 
-    // ------------------------------------------------
-    // Send OTP
-    // ------------------------------------------------
-
-    let error;
+    // =================================================
+    // EMAIL
+    // =================================================
 
     if (isEmail) {
-      const result = await supabase.auth.signInWithOtp({
+      const { error } = await supabase.auth.signInWithOtp({
         email: normalizedIdentifier,
         options: {
           shouldCreateUser: true,
         },
       });
 
-      error = result.error;
-    } else {
-      const result = await supabase.auth.signInWithOtp({
-        phone: normalizedIdentifier,
-        options: {
-          shouldCreateUser: true,
-        },
-      });
+      if (error) {
+        console.error("[send-otp] Supabase email error:", error.message);
 
-      error = result.error;
+        return NextResponse.json(
+          {
+            error:
+              "ارسال کد تایید ایمیل با خطا مواجه شد. لطفا دوباره تلاش کنید.",
+          },
+          {
+            status: 400,
+          },
+        );
+      }
+    }
+
+    // =================================================
+    // SMS
+    // =================================================
+
+    if (isPhone) {
+      // تولید کد ۸ رقمی
+      const otp = generateOtp(8);
+
+      // ذخیره OTP در Redis
+      await saveOtp(normalizedIdentifier, otp);
+
+      // فعلاً SMS ارسال نمی‌کنیم
+      // کد در ترمینال نمایش داده می‌شود
+      console.log(`[Nobito OTP] ${normalizedIdentifier} => ${otp}`);
     }
 
     // ------------------------------------------------
-    // Supabase error
-    // ------------------------------------------------
-
-    if (error) {
-      console.error("[send-otp] Supabase error:", error.message);
-
-      return NextResponse.json(
-        {
-          error: "ارسال کد تایید با خطا مواجه شد. لطفا دوباره تلاش کنید.",
-        },
-        {
-          status: 400,
-        },
-      );
-    }
-
-    // ------------------------------------------------
-    // OTP identifier cookie
+    // OTP Identifier Cookie
     // ------------------------------------------------
 
     response.cookies.set("otp_identifier", normalizedIdentifier, {
       httpOnly: true,
+
       secure: process.env.NODE_ENV === "production",
+
       sameSite: "lax",
+
       path: "/",
+
       maxAge: OTP_SESSION_MAX_AGE_SECONDS,
     });
 

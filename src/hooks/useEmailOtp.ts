@@ -1,6 +1,7 @@
 "use client";
 
 import * as O from "@/Imports/OtpImports/OtpImports";
+import { axiosClient, getAxiosErrorMessage } from "@/lib/axiosClient";
 import { supabase } from "@/lib/supabaseClient";
 
 export const OTP_LENGTH = 8;
@@ -21,28 +22,10 @@ export function useEmailOtp() {
     setIsSubmitting(true);
 
     try {
-      const res = await fetch("/api/auth/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ otp: otpValue }),
+      const { data: result } = await axiosClient.post("/api/auth/verify-otp", {
+        otp: otpValue,
       });
 
-      const result = await res.json();
-
-      if (!res.ok) {
-        if (result.error?.includes("منقضی")) {
-          O.toast.error(
-            "شما هنوز ورود را شروع نکرده‌اید. لطفا دوباره ایمیل خود را وارد کنید.",
-          );
-          router.push("/auth/signup");
-          return;
-        }
-        throw new Error(result.error ?? "خطا در تایید کد OTP");
-      }
-
-      // همگام‌سازی کلاینت مرورگری با سشنی که سرور ساخته
-      // این خط باعث می‌شه onAuthStateChange در useAuthUser بلافاصله
-      // فایر بشه و Header بدون نیاز به رفرش آپدیت شه
       if (result.session?.access_token && result.session?.refresh_token) {
         await supabase.auth.setSession({
           access_token: result.session.access_token,
@@ -56,8 +39,18 @@ export function useEmailOtp() {
         router.push("/");
       }, 1500);
     } catch (err: unknown) {
+      const message = getAxiosErrorMessage(err, "خطا در تایید کد OTP");
+
+      if (message.includes("منقضی")) {
+        O.toast.error(
+          "شما هنوز ورود را شروع نکرده‌اید. لطفا دوباره ایمیل خود را وارد کنید.",
+        );
+        router.push("/auth/signup");
+        return;
+      }
+
       console.error(err);
-      O.toast.error(err instanceof Error ? err.message : "خطا در تایید کد OTP");
+      O.toast.error(message);
     } finally {
       setIsSubmitting(false);
     }

@@ -1,6 +1,8 @@
 "use client";
 
 import * as O from "@/Imports/OtpImports/OtpImports";
+import { axiosClient, getAxiosErrorMessage } from "@/lib/axiosClient";
+import axios from "axios";
 
 export default function EmailOtpVerifyPage() {
   const OTP_LENGTH = 8;
@@ -24,22 +26,7 @@ export default function EmailOtpVerifyPage() {
     try {
       // The server reads the identifier from the HttpOnly cookie set by
       // /api/auth/send-otp - the client only ever handles the OTP digits.
-      const res = await fetch("/api/auth/verify-otp", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ otp: otpValue }),
-      });
-
-      const result = await res.json();
-
-      if (!res.ok) {
-        // If the identifier cookie expired (or was never set, e.g. the
-        // user landed here directly), send them back to request a new code.
-        if (res.status === 400 && !result?.error?.includes("نامعتبر")) {
-          router.replace("/auth/signup");
-        }
-        throw new Error(result.error ?? "خطا در تایید کد");
-      }
+      await axiosClient.post("/api/auth/verify-otp", { otp: otpValue });
 
       O.toast.success("ورود موفق! در حال انتقال...");
 
@@ -47,7 +34,17 @@ export default function EmailOtpVerifyPage() {
         router.replace("/");
       }, 1500);
     } catch (err: unknown) {
-      O.toast.error(err instanceof Error ? err.message : "خطا در تایید کد");
+      // If the identifier cookie expired (or was never set, e.g. the
+      // user landed here directly), send them back to request a new code.
+      if (axios.isAxiosError(err) && err.response?.status === 400) {
+        const serverError = (err.response.data as { error?: string })?.error;
+
+        if (!serverError?.includes("نامعتبر")) {
+          router.replace("/auth/signup");
+        }
+      }
+
+      O.toast.error(getAxiosErrorMessage(err, "خطا در تایید کد"));
     } finally {
       setIsSubmitting(false);
     }

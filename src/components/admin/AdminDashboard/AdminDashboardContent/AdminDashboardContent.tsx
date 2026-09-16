@@ -6,6 +6,8 @@ import type { AdminPage } from "@/Types/types";
 
 import AdminPageRenderer from "@/components/admin/AdminDashboard/AdminPageRenderer/AdminPageRenderer";
 
+import { useNotifications } from "@/hooks/useNotifications";
+
 interface AdminDashboardContentProps {
   page: AdminPage;
   onMenuClick: () => void;
@@ -15,6 +17,8 @@ export default function AdminDashboardContent({
   page,
   onMenuClick,
 }: AdminDashboardContentProps) {
+  const { unreadCount } = useNotifications();
+
   return (
     <main
       className="
@@ -36,7 +40,10 @@ export default function AdminDashboardContent({
           backdrop-blur-xl
         "
       >
-        <AdminHeader onMenuClick={onMenuClick} />
+        <AdminHeader
+          onMenuClick={onMenuClick}
+          notificationCount={unreadCount}
+        />
       </header>
 
       {/* Content */}

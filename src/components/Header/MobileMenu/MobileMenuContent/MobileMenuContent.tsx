@@ -30,7 +30,7 @@ const DEFAULT_NAV_LINKS: H.NavLink[] = [
     label: "نیکوکاری",
   },
   {
-    href: "/notifications",
+    href: "/Notifications",
     label: "اعلان‌ها",
   },
 ];

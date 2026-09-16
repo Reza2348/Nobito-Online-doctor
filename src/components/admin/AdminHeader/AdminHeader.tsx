@@ -132,6 +132,7 @@ export default function AdminHeader({
         {/* اعلان‌ها */}
         <button
           type="button"
+          onClick={() => router.push("/Notifications")}
           aria-label={
             notificationCount > 0
               ? `${notificationCount} اعلان جدید`
@@ -160,7 +161,7 @@ export default function AdminHeader({
           >
             {/* آیکون کاربر */}
             <div className="relative shrink-0">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20">
                 <FaUserShield className="text-base" />
               </div>
 

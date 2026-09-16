@@ -50,33 +50,13 @@ export default function ConsultantStats({ ratingValue }: ConsultantStatsProps) {
           <span>امتیاز</span>
         </div>
 
-        <div
-          className="
-            flex
-            items-end
-            gap-1
-          "
-        >
-          <span
-            className="
-              text-2xl
-              font-black
-              text-slate-900
-            "
-          >
+        <div className="flex items-end gap-1">
+          <span className="text-2xl font-black text-slate-900">
             {formatRating(ratingValue)}
           </span>
 
           {rating !== null && (
-            <span
-              className="
-                mb-1
-                text-xs
-                text-slate-400
-              "
-            >
-              / ۵
-            </span>
+            <span className="mb-1 text-xs text-slate-400">/ ۵</span>
           )}
         </div>
       </div>
@@ -107,25 +87,11 @@ export default function ConsultantStats({ ratingValue }: ConsultantStatsProps) {
           <span>میزان رضایت</span>
         </div>
 
-        <div
-          className="
-            text-2xl
-            font-black
-            text-slate-900
-          "
-        >
+        <div className="text-2xl font-black text-slate-900">
           {satisfaction !== null ? `${satisfaction}٪` : "ثبت نشده"}
         </div>
 
-        <div
-          className="
-            mt-1
-            text-xs
-            text-slate-400
-          "
-        >
-          محاسبه‌شده از امتیاز
-        </div>
+        <div className="mt-1 text-xs text-slate-400">محاسبه‌شده از امتیاز</div>
       </div>
     </div>
   );

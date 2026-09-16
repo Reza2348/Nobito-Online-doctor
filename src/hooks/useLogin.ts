@@ -2,6 +2,8 @@
 
 import { useCallback, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+
+import { axiosClient, getAxiosErrorMessage } from "@/lib/axiosClient";
 import type { Role } from "@/Types/types";
 
 export function useLogin() {
@@ -11,6 +13,10 @@ export function useLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+
+  // Remember Me
+  const [rememberMe, setRememberMe] = useState(false);
+
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -30,26 +36,12 @@ export function useLogin() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: username.trim(),
-          password,
-          role,
-        }),
+      const { data } = await axiosClient.post("/api/auth/login", {
+        username: username.trim(),
+        password,
+        role,
+        rememberMe,
       });
-
-      const data = await response.json().catch(() => null);
-
-      if (!response.ok) {
-        setError(data?.message || "خطا در ورود");
-        setLoading(false);
-        isSubmittingRef.current = false;
-        return;
-      }
 
       if (!data?.path) {
         setError("مسیر بازگشتی از سرور نامعتبر است");
@@ -60,24 +52,28 @@ export function useLogin() {
 
       router.replace(data.path);
       router.refresh();
-    } catch {
-      setError("خطایی هنگام ورود رخ داد");
+    } catch (error) {
+      setError(getAxiosErrorMessage(error, "خطا در ورود"));
       setLoading(false);
       isSubmittingRef.current = false;
     }
-  }, [username, password, role, router]);
+  }, [username, password, role, rememberMe, router]);
 
   return {
     role,
     username,
     password,
     showPassword,
+    rememberMe,
     error,
     loading,
+
     setRole,
     setUsername,
     setPassword,
     setShowPassword,
+    setRememberMe,
+
     handleLogin,
   };
 }

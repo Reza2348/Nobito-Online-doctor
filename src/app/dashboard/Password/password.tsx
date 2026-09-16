@@ -2,6 +2,7 @@
 
 import React from "react";
 import * as P from "@/Imports/publicprofileImports/publicprofileImports";
+import { axiosClient, getAxiosErrorMessage } from "@/lib/axiosClient";
 
 type PasswordFormData = {
   password: string;
@@ -68,25 +69,13 @@ export default function Password() {
     setErrorMessage("");
 
     try {
-      const response = await fetch("/api/dashboard/change-password", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
+      const { data: result } = await axiosClient.post<ApiResponse>(
+        "/api/dashboard/change-password",
+        {
           password: data.password,
           confirmPassword: data.confirmPassword,
-        }),
-      });
-
-      const result: ApiResponse = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          result.error || result.message || "تغییر رمز عبور انجام نشد.",
-        );
-      }
+        },
+      );
 
       setMessage(result.message || "رمز عبور با موفقیت تغییر کرد.");
 
@@ -98,9 +87,7 @@ export default function Password() {
       });
     } catch (error) {
       setErrorMessage(
-        error instanceof Error
-          ? error.message
-          : "خطایی هنگام تغییر رمز عبور رخ داد.",
+        getAxiosErrorMessage(error, "خطایی هنگام تغییر رمز عبور رخ داد."),
       );
     }
   };

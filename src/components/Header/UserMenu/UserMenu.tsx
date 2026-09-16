@@ -4,89 +4,22 @@ import * as H from "@/Imports/HeaderImports/HeaderImports";
 import type { SupabaseUser } from "@/Types/types";
 import { useState, useRef, useEffect } from "react";
 
+import { useNotifications } from "@/hooks/useNotifications";
+
 type Props = {
   user: SupabaseUser | null;
   logout: () => void;
 };
 
-const NOTIFICATIONS_KEY = "admin_notifications";
-
-type StoredNotification = {
-  id: number;
-  title: string;
-  message: string;
-  time: string;
-  read: boolean;
-};
-
 const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
   const [open, setOpen] = useState(false);
-  const [unreadCount, setUnreadCount] = useState(0);
+
+  const { unreadCount } = useNotifications();
 
   const menuRef = useRef<HTMLDivElement>(null);
 
   const displayName =
     user?.user_metadata?.phone || user?.phone || user?.email || "کاربر";
-
-  // =========================================
-  // تعداد اعلان‌های خوانده نشده
-  // =========================================
-
-  const updateUnreadCount = () => {
-    try {
-      const saved = localStorage.getItem(NOTIFICATIONS_KEY);
-
-      if (!saved) {
-        setUnreadCount(0);
-        return;
-      }
-
-      const notifications: StoredNotification[] = JSON.parse(saved);
-
-      const count = notifications.filter(
-        (notification) => !notification.read,
-      ).length;
-
-      setUnreadCount(count);
-    } catch (error) {
-      console.error("خطا در خواندن اعلان‌ها:", error);
-      setUnreadCount(0);
-    }
-  };
-
-  // =========================================
-  // دریافت تعداد اعلان‌ها
-  // =========================================
-
-  useEffect(() => {
-    updateUnreadCount();
-
-    const handleStorage = (event: StorageEvent) => {
-      if (event.key === NOTIFICATIONS_KEY) {
-        updateUnreadCount();
-      }
-    };
-
-    window.addEventListener("storage", handleStorage);
-
-    const handleNotificationsUpdated = () => {
-      updateUnreadCount();
-    };
-
-    window.addEventListener(
-      "notifications-updated",
-      handleNotificationsUpdated,
-    );
-
-    return () => {
-      window.removeEventListener("storage", handleStorage);
-
-      window.removeEventListener(
-        "notifications-updated",
-        handleNotificationsUpdated,
-      );
-    };
-  }, []);
 
   // =========================================
   // بستن منوی کاربر با کلیک بیرون
@@ -114,7 +47,7 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
 
       <div className="shrink-0">
         <H.Link
-          href="/notifications"
+          href="/Notifications"
           aria-label="اعلان‌ها"
           className="
             relative
@@ -175,12 +108,6 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
 
       <div ref={menuRef} className="relative min-w-0">
         {!user?.id ? (
-          /*
-           * ورود / ثبت نام
-           *
-           * توجه:
-           * هیچ Loading روی این دکمه وجود ندارد.
-           */
           <H.Link
             href="/auth/signup"
             className="
@@ -201,13 +128,7 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
             ورود / ثبت‌نام
           </H.Link>
         ) : (
-          /* =========================================
-             کاربر وارد شده
-          ========================================== */
-
           <div className="relative hidden lg:block">
-            {/* دکمه نام کاربر */}
-
             <button
               type="button"
               onClick={() => setOpen((prev) => !prev)}
@@ -233,8 +154,6 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
               {displayName}
             </button>
 
-            {/* Dropdown */}
-
             {open && (
               <div
                 role="menu"
@@ -253,8 +172,6 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
                   shadow-lg
                 "
               >
-                {/* داشبورد */}
-
                 <H.Link
                   href="/dashboard"
                   onClick={() => setOpen(false)}
@@ -269,8 +186,6 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
                 >
                   ورود به داشبورد
                 </H.Link>
-
-                {/* خروج */}
 
                 <button
                   type="button"

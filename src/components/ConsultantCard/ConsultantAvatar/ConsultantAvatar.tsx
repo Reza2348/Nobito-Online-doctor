@@ -13,8 +13,8 @@ export default function ConsultantAvatar({
     <div
       className="
         relative
-        h-28
-        w-28
+        h-20
+        w-20
         shrink-0
         overflow-hidden
         rounded-3xl
@@ -24,6 +24,10 @@ export default function ConsultantAvatar({
         from-purple-50
         to-fuchsia-50
         shadow-sm
+        sm:h-24
+        sm:w-24
+        xl:h-28
+        xl:w-28
       "
     >
       {photoUrl ? (
@@ -50,28 +54,35 @@ export default function ConsultantAvatar({
             text-purple-300
           "
         >
-          <MdPsychology size={52} />
+          <MdPsychology size={36} className="sm:hidden" />
+          <MdPsychology size={44} className="hidden sm:block xl:hidden" />
+          <MdPsychology size={52} className="hidden xl:block" />
         </div>
       )}
 
       <div
         className="
           absolute
-          bottom-2
-          right-2
+          bottom-1.5
+          right-1.5
           flex
-          h-7
-          w-7
+          h-5
+          w-5
           items-center
           justify-center
           rounded-full
           bg-white
           text-purple-600
           shadow-md
+          sm:bottom-2
+          sm:right-2
+          sm:h-7
+          sm:w-7
         "
         title="مشاور"
       >
-        <MdVerified size={18} />
+        <MdVerified size={14} className="sm:hidden" />
+        <MdVerified size={18} className="hidden sm:block" />
       </div>
     </div>
   );

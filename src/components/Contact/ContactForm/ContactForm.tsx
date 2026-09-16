@@ -1,5 +1,6 @@
 "use client";
 
+import axios from "axios";
 import * as C from "@/Imports/Contact usImports/ContactusImports";
 
 import ContactField from "@/components/Contact/ContactField/ContactField";
@@ -29,22 +30,21 @@ export default function ContactForm() {
 
   const onSubmit: C.SubmitHandler<ContactFormData> = async (data) => {
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-
-        body: JSON.stringify({
+      // از axios خام (بدون instance مشترک) استفاده می‌کنیم چون این یک
+      // سرویس بیرونیه و نباید withCredentials/کوکی‌های سایت ما را دریافت کند.
+      const { data: result } = await axios.post(
+        "https://api.web3forms.com/submit",
+        {
           access_key: process.env.NEXT_PUBLIC_WEB3FORMS_ACCESS_KEY,
-
           ...data,
-        }),
-      });
-
-      const result = await response.json();
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+        },
+      );
 
       if (!result.success) {
         C.toast.error("ارسال پیام موفقیت‌آمیز نبود.");

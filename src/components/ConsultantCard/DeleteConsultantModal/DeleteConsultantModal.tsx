@@ -52,24 +52,22 @@ export default function DeleteConsultantModal({
             flex
             items-center
             justify-between
+            gap-3
             border-b
             border-slate-100
-            px-6
-            py-5
+            px-4
+            py-4
+            sm:px-6
+            sm:py-5
           "
         >
-          <div
-            className="
-              flex
-              items-center
-              gap-3
-            "
-          >
+          <div className="flex min-w-0 items-center gap-3">
             <div
               className="
                 flex
                 h-11
                 w-11
+                shrink-0
                 items-center
                 justify-center
                 rounded-2xl
@@ -80,24 +78,12 @@ export default function DeleteConsultantModal({
               <MdWarning size={25} />
             </div>
 
-            <div>
-              <h3
-                className="
-                  text-lg
-                  font-extrabold
-                  text-slate-900
-                "
-              >
+            <div className="min-w-0">
+              <h3 className="text-lg font-extrabold text-slate-900">
                 حذف مشاور
               </h3>
 
-              <p
-                className="
-                  mt-0.5
-                  text-xs
-                  text-slate-400
-                "
-              >
+              <p className="mt-0.5 truncate text-xs text-slate-400">
                 این عملیات قابل بازگشت نیست
               </p>
             </div>
@@ -111,6 +97,7 @@ export default function DeleteConsultantModal({
               flex
               h-9
               w-9
+              shrink-0
               items-center
               justify-center
               rounded-xl
@@ -128,29 +115,11 @@ export default function DeleteConsultantModal({
         </div>
 
         {/* Body */}
-        <div className="px-6 py-6">
-          <div
-            className="
-              rounded-2xl
-              bg-red-50
-              p-4
-            "
-          >
-            <p
-              className="
-                text-sm
-                leading-7
-                text-slate-700
-              "
-            >
+        <div className="px-4 py-6 sm:px-6">
+          <div className="rounded-2xl bg-red-50 p-4">
+            <p className="text-sm leading-7 text-slate-700">
               اطلاعات مشاور
-              <span
-                className="
-                  mx-1
-                  font-extrabold
-                  text-slate-900
-                "
-              >
+              <span className="mx-1 font-extrabold text-slate-900">
                 «{consultantName || "بدون نام"}»
               </span>
               از سامانه حذف خواهد شد.
@@ -166,8 +135,9 @@ export default function DeleteConsultantModal({
             border-t
             border-slate-100
             bg-slate-50
-            px-6
+            px-4
             py-4
+            sm:px-6
           "
         >
           <button

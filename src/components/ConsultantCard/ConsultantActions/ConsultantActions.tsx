@@ -19,10 +19,13 @@ export default function ConsultantActions({
     <div
       className="
         flex
+        w-full
         shrink-0
         items-center
         gap-2
+        xl:w-auto
         xl:flex-col
+        xl:flex-nowrap
       "
     >
       {/* ویرایش */}
@@ -33,13 +36,15 @@ export default function ConsultantActions({
         onClick={() => onEdit(consultant)}
         className="
           inline-flex
+          flex-1
           items-center
           justify-center
           gap-2
           rounded-2xl
           bg-blue-50
-          px-4
-          py-3
+          px-3
+          py-2.5
+          text-sm
           font-bold
           text-blue-600
           transition-all
@@ -48,11 +53,15 @@ export default function ConsultantActions({
           hover:shadow-lg
           disabled:cursor-not-allowed
           disabled:opacity-50
+          sm:px-4
+          sm:py-3
+          sm:text-base
+          xl:flex-none
+          xl:w-full
         "
       >
-        <MdEdit size={20} />
-
-        <span>ویرایش</span>
+        <MdEdit size={18} className="shrink-0" />
+        <span className="whitespace-nowrap">ویرایش</span>
       </button>
 
       {/* حذف */}
@@ -63,13 +72,15 @@ export default function ConsultantActions({
         onClick={onDeleteClick}
         className="
           inline-flex
+          flex-1
           items-center
           justify-center
           gap-2
           rounded-2xl
           bg-red-50
-          px-4
-          py-3
+          px-3
+          py-2.5
+          text-sm
           font-bold
           text-red-600
           transition-all
@@ -78,11 +89,17 @@ export default function ConsultantActions({
           hover:shadow-lg
           disabled:cursor-not-allowed
           disabled:opacity-50
+          sm:px-4
+          sm:py-3
+          sm:text-base
+          xl:flex-none
+          xl:w-full
         "
       >
-        <MdDelete size={20} />
-
-        <span>{saving ? "در حال حذف..." : "حذف"}</span>
+        <MdDelete size={18} className="shrink-0" />
+        <span className="whitespace-nowrap">
+          {saving ? "در حال حذف..." : "حذف"}
+        </span>
       </button>
     </div>
   );

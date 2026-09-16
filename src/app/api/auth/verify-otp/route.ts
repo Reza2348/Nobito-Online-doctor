@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+
 import { createSupabaseRouteClient } from "@/lib/Server";
 import { createRateLimiter, getClientIp, getRetryAfter } from "@/lib/rateLimit";
+import { verifyStoredOtp } from "@/lib/otpStore";
 
 // --------------------------------------------------
 // POST /api/auth/verify-otp
@@ -13,13 +15,8 @@ export async function POST(request: NextRequest) {
     // Rate Limit
     // ------------------------------------------------
 
-    // Rate limiter را داخل درخواست می‌سازیم
-    // تا هنگام build شدن Route، Redis initialize نشود.
-
-    // حداکثر 10 تلاش از هر IP در 10 دقیقه
     const ipRateLimit = createRateLimiter("auth:verify-otp:ip", 10, "10 m");
 
-    // حداکثر 5 تلاش برای هر ایمیل/شماره در 10 دقیقه
     const identifierRateLimit = createRateLimiter(
       "auth:verify-otp:identifier",
       5,
@@ -27,7 +24,7 @@ export async function POST(request: NextRequest) {
     );
 
     // ------------------------------------------------
-    // Parse body
+    // Parse Body
     // ------------------------------------------------
 
     const body = await request.json().catch(() => null);
@@ -35,7 +32,7 @@ export async function POST(request: NextRequest) {
     const otp = typeof body?.otp === "string" ? body.otp.trim() : "";
 
     // ------------------------------------------------
-    // OTP cookie
+    // OTP Cookie
     // ------------------------------------------------
 
     const cookieStore = await cookies();
@@ -47,7 +44,9 @@ export async function POST(request: NextRequest) {
         {
           error: "نشست ورود منقضی شده. لطفاً دوباره تلاش کنید.",
         },
-        { status: 400 },
+        {
+          status: 400,
+        },
       );
     }
 
@@ -60,7 +59,21 @@ export async function POST(request: NextRequest) {
         {
           error: "لطفاً کد تایید را وارد کنید.",
         },
-        { status: 400 },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    // فقط OTP شش رقمی
+    if (!/^\d{8}$/.test(otp)) {
+      return NextResponse.json(
+        {
+          error: "کد تایید باید ۸ رقم باشد.",
+        },
+        {
+          status: 400,
+        },
       );
     }
 
@@ -68,9 +81,9 @@ export async function POST(request: NextRequest) {
     // Rate Limit - IP
     // ------------------------------------------------
 
-    if (ipRateLimit) {
-      const ip = getClientIp(request);
+    const ip = getClientIp(request);
 
+    if (ipRateLimit) {
       const ipLimit = await ipRateLimit.limit(ip);
 
       if (!ipLimit.success) {
@@ -113,58 +126,173 @@ export async function POST(request: NextRequest) {
     }
 
     // ------------------------------------------------
-    // Supabase
-    // ------------------------------------------------
-
-    /*
-     * مهم:
-     * همان response را به Supabase می‌دهیم
-     * تا کوکی‌های Auth روی همان response ثبت شوند.
-     */
-
-    const response = NextResponse.json({
-      ok: true,
-    });
-
-    const supabase = createSupabaseRouteClient(cookieStore, response);
-
-    // ------------------------------------------------
-    // Verify OTP
+    // Detect Channel
     // ------------------------------------------------
 
     const isEmail = identifier.includes("@");
 
-    const { data, error } = await supabase.auth.verifyOtp(
-      isEmail
-        ? {
-            email: identifier.toLowerCase(),
-            token: otp,
-            type: "email",
-          }
-        : {
-            phone: identifier,
-            token: otp,
-            type: "sms",
+    // =================================================
+    // EMAIL
+    // =================================================
+
+    if (isEmail) {
+      // ------------------------------------------------
+      // Create Response
+      // ------------------------------------------------
+
+      const response = NextResponse.json({
+        ok: true,
+      });
+
+      // ------------------------------------------------
+      // Supabase Client
+      // ------------------------------------------------
+
+      const supabase = createSupabaseRouteClient(cookieStore, response);
+
+      // ------------------------------------------------
+      // Supabase Verify
+      // ------------------------------------------------
+
+      const { data, error } = await supabase.auth.verifyOtp({
+        email: identifier.toLowerCase(),
+        token: otp,
+        type: "email",
+      });
+
+      // ------------------------------------------------
+      // Error
+      // ------------------------------------------------
+
+      if (error || !data.session) {
+        console.error("[verify-otp] Supabase email error:", error?.message);
+
+        return NextResponse.json(
+          {
+            error: "کد وارد شده نامعتبر یا منقضی شده است.",
           },
-    );
+          {
+            status: 400,
+          },
+        );
+      }
+
+      // ------------------------------------------------
+      // Remove Temporary Cookie
+      // ------------------------------------------------
+
+      response.cookies.set("otp_identifier", "", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: 0,
+      });
+
+      // ------------------------------------------------
+      // Session
+      // ------------------------------------------------
+
+      const session = data.session;
+
+      const finalResponse = NextResponse.json({
+        ok: true,
+        channel: "email",
+
+        user: {
+          id: data.user?.id ?? null,
+          email: data.user?.email ?? null,
+          phone: data.user?.phone ?? null,
+        },
+
+        session: {
+          access_token: session.access_token,
+
+          refresh_token: session.refresh_token,
+        },
+      });
+
+      // ------------------------------------------------
+      // Transfer Supabase Cookies
+      // ------------------------------------------------
+
+      response.cookies.getAll().forEach((cookie) => {
+        finalResponse.cookies.set(cookie);
+      });
+
+      return finalResponse;
+    }
+
+    // =================================================
+    // SMS
+    // =================================================
+
+    const result = await verifyStoredOtp(identifier, otp);
 
     // ------------------------------------------------
-    // Supabase error
+    // Expired
     // ------------------------------------------------
 
-    if (error || !data.session) {
-      console.error("[verify-otp] Supabase error:", error?.message);
-
+    if (!result.success && result.reason === "not_found") {
       return NextResponse.json(
         {
-          error: "کد وارد شده نامعتبر یا منقضی شده است.",
+          error: "کد تایید منقضی شده است. لطفاً کد جدید درخواست کنید.",
         },
-        { status: 400 },
+        {
+          status: 400,
+        },
       );
     }
 
     // ------------------------------------------------
-    // Remove temporary OTP cookie
+    // Too Many Attempts
+    // ------------------------------------------------
+
+    if (!result.success && result.reason === "too_many_attempts") {
+      return NextResponse.json(
+        {
+          error:
+            "تعداد تلاش‌های ناموفق بیش از حد مجاز است. لطفاً کد جدید درخواست کنید.",
+        },
+        {
+          status: 429,
+        },
+      );
+    }
+
+    // ------------------------------------------------
+    // Invalid
+    // ------------------------------------------------
+
+    if (!result.success) {
+      return NextResponse.json(
+        {
+          error: "کد وارد شده صحیح نیست.",
+        },
+        {
+          status: 400,
+        },
+      );
+    }
+
+    // ------------------------------------------------
+    // SMS Verified
+    // ------------------------------------------------
+
+    const response = NextResponse.json({
+      ok: true,
+      verified: true,
+      channel: "sms",
+
+      user: {
+        id: null,
+        email: null,
+        phone: identifier,
+      },
+    });
+
+    // ------------------------------------------------
+    // Remove Temporary Cookie
     // ------------------------------------------------
 
     response.cookies.set("otp_identifier", "", {
@@ -175,52 +303,7 @@ export async function POST(request: NextRequest) {
       maxAge: 0,
     });
 
-    // ------------------------------------------------
-    // Session
-    // ------------------------------------------------
-
-    /*
-     * Session را برای Client برمی‌گردانیم.
-     *
-     * Client بعداً با setSession()
-     * این Session را در Supabase Browser Client
-     * قرار می‌دهد.
-     */
-
-    const session = data.session;
-
-    const finalResponse = NextResponse.json({
-      ok: true,
-
-      user: {
-        id: data.user?.id ?? null,
-        email: data.user?.email ?? null,
-      },
-
-      session: {
-        access_token: session.access_token,
-        refresh_token: session.refresh_token,
-      },
-    });
-
-    // ------------------------------------------------
-    // Transfer Supabase cookies
-    // ------------------------------------------------
-
-    /*
-     * کوکی‌های Supabase که روی response اصلی ایجاد شده‌اند
-     * به response نهایی منتقل می‌شوند.
-     */
-
-    response.cookies.getAll().forEach((cookie) => {
-      finalResponse.cookies.set(cookie);
-    });
-
-    // ------------------------------------------------
-    // Success
-    // ------------------------------------------------
-
-    return finalResponse;
+    return response;
   } catch (error) {
     console.error("[verify-otp] unexpected error:", error);
 
@@ -228,7 +311,9 @@ export async function POST(request: NextRequest) {
       {
         error: "خطایی هنگام تایید کد رخ داد. لطفاً دوباره تلاش کنید.",
       },
-      { status: 500 },
+      {
+        status: 500,
+      },
     );
   }
 }

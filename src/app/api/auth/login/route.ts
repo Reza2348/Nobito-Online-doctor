@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import bcrypt from "bcryptjs";
 import { accounts } from "@/constants/accounts";
 import type { Role } from "@/Types/types";
@@ -15,6 +16,9 @@ export async function POST(request: NextRequest) {
     const username = String(body.username ?? "").trim();
     const password = String(body.password ?? "");
     const role = String(body.role ?? "").trim() as Role;
+
+    // Remember Me
+    const rememberMe = Boolean(body.rememberMe);
 
     // بررسی ورودی
     if (!username || !password || !role) {
@@ -34,31 +38,31 @@ export async function POST(request: NextRequest) {
 
     // پیدا کردن حساب
     const account = accounts[role];
-    console.log("DEBUG LOGIN >>>", {
-      roleSent: role,
-      usernameSent: username,
-      passwordSent: password,
-      accountFound: account,
-    });
 
-    // اگه حساب وجود نداره یا هش پسورد ست نشده (env گم شده)
+    // حساب وجود ندارد یا passwordHash تنظیم نشده
     if (!account || !account.passwordHash) {
-      return NextResponse.json(INVALID_CREDENTIALS, { status: 401 });
+      return NextResponse.json(INVALID_CREDENTIALS, {
+        status: 401,
+      });
     }
 
     // بررسی نام کاربری
     if (username !== account.username) {
-      return NextResponse.json(INVALID_CREDENTIALS, { status: 401 });
+      return NextResponse.json(INVALID_CREDENTIALS, {
+        status: 401,
+      });
     }
 
-    // بررسی رمز عبور با bcrypt (مقایسه هش، نه پلین‌تکست)
+    // بررسی رمز عبور با bcrypt
     const passwordMatches = await bcrypt.compare(
       password,
       account.passwordHash,
     );
 
     if (!passwordMatches) {
-      return NextResponse.json(INVALID_CREDENTIALS, { status: 401 });
+      return NextResponse.json(INVALID_CREDENTIALS, {
+        status: 401,
+      });
     }
 
     // ساخت JWT
@@ -73,12 +77,22 @@ export async function POST(request: NextRequest) {
       path: account.path,
     });
 
-    // ذخیره توکن در Cookie
+    /*
+     * اگر Remember Me فعال باشد:
+     * Cookie مدت بیشتری معتبر می‌ماند.
+     *
+     * اگر فعال نباشد:
+     * Cookie فقط برای مدت کوتاه‌تری معتبر خواهد بود.
+     */
+    const maxAge = rememberMe
+      ? 60 * 60 * 24 * 30 // 30 روز
+      : 60 * 60 * 24; // 1 روز
+
     response.cookies.set("auth-token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
-      maxAge: 60 * 60 * 24,
+      maxAge,
       path: "/",
     });
 

@@ -17,6 +17,12 @@ interface UseProfessionalPhotoReturn {
   uploadedPhotoPath: string | null;
   photoError: string | null;
 
+  /** درصد پیشرفت آپلود (۰ تا ۱۰۰)؛ فقط حین آپلود مقدار دارد. */
+  uploadProgress: number;
+
+  /** آیا آپلود در حال انجام است. */
+  isUploading: boolean;
+
   handlePhotoChange: (event: ChangeEvent<HTMLInputElement>) => void;
 
   removePhoto: () => void;
@@ -54,6 +60,9 @@ export function useProfessionalPhoto(
   );
 
   const [photoError, setPhotoError] = useState<string | null>(null);
+
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
 
   // --------------------------------------------------
   // Create / revoke preview URL
@@ -175,8 +184,13 @@ export function useProfessionalPhoto(
         throw new Error(errorMessage);
       }
 
+      setIsUploading(true);
+      setUploadProgress(0);
+
       try {
-        const result = await uploadPhoto(photo, idToUse, type);
+        const result = await uploadPhoto(photo, idToUse, type, (percent) => {
+          setUploadProgress(percent);
+        });
 
         setUploadedPhotoPath(result.path);
 
@@ -190,6 +204,9 @@ export function useProfessionalPhoto(
         setPhotoError(message);
 
         throw error;
+      } finally {
+        setIsUploading(false);
+        setUploadProgress(0);
       }
     },
     [photo, professionalId, type],
@@ -235,6 +252,8 @@ export function useProfessionalPhoto(
     photoPreview,
     uploadedPhotoPath,
     photoError,
+    uploadProgress,
+    isUploading,
 
     handlePhotoChange,
     removePhoto,

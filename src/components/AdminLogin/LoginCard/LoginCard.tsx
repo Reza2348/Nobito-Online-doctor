@@ -5,7 +5,6 @@ import RoleSelector from "@/components/AdminLogin/RoleSelector/RoleSelector";
 import LoginForm from "@/components/AdminLogin/LoginForm/LoginForm";
 import ErrorAlert from "@/components/AdminLogin/ErrorAlert/ErrorAlert";
 import Footer from "@/components/AdminLogin/Footer/Footer";
-
 import { useLogin } from "@/hooks/useLogin";
 
 export default function LoginCard() {
@@ -14,12 +13,14 @@ export default function LoginCard() {
     username,
     password,
     showPassword,
+    rememberMe,
     loading,
     error,
     setRole,
     setUsername,
     setPassword,
     setShowPassword,
+    setRememberMe,
     handleLogin,
   } = useLogin();
 
@@ -43,6 +44,20 @@ export default function LoginCard() {
         onPasswordChange={setPassword}
         onTogglePassword={() => setShowPassword((prev) => !prev)}
       />
+
+      {/* Remember Me */}
+      <div className="mb-4 flex items-center">
+        <label className="flex cursor-pointer items-center gap-2 text-sm text-gray-600">
+          <input
+            type="checkbox"
+            checked={rememberMe}
+            onChange={(event) => setRememberMe(event.target.checked)}
+            className="h-4 w-4 cursor-pointer rounded border-gray-300 text-teal-600 focus:ring-teal-500"
+          />
+
+          <span>مرا به خاطر بسپار</span>
+        </label>
+      </div>
 
       {/* Login Button */}
       <button
