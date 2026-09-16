@@ -8,6 +8,8 @@ export interface Notification {
   entity_id: string | null;
   is_read: boolean;
   created_at: string;
+  time: string;
+  read: boolean;
 }
 
 export interface CreateNotificationInput {
