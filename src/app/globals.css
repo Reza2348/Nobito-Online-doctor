@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --link-color: oklch(39.114% 0.00338 286.054);
+  --link-hover: oklch(7.972% 0.01658 233.535);
+  --link-active: oklch(52% 0.23 145);
+}
+
+
+
+a.link {
+  color: var(--link-color);
+  transition: color 0.3s;
+}
+
+a.link:hover {
+  color: var(--link-hover);
+}
+
+a.active {
+  color: var(--link-active);
+  transition: color 0.3s;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+
+    --foreground: #ededed;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Vazirmatn, Tahoma;
+}
