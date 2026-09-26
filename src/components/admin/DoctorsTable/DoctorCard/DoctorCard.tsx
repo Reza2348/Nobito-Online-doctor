@@ -14,7 +14,7 @@ import DoctorHeader from "@/components/admin/DoctorsTable/DoctorCard/DoctorHeade
 import DoctorActions from "@/components/admin/DoctorsTable/DoctorCard/DoctorActions/DoctorActions";
 import DoctorStats from "@/components/admin/DoctorsTable/DoctorCard/DoctorStats/DoctorStats";
 import DoctorFields from "@/components/admin/DoctorsTable/DoctorCard/DoctorFields/DoctorFields";
-import SavingIndicator from "@/components/admin/DoctorsTable/DoctorCard/SavingIndicator/SavingIndicator";
+import SavingIndicator from "@/components/shared/SavingIndicator/SavingIndicator";
 import DeleteDoctorModal from "@/components/admin/DoctorsTable/DoctorCard/DeleteDoctorModal/DeleteDoctorModal";
 
 interface Props {

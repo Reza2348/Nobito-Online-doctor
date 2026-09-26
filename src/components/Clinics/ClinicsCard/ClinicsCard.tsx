@@ -1,281 +1,102 @@
 "use client";
 
-import React from "react";
 import { useRouter } from "next/navigation";
-import { FiArrowLeft, FiCheckCircle } from "react-icons/fi";
 
 import { useClinics } from "@/context/ClinicsContext/ClinicsContext";
-import ClinicsPhoto from "@/components/Clinics/ClinicsPhoto/ClinicsPhoto";
-import ClinicsRating from "@/components/Clinics/ClinicsRating/ClinicsRating";
 import ClinicsFields from "@/components/Clinics/ClinicsFields/ClinicsFields";
 import ClinicsAddress from "@/components/Clinics/ClinicsAddress/ClinicsAddress";
+
 import { Clinic } from "@/Types/types";
+
+import ClinicsImageSection from "./ClinicsImageSection/ClinicsImageSection";
+import ClinicsBadges from "./ClinicsBadges/ClinicsBadges";
+import ClinicsCardButton from "./ClinicsCardButton/ClinicsBadges";
 
 interface ClinicsCardProps {
   clinic: Clinic;
 }
 
-const ClinicsCard: React.FC<ClinicsCardProps> = ({ clinic }) => {
+export default function ClinicsCard({ clinic }: ClinicsCardProps) {
   const router = useRouter();
-
   const { setSelectedClinic } = useClinics();
 
   const handleClick = () => {
     setSelectedClinic(clinic);
-
     router.push("/clinics-profile");
   };
 
   return (
     <div
       onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          event.preventDefault();
+          handleClick();
+        }
+      }}
       className="
-      group
-      flex
-      h-full
-      min-h-155
-      flex-col
-      overflow-hidden
-      cursor-pointer
-      rounded-3xl
-      border
-      border-gray-100
-      bg-white
-      shadow-[0_8px_30px_rgba(0,0,0,.06)]
-      transition-all
-      duration-500
-      hover:-translate-y-2
-      hover:border-teal-200
-      hover:shadow-[0_20px_50px_rgba(0,0,0,.12)]
+        group
+        flex
+        h-full
+        min-h-[620px]
+        cursor-pointer
+        flex-col
+        overflow-hidden
+        rounded-3xl
+        border
+        border-gray-100
+        bg-white
+        shadow-[0_8px_30px_rgba(0,0,0,0.06)]
+        transition-all
+        duration-500
+        hover:-translate-y-2
+        hover:border-teal-200
+        hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)]
       "
     >
       {/* IMAGE */}
-
-      <div
-        className="
-        relative
-        h-64
-        shrink-0
-        overflow-hidden
-        "
-      >
-        <div
-          className="
-          transition-transform
-          duration-700
-          group-hover:scale-105
-          "
-        >
-          <ClinicsPhoto name={clinic.name} photoUrl={clinic.photo_url} />
-        </div>
-
-        <div
-          className="
-          absolute
-          inset-0
-         bg-linear-to-t
-          from-black/30
-          via-transparent
-          to-transparent
-          "
-        />
-
-        {/* Verified */}
-
-        <div
-          className="
-          absolute
-          right-4
-          top-4
-          flex
-          items-center
-          gap-1
-          rounded-full
-          bg-white/90
-          px-3
-          py-1.5
-          text-xs
-          font-bold
-          text-emerald-600
-          shadow
-          backdrop-blur
-          "
-        >
-          <FiCheckCircle size={14} />
-          کلینیک معتبر
-        </div>
-
-        {/* Rating */}
-
-        <div
-          className="
-          absolute
-          bottom-4
-          left-4
-          rounded-full
-          bg-white/95
-          px-3
-          py-1.5
-          shadow
-          "
-        >
-          <ClinicsRating rating={clinic.rating} />
-        </div>
-      </div>
+      <ClinicsImageSection image={clinic.photo_url} alt={clinic.name} />
 
       {/* CONTENT */}
-
-      <div
-        className="
-        flex
-        flex-1
-        flex-col
-        px-5
-        py-5
-        "
-      >
+      <div className="flex flex-1 flex-col px-5 py-5">
         {/* NAME */}
-
-        <h3
-          className="
-          min-h-7.5
-          line-clamp-1
-          text-lg
-          font-extrabold
-          text-gray-900
-          "
-        >
+        <h3 className="min-h-[30px] line-clamp-1 text-lg font-extrabold text-gray-900">
           {clinic.name}
         </h3>
 
-        {/* Specialty */}
-
-        <p
-          className="
-          mt-2
-         min-h-5.5
-          line-clamp-1
-          text-sm
-          text-gray-500
-          "
-        >
+        {/* SPECIALTY */}
+        <p className="mt-2 min-h-[22px] line-clamp-1 text-sm text-gray-500">
           {clinic.specialty}
         </p>
 
         {/* BADGES */}
-
-        <div
-          className="
-          mt-5
-          flex
-          min-h-8.5
-           items-center
-          flex-wrap
-          gap-2
-          "
-        >
-          <span
-            className="
-            rounded-full
-            bg-yellow-50
-            px-3
-            py-1
-            text-xs
-            font-bold
-            text-yellow-700
-            "
-          >
-            ⭐ {clinic.rating}
-          </span>
-
-          <span
-            className="
-            rounded-full
-            bg-emerald-50
-            px-3
-            py-1
-            text-xs
-            font-bold
-            text-emerald-700
-            "
-          >
-            {clinic.satisfied_percent ?? "۹۷٪"} رضایت
-          </span>
-
-          <span
-            className="
-            rounded-full
-            bg-sky-50
-            px-3
-            py-1
-            text-xs
-            font-bold
-            text-sky-700
-            "
-          >
-            {clinic.patients_satisfied?.toLocaleString("fa-IR") ?? "1000+"}
-            مراجعه
-          </span>
+        <div className="mt-3">
+          <ClinicsBadges rating={clinic.rating} />
         </div>
 
-        {/* Fields */}
-
-        <div
-          className="
-          mt-5
-          min-h-15
-          overflow-hidden
-          "
-        >
+        {/* FIELDS */}
+        <div className="mt-5 min-h-[60px] overflow-hidden">
           <ClinicsFields fields={clinic.fields} />
         </div>
 
-        {/* Address */}
-
-        <div
-          className="
-          mt-5
-          mb-6
-          min-h-13.75
-          "
-        >
+        {/* ADDRESS */}
+        <div className="mt-5 mb-6 min-h-[55px]">
           <ClinicsAddress address={clinic.address} />
         </div>
 
         {/* BUTTON */}
-
-        <button
-          className="
-          mt-auto
-          flex
-          w-full
-          items-center
-          justify-center
-          gap-2
-          rounded-2xl
-          bg-linear-to-r
-          from-teal-600
-          to-emerald-500
-          py-3
-          font-bold
-          text-white
-          transition-all
-          duration-300
-          hover:shadow-lg
-          "
+        <div
+          className="mt-auto"
+          onClick={(event) => {
+            event.stopPropagation();
+            handleClick();
+          }}
         >
-          مشاهده کلینیک
-          <FiArrowLeft
-            className="
-            transition-transform
-            duration-300
-            group-hover:-translate-x-1
-            "
-          />
-        </button>
+          <ClinicsCardButton href="/clinics-profile" />
+        </div>
       </div>
     </div>
   );
-};
-
-export default ClinicsCard;
+}

@@ -6,6 +6,8 @@ const ADMIN_LOGIN_PATH = "/Admin";
 
 const roleRouteMap: Record<string, string> = {
   "/Admin/dashboard": "admin",
+  "/Admin/add": "admin",
+  "/Admin/users": "admin",
   "/Admin/Consultant": "consultant",
   "/Admin/Content": "content",
 };

@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabaseClient";
 const DOCTORS_TABLE = "doctors";
 
 /* =========================================================
-   Fetch Doctors
+   Fetch Doctors (عمومی — خواندنی)
 ========================================================= */
 
 export async function fetchDoctors(): Promise<AdminDoctor[]> {
@@ -25,21 +25,20 @@ export async function fetchDoctors(): Promise<AdminDoctor[]> {
 }
 
 /* =========================================================
-   Delete Doctor
+   Delete Doctor (از طریق API محافظت‌شده)
 ========================================================= */
 
 export async function deleteDoctor(id: string): Promise<void> {
-  const { error } = await supabase.from(DOCTORS_TABLE).delete().eq("id", id);
+  const response = await fetch("/api/admin/doctors", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id }),
+  });
 
-  if (error) {
-    console.error("DELETE DOCTOR ERROR:", {
-      message: error.message,
-      details: error.details,
-      hint: error.hint,
-      code: error.code,
-    });
+  const result = await response.json();
 
-    throw new Error(error.message || "خطا در حذف پزشک");
+  if (!response.ok) {
+    throw new Error(result.error || "خطا در حذف پزشک");
   }
 }
 
@@ -62,40 +61,30 @@ export type UpdateDoctorData = Partial<
 >;
 
 /* =========================================================
-   Update Doctor
+   Update Doctor (از طریق API محافظت‌شده)
 ========================================================= */
 
 export async function updateDoctor(
   id: string,
   updates: UpdateDoctorData,
 ): Promise<AdminDoctor> {
-  const { data, error } = await supabase
-    .from(DOCTORS_TABLE)
-    .update(updates)
-    .eq("id", id)
-    .select()
-    .single();
+  const response = await fetch("/api/admin/doctors", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, ...updates }),
+  });
 
-  if (error) {
-    console.error("UPDATE DOCTOR ERROR:", {
-      message: error.message,
-      details: error.details,
-      hint: error.hint,
-      code: error.code,
-    });
+  const result = await response.json();
 
-    throw new Error(error.message || "خطا در ویرایش پزشک");
+  if (!response.ok) {
+    throw new Error(result.error || "خطا در ویرایش پزشک");
   }
 
-  if (!data) {
-    throw new Error("پزشک موردنظر پیدا نشد");
-  }
-
-  return data as AdminDoctor;
+  return result.doctor as AdminDoctor;
 }
 
 /* =========================================================
-   Get Doctor By ID
+   Get Doctor By ID (عمومی — خواندنی)
 ========================================================= */
 
 export async function getDoctorById(id: string): Promise<AdminDoctor | null> {

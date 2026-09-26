@@ -1,34 +1,13 @@
 import type { AdminClinic, ClinicRow as BaseClinicRow } from "@/Types/types";
 
+import { parseFields } from "@/components/shared/utils/parse-fields";
+import { getSupabaseErrorMessage } from "@/components/shared/utils/supabase-error";
+
 export type ClinicRow = BaseClinicRow;
 
-export function getFields(fields: ClinicRow["fields"]): string[] {
-  if (!fields) {
-    return [];
-  }
-
-  if (Array.isArray(fields)) {
-    return fields.map((field) => String(field).trim()).filter(Boolean);
-  }
-
-  const value = String(fields).trim();
-
-  if (!value) {
-    return [];
-  }
-  try {
-    const parsed: unknown = JSON.parse(value);
-
-    if (Array.isArray(parsed)) {
-      return parsed.map((field) => String(field).trim()).filter(Boolean);
-    }
-  } catch {}
-
-  return value
-    .split(/[,،|]/)
-    .map((field) => field.trim())
-    .filter(Boolean);
-}
+// re-export برای سازگاری با clinics.service.ts که از همین مسیر import می‌کنه
+export { getSupabaseErrorMessage };
+export { parseFields as getFields };
 
 /**
  * تبدیل ClinicRow به AdminClinic
@@ -49,7 +28,7 @@ export function mapClinic(clinic: ClinicRow): AdminClinic {
 
     address: clinic.address ?? "",
 
-    fields: getFields(clinic.fields).join("، "),
+    fields: parseFields(clinic.fields).join("، "),
 
     rating:
       clinic.rating !== null && clinic.rating !== undefined
@@ -81,7 +60,7 @@ export function createClinicUpdateData(clinic: AdminClinic) {
 
     address: clinic.address?.trim() ?? "",
 
-    fields: getFields(clinic.fields),
+    fields: parseFields(clinic.fields),
 
     rating:
       clinic.rating !== null && clinic.rating !== undefined
@@ -96,28 +75,4 @@ export function createClinicUpdateData(clinic: AdminClinic) {
 
     photo_url: clinic.photo_url ?? null,
   };
-}
-
-/**
- * تبدیل خطای Supabase به پیام قابل نمایش
- */
-export function getSupabaseErrorMessage(
-  error: {
-    message?: string;
-    details?: string;
-    hint?: string;
-    code?: string;
-  },
-  fallback: string,
-): string {
-  return (
-    [
-      error.message,
-      error.details,
-      error.hint,
-      error.code ? `Code: ${error.code}` : "",
-    ]
-      .filter(Boolean)
-      .join(" | ") || fallback
-  );
 }

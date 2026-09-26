@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabaseClient";
 const CLINICS_TABLE = "clinics";
 
 // =========================================================
-// دریافت لیست کلینیک‌ها
+// دریافت لیست کلینیک‌ها (عمومی — خواندنی)
 // =========================================================
 
 export async function fetchClinics(): Promise<AdminClinic[]> {
@@ -26,16 +26,20 @@ export async function fetchClinics(): Promise<AdminClinic[]> {
 }
 
 // =========================================================
-// حذف کلینیک
+// حذف کلینیک (از طریق API محافظت‌شده)
 // =========================================================
 
 export async function deleteClinic(id: string): Promise<void> {
-  const { error } = await supabase.from(CLINICS_TABLE).delete().eq("id", id);
+  const response = await fetch("/api/admin/clinics", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id }),
+  });
 
-  if (error) {
-    console.error("DELETE CLINIC ERROR:", error);
+  const result = await response.json();
 
-    throw new Error(error.message || "خطا در حذف کلینیک");
+  if (!response.ok) {
+    throw new Error(result.error || "خطا در حذف کلینیک");
   }
 }
 
@@ -57,29 +61,24 @@ export type UpdateClinicData = Partial<
 >;
 
 // =========================================================
-// ویرایش کلینیک
+// ویرایش کلینیک (از طریق API محافظت‌شده)
 // =========================================================
 
 export async function updateClinic(
   id: string,
   updates: UpdateClinicData,
 ): Promise<AdminClinic> {
-  const { data, error } = await supabase
-    .from(CLINICS_TABLE)
-    .update(updates)
-    .eq("id", id)
-    .select()
-    .single();
+  const response = await fetch("/api/admin/clinics", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, ...updates }),
+  });
 
-  if (error) {
-    console.error("UPDATE CLINIC ERROR:", error);
+  const result = await response.json();
 
-    throw new Error(error.message || "خطا در ویرایش کلینیک");
+  if (!response.ok) {
+    throw new Error(result.error || "خطا در ویرایش کلینیک");
   }
 
-  if (!data) {
-    throw new Error("کلینیک موردنظر پیدا نشد");
-  }
-
-  return data as AdminClinic;
+  return result.clinic as AdminClinic;
 }

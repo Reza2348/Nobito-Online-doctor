@@ -3,41 +3,41 @@
 import { useState } from "react";
 
 import type { Message } from "@/Types/types";
+
 import { sendSupportMessage } from "@/lib/support-api";
 
 import ChatMessages from "@/components/Nobitofeedback/SupportWidget/SupportPanel/SupportChat/ChatMessages/ChatMessages";
-
 import ChatInput from "@/components/Nobitofeedback/SupportWidget/SupportPanel/SupportChat/ChatInput/ChatInput";
-
 import HumanSupportButton from "@/components/Nobitofeedback/SupportWidget/SupportPanel/SupportChat/HumanSupportButton/HumanSupportButton";
 
-export default function SupportChat() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      role: "assistant",
-      content:
-        "سلام 👋\nمن دستیار هوشمند پشتیبانی نوبیتو هستم.\nسؤال خود را مستقیم بپرسید؛ چطور می‌توانم کمکتان کنم؟",
-    },
-  ]);
+type Props = {
+  messages: Message[];
+  onMessage: (message: Message) => void;
+  conversationId: string | null;
+  onConversationId: (id: string) => void;
+  faqLoading: boolean;
+};
 
+export default function SupportChat({
+  messages,
+  onMessage,
+  conversationId,
+  onConversationId,
+  faqLoading,
+}: Props) {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [conversationId, setConversationId] = useState<string | null>(null);
-
-  const addMessage = (message: Message) => {
-    setMessages((prev) => [...prev, message]);
-  };
 
   const sendMessage = async (value?: string) => {
     const text = (value ?? input).trim();
 
-    if (!text || loading) {
+    if (!text || loading || faqLoading) {
       return;
     }
 
     setInput("");
 
-    addMessage({
+    onMessage({
       role: "user",
       content: text,
     });
@@ -51,10 +51,10 @@ export default function SupportChat() {
       });
 
       if (data.conversationId) {
-        setConversationId(data.conversationId);
+        onConversationId(data.conversationId);
       }
 
-      addMessage({
+      onMessage({
         role: "assistant",
         content:
           data.reply || "متأسفم، در حال حاضر نتوانستم پاسخ مناسبی پیدا کنم.",
@@ -62,7 +62,7 @@ export default function SupportChat() {
     } catch (error) {
       console.error("Support chat error:", error);
 
-      addMessage({
+      onMessage({
         role: "assistant",
         content:
           "متأسفانه در ارتباط با سامانه پشتیبانی مشکلی پیش آمد. لطفاً دوباره تلاش کنید.",
@@ -73,19 +73,19 @@ export default function SupportChat() {
   };
 
   return (
-    <div className="flex flex-1 flex-col min-h-0">
-      <ChatMessages messages={messages} loading={loading} />
+    <div className="flex min-h-0 flex-1 flex-col">
+      <ChatMessages messages={messages} loading={loading || faqLoading} />
 
       <HumanSupportButton
         conversationId={conversationId}
-        onMessage={addMessage}
+        onMessage={onMessage}
       />
 
       <ChatInput
         value={input}
-        loading={loading}
+        loading={loading || faqLoading}
         onChange={setInput}
-        onSubmit={() => sendMessage()}
+        onSubmit={() => void sendMessage()}
       />
     </div>
   );

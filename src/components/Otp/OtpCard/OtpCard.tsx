@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import * as O from "@/Imports/OtpImports/OtpImports";
 import { axiosClient } from "@/lib/axiosClient";
 
-import LogoSection from "@/components/Otp/LogoSection/LogoSection";
+import LogoSection from "@/components/shared/ProviderLogoSection/ProviderLogoSection";
 
 import OtpHeader from "@/components/Otp/OtpCard/OtpHeader/OtpHeader";
 import OtpEmailInfo from "@/components/Otp/OtpCard/OtpEmailInfo/OtpEmailInfo";

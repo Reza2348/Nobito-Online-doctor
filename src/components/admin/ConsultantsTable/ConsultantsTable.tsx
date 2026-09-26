@@ -1,11 +1,13 @@
 "use client";
 
+import { MdPsychology } from "react-icons/md";
+
 import type { AdminConsultant } from "@/Types/types";
 
 import EntityForm from "@/components/admin/AdminDashboard/shared/EntityForm/EntityForm";
 import ConsultantCard from "@/components/admin/ConsultantsTable/ConsultantCard/ConsultantCard";
-import ConsultantsTableHeader from "@/components/admin/ConsultantsTable/ConsultantsTableHeader/ConsultantsTableHeader";
-import ConsultantsTableState from "@/components/admin/ConsultantsTable/ConsultantsTableState/ConsultantsTableState";
+import EntityTableHeader from "@/components/shared/EntityTableHeader/EntityTableHeader";
+import EntityTableState from "@/components/shared/EntityTableState/EntityTableState";
 
 import { useConsultants } from "@/hooks/useConsultant";
 
@@ -30,12 +32,30 @@ export default function ConsultantsTable({
     onDelete,
   });
 
+  const headerProps = {
+    icon: <MdPsychology size={28} />,
+    title: "لیست مشاوران",
+    subtitle: "مشاوران ثبت‌شده در سامانه",
+    accent: "purple" as const,
+  };
+
+  const stateProps = {
+    icon: <MdPsychology size={28} />,
+    title: "لیست مشاوران",
+    subtitle: "مشاوران ثبت‌شده در سامانه",
+    accent: "purple" as const,
+    loadingText: "در حال دریافت مشاوران...",
+    emptyTitle: "هنوز مشاوری ثبت نشده است.",
+    emptyDescription: "مشاوران ثبت‌شده در سامانه",
+    errorTitle: "خطا در دریافت مشاوران",
+  };
+
   // -----------------------------------------
   // Loading
   // -----------------------------------------
 
   if (loading) {
-    return <ConsultantsTableState type="loading" />;
+    return <EntityTableState {...stateProps} type="loading" />;
   }
 
   // -----------------------------------------
@@ -44,7 +64,8 @@ export default function ConsultantsTable({
 
   if (errorMessage) {
     return (
-      <ConsultantsTableState
+      <EntityTableState
+        {...stateProps}
         type="error"
         message={errorMessage}
         onRetry={actions.load}
@@ -58,13 +79,14 @@ export default function ConsultantsTable({
 
   return (
     <div dir="rtl" className="rounded-3xl bg-white p-6 shadow">
-      <ConsultantsTableHeader
+      <EntityTableHeader
+        {...headerProps}
         onRefresh={actions.load}
-        disabled={Boolean(savingId)}
+        refreshing={Boolean(savingId)}
       />
 
       {consultantList.length === 0 ? (
-        <ConsultantsTableState type="empty" />
+        <EntityTableState {...stateProps} type="empty" />
       ) : (
         <div className="space-y-4">
           {consultantList.map((consultant) => {

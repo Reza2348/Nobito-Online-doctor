@@ -4,38 +4,13 @@ import type {
   DoctorRow as BaseDoctorRow,
 } from "@/Types/types";
 
+import { parseFields } from "@/components/shared/utils/parse-fields";
+import { getSupabaseErrorMessage } from "@/components/shared/utils/supabase-error";
+
 export type DoctorRow = BaseDoctorRow;
 
-export function parseFields(fields: unknown): string[] {
-  if (!fields) {
-    return [];
-  }
-
-  if (Array.isArray(fields)) {
-    return fields.map((field) => String(field).trim()).filter(Boolean);
-  }
-
-  const value = String(fields).trim();
-
-  if (!value) {
-    return [];
-  }
-
-  try {
-    const parsed: unknown = JSON.parse(value);
-
-    if (Array.isArray(parsed)) {
-      return parsed.map((field) => String(field).trim()).filter(Boolean);
-    }
-  } catch {
-    // مقدار JSON نیست
-  }
-
-  return value
-    .split(/[,،|]/)
-    .map((field) => field.trim())
-    .filter(Boolean);
-}
+// re-export برای سازگاری با doctors.service.ts که از همین مسیر import می‌کنه
+export { parseFields, getSupabaseErrorMessage };
 
 export function mapDoctor(doctor: DoctorRow): AdminDoctor {
   return {
@@ -72,22 +47,6 @@ export function mapDoctor(doctor: DoctorRow): AdminDoctor {
         ? Number(doctor.satisfied_percent)
         : null,
   };
-}
-
-export function getSupabaseErrorMessage(error: {
-  message?: string;
-  details?: string;
-  hint?: string;
-  code?: string;
-}): string {
-  return [
-    error.message,
-    error.details,
-    error.hint,
-    error.code ? `Code: ${error.code}` : "",
-  ]
-    .filter(Boolean)
-    .join(" | ");
 }
 
 export function validateDoctorForm(

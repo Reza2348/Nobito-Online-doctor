@@ -1,11 +1,13 @@
 "use client";
 
+import { MdLocalHospital } from "react-icons/md";
+
 import type { AdminClinic } from "@/Types/types";
 
 import EntityForm from "@/components/admin/AdminDashboard/shared/EntityForm/EntityForm";
 import ClinicCard from "@/components/admin/ClinicsTable/ClinicCard/ClinicCard";
-import ClinicsTableHeader from "@/components/admin/ClinicsTable/ClinicsTableHeader/ClinicsTableHeader";
-import ClinicsTableState from "@/components/admin/ClinicsTable/ClinicsTableState/ClinicsTableState";
+import EntityTableHeader from "@/components/shared/EntityTableHeader/EntityTableHeader";
+import EntityTableState from "@/components/shared/EntityTableState/EntityTableState";
 
 import { useClinics } from "@/hooks/useClinics";
 
@@ -28,6 +30,25 @@ export default function ClinicsTable({ clinics = [], onDelete }: Props) {
     onDelete,
   });
 
+  const headerProps = {
+    icon: <MdLocalHospital size={28} />,
+    title: "کلینیک‌ها",
+    subtitle: "مدیریت مراکز درمانی سیستم",
+    accent: "blue" as const,
+  };
+
+  const stateProps = {
+    icon: <MdLocalHospital size={28} />,
+    title: "کلینیک‌ها",
+    subtitle: "مدیریت مراکز درمانی سیستم",
+    accent: "blue" as const,
+    loadingText: "در حال دریافت کلینیک‌ها...",
+    emptyTitle: "هنوز کلینیکی ثبت نشده است.",
+    emptyDescription:
+      "کلینیک‌های ثبت‌شده در جدول clinics اینجا نمایش داده می‌شوند.",
+    errorTitle: "خطا در دریافت کلینیک‌ها",
+  };
+
   // -----------------------------------------
   // Loading
   // -----------------------------------------
@@ -35,9 +56,13 @@ export default function ClinicsTable({ clinics = [], onDelete }: Props) {
   if (loading) {
     return (
       <div dir="rtl" className="p-4">
-        <ClinicsTableHeader onRefresh={actions.load} refreshing />
+        <EntityTableHeader
+          {...headerProps}
+          onRefresh={actions.load}
+          refreshing
+        />
 
-        <ClinicsTableState type="loading" />
+        <EntityTableState {...stateProps} type="loading" />
       </div>
     );
   }
@@ -49,9 +74,10 @@ export default function ClinicsTable({ clinics = [], onDelete }: Props) {
   if (errorMessage) {
     return (
       <div dir="rtl" className="p-4">
-        <ClinicsTableHeader onRefresh={actions.load} />
+        <EntityTableHeader {...headerProps} onRefresh={actions.load} />
 
-        <ClinicsTableState
+        <EntityTableState
+          {...stateProps}
           type="error"
           message={errorMessage}
           onRetry={actions.load}
@@ -66,11 +92,15 @@ export default function ClinicsTable({ clinics = [], onDelete }: Props) {
 
   return (
     <div dir="rtl" className="p-4">
-      <ClinicsTableHeader onRefresh={actions.load} refreshing={loading} />
+      <EntityTableHeader
+        {...headerProps}
+        onRefresh={actions.load}
+        refreshing={loading}
+      />
 
       <div className="rounded-3xl border bg-white p-6 shadow-lg">
         {clinicList.length === 0 ? (
-          <ClinicsTableState type="empty" />
+          <EntityTableState {...stateProps} type="empty" />
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-right">

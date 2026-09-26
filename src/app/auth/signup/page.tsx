@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import LogoSection from "@/components/Signup/LogoSection/LogoSection"; // مسیر فرضی فایل‌ها
+import LogoSection from "@/components/shared/ProviderLogoSection/ProviderLogoSection"; // مسیر فرضی فایل‌ها
 import HeaderSection from "@/components/Signup/HeaderSection/HeaderSection";
 import LoginForm from "@/components/Signup/LoginForm/LoginForm";
 import TermsSection from "@/components/Signup/TermsSection/TermsSection";

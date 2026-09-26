@@ -1,3 +1,5 @@
+export { default as LogoSection } from "@/components/shared/ProviderLogoSection/ProviderLogoSection";
+export { default as SectionTitle } from "@/components/shared/ProviderSectionTitle/ProviderSectionTitle";
 export { default as ProviderProfile } from "@/components/shared/ProviderProfile/ProviderProfile";
 export { default as ProviderHeader } from "@/components/shared/Providerheader/Providerheader";
 export { default as ProviderBio } from "@/components/shared/Providerbio/Providerbio";

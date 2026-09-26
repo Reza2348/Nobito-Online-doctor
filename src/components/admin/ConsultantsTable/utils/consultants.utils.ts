@@ -3,31 +3,16 @@ import type {
   ConsultantRow as BaseConsultantRow,
 } from "@/Types/types";
 
+import { parseFields } from "@/components/shared/utils/parse-fields";
+import { getSupabaseErrorMessage } from "@/components/shared/utils/supabase-error";
+
 /**
  * Export مجدد ConsultantRow
  */
 export type ConsultantRow = BaseConsultantRow;
-export function parseFields(fields: unknown): string[] {
-  if (!fields) {
-    return [];
-  }
 
-  if (Array.isArray(fields)) {
-    return fields
-      .map(String)
-      .map((field) => field.trim())
-      .filter(Boolean);
-  }
-
-  if (typeof fields === "string") {
-    return fields
-      .split(/[,،|]/)
-      .map((field) => field.trim())
-      .filter(Boolean);
-  }
-
-  return [];
-}
+// re-export برای سازگاری با consultants.service.ts که از همین مسیر import می‌کنه
+export { parseFields, getSupabaseErrorMessage };
 
 /**
  * تبدیل رکورد Supabase به AdminConsultant
@@ -59,23 +44,4 @@ export function createConsultantUpdateData(consultant: AdminConsultant) {
     fields: parseFields(consultant.fields),
     rating: consultant.rating ?? 0,
   };
-}
-
-/**
- * دریافت پیام خطای Supabase
- */
-export function getSupabaseErrorMessage(error: {
-  message?: string;
-  details?: string;
-  hint?: string;
-  code?: string;
-}): string {
-  return [
-    error.message,
-    error.details,
-    error.hint,
-    error.code ? `Code: ${error.code}` : "",
-  ]
-    .filter(Boolean)
-    .join(" | ");
 }

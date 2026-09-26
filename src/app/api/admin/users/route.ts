@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
+import { getAdmin } from "@/lib/getAdmin";
+
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const adminEmail = process.env.ADMIN_EMAIL!;
@@ -15,9 +17,19 @@ const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey, {
 // GET: دریافت لیست کاربران
 export async function GET() {
   try {
-    // بررسی وجود کاربر ادمین
-    // فعلاً بر اساس ADMIN_EMAIL انجام می‌شود.
-    // در نسخه بعدی بهتر است role-based authentication اضافه کنیم.
+    // -------------------------------------------------
+    // بررسی احراز هویت ادمین (قبل از هر کار دیگری)
+    // -------------------------------------------------
+
+    const admin = await getAdmin();
+
+    if (!admin) {
+      return NextResponse.json(
+        { error: "دسترسی غیرمجاز. لطفاً ابتدا وارد پنل ادمین شوید." },
+        { status: 401 },
+      );
+    }
+
     if (!adminEmail) {
       return NextResponse.json(
         { error: "ADMIN_EMAIL تنظیم نشده است." },
@@ -66,6 +78,19 @@ export async function GET() {
 // PATCH: ویرایش نام و ایمیل کاربر
 export async function PATCH(request: NextRequest) {
   try {
+    // -------------------------------------------------
+    // بررسی احراز هویت ادمین (قبل از هر کار دیگری)
+    // -------------------------------------------------
+
+    const admin = await getAdmin();
+
+    if (!admin) {
+      return NextResponse.json(
+        { error: "دسترسی غیرمجاز. لطفاً ابتدا وارد پنل ادمین شوید." },
+        { status: 401 },
+      );
+    }
+
     const body = await request.json();
 
     const { id, full_name, email } = body;

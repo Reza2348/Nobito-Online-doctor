@@ -1,11 +1,13 @@
 "use client";
 
+import { MdMedicalServices } from "react-icons/md";
+
 import type { AdminDoctor } from "@/Types/types";
 
 import EntityForm from "@/components/admin/AdminDashboard/shared/EntityForm/EntityForm";
 import DoctorCard from "@/components/admin/DoctorsTable/DoctorCard/DoctorCard";
-import DoctorsTableHeader from "@/components/admin/DoctorsTable/DoctorsTableHeader/DoctorsTableHeader";
-import DoctorsTableState from "@/components/admin/DoctorsTable/DoctorsTableState/DoctorsTableState";
+import EntityTableHeader from "@/components/shared/EntityTableHeader/EntityTableHeader";
+import EntityTableState from "@/components/shared/EntityTableState/EntityTableState";
 
 import { useDoctors } from "@/hooks/useDoctors";
 
@@ -27,13 +29,33 @@ export default function DoctorsTable({ doctors = [], onDelete }: Props) {
     onDelete,
   });
 
+  const headerProps = {
+    icon: <MdMedicalServices size={28} />,
+    title: "لیست پزشکان",
+    subtitle: "پزشکان ثبت‌شده در سامانه",
+    accent: "teal" as const,
+  };
+
+  const stateProps = {
+    icon: <MdMedicalServices size={28} />,
+    title: "لیست پزشکان",
+    subtitle: "پزشکان ثبت‌شده در سامانه",
+    accent: "teal" as const,
+    loadingText: "در حال دریافت پزشکان...",
+    emptyTitle: "هنوز پزشکی ثبت نشده است.",
+    emptyDescription:
+      "پزشکان ثبت‌شده در جدول doctors اینجا نمایش داده می‌شوند.",
+    errorTitle: "خطا در دریافت پزشکان",
+  };
+
   if (loading) {
-    return <DoctorsTableState type="loading" />;
+    return <EntityTableState {...stateProps} type="loading" />;
   }
 
   if (errorMessage) {
     return (
-      <DoctorsTableState
+      <EntityTableState
+        {...stateProps}
         type="error"
         message={errorMessage}
         onRetry={actions.load}
@@ -43,13 +65,14 @@ export default function DoctorsTable({ doctors = [], onDelete }: Props) {
 
   return (
     <div dir="rtl" className="rounded-3xl bg-white p-6 shadow">
-      <DoctorsTableHeader
+      <EntityTableHeader
+        {...headerProps}
         onRefresh={actions.load}
-        disabled={Boolean(savingId)}
+        refreshing={Boolean(savingId)}
       />
 
       {doctorList.length === 0 ? (
-        <DoctorsTableState type="empty" />
+        <EntityTableState {...stateProps} type="empty" />
       ) : (
         <div className="space-y-4">
           {doctorList.map((doctor) => {

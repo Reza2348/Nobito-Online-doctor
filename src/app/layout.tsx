@@ -3,7 +3,7 @@
 import type { Metadata } from "next";
 import { IRANSansWebLocal } from "../fonts/IRANSansWeb";
 import "./globals.css";
-
+import SupportWidget from "@/components/Nobitofeedback/SupportWidget/SupportWidget";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import QueryProvider from "@/components/QueryProvider/QueryProvider";
@@ -27,6 +27,7 @@ export default function RootLayout({
         <QueryProvider>
           <AppProviders>
             <Header />
+            <SupportWidget />
             <main>{children}</main>
             <Footer />
           </AppProviders>

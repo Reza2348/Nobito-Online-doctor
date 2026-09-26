@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabaseClient";
 const CONSULTANTS_TABLE = "consultants";
 
 /**
- * دریافت لیست مشاوران
+ * دریافت لیست مشاوران (عمومی — خواندنی)
  */
 export async function fetchConsultants(): Promise<AdminConsultant[]> {
   const { data, error } = await supabase
@@ -23,18 +23,19 @@ export async function fetchConsultants(): Promise<AdminConsultant[]> {
 }
 
 /**
- * حذف مشاور
+ * حذف مشاور (از طریق API محافظت‌شده)
  */
 export async function deleteConsultant(id: string): Promise<void> {
-  const { error } = await supabase
-    .from(CONSULTANTS_TABLE)
-    .delete()
-    .eq("id", id);
+  const response = await fetch("/api/admin/consultants", {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id }),
+  });
 
-  if (error) {
-    console.error("DELETE CONSULTANT ERROR:", error);
+  const result = await response.json();
 
-    throw new Error(error.message || "خطا در حذف مشاور");
+  if (!response.ok) {
+    throw new Error(result.error || "خطا در حذف مشاور");
   }
 }
 
@@ -46,28 +47,23 @@ export type UpdateConsultantData = Partial<
 >;
 
 /**
- * ویرایش مشاور
+ * ویرایش مشاور (از طریق API محافظت‌شده)
  */
 export async function updateConsultant(
   id: string,
   updates: UpdateConsultantData,
 ): Promise<AdminConsultant> {
-  const { data, error } = await supabase
-    .from(CONSULTANTS_TABLE)
-    .update(updates)
-    .eq("id", id)
-    .select()
-    .single();
+  const response = await fetch("/api/admin/consultants", {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id, ...updates }),
+  });
 
-  if (error) {
-    console.error("UPDATE CONSULTANT ERROR:", error);
+  const result = await response.json();
 
-    throw new Error(error.message || "خطا در ویرایش مشاور");
+  if (!response.ok) {
+    throw new Error(result.error || "خطا در ویرایش مشاور");
   }
 
-  if (!data) {
-    throw new Error("مشاور موردنظر پیدا نشد");
-  }
-
-  return data as AdminConsultant;
+  return result.consultant as AdminConsultant;
 }

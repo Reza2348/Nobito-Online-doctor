@@ -1,11 +1,12 @@
 "use client";
 
+import { MdMedicalServices } from "react-icons/md";
+
 import type { AdminDoctor } from "@/Types/types";
 
 import EntityForm from "@/components/admin/AdminDashboard/shared/EntityForm/EntityForm";
 import DoctorCard from "@/components/admin/DoctorsTable/DoctorCard/DoctorCard";
-import DoctorsTableHeader from "@/components/admin/DoctorsTable/DoctorsTableHeader/DoctorsTableHeader";
-import DoctorsTableState from "@/components/admin/DoctorsTable/DoctorsTableState/DoctorsTableState";
+import EntityTable from "@/components/shared/EntityTable/EntityTable";
 
 import { useDoctors } from "@/hooks/useDoctors";
 
@@ -27,56 +28,43 @@ export default function DoctorsTable({ doctors = [], onDelete }: Props) {
     onDelete,
   });
 
-  if (loading) {
-    return <DoctorsTableState type="loading" />;
-  }
-
-  if (errorMessage) {
-    return (
-      <DoctorsTableState
-        type="error"
-        message={errorMessage}
-        onRetry={actions.load}
-      />
-    );
-  }
-
   return (
-    <div dir="rtl" className="rounded-3xl bg-white p-6 shadow">
-      <DoctorsTableHeader
-        onRefresh={actions.load}
-        disabled={Boolean(savingId)}
-      />
-
-      {doctorList.length === 0 ? (
-        <DoctorsTableState type="empty" />
-      ) : (
-        <div className="space-y-4">
-          {doctorList.map((doctor) => {
-            const doctorId = String(doctor.id);
-
-            return (
-              <DoctorCard
-                key={doctorId}
-                doctor={doctor}
-                saving={savingId === doctorId}
-                onEdit={actions.edit}
-                onDelete={actions.remove}
-              />
-            );
-          })}
-        </div>
-      )}
-
-      {editingDoctor && (
-        <EntityForm
-          entity="doctor"
-          data={editingDoctor}
-          saving={savingId === String(editingDoctor.id)}
-          onClose={actions.closeEdit}
-          onSave={actions.saveEdit}
+    <EntityTable
+      icon={<MdMedicalServices size={28} />}
+      title="لیست پزشکان"
+      subtitle="پزشکان ثبت‌شده در سامانه"
+      accent="teal"
+      loadingText="در حال دریافت پزشکان..."
+      emptyTitle="هنوز پزشکی ثبت نشده است."
+      emptyDescription="پزشکان ثبت‌شده در جدول doctors اینجا نمایش داده می‌شوند."
+      errorTitle="خطا در دریافت پزشکان"
+      items={doctorList}
+      loading={loading}
+      errorMessage={errorMessage}
+      savingId={savingId}
+      onRefresh={actions.load}
+      onRetry={actions.load}
+      getItemId={(doctor) => String(doctor.id)}
+      renderItem={(doctor) => (
+        <DoctorCard
+          doctor={doctor}
+          saving={savingId === String(doctor.id)}
+          onEdit={actions.edit}
+          onDelete={actions.remove}
         />
       )}
-    </div>
+      editing={editingDoctor}
+      renderForm={() =>
+        editingDoctor && (
+          <EntityForm
+            entity="doctor"
+            data={editingDoctor}
+            saving={savingId === String(editingDoctor.id)}
+            onClose={actions.closeEdit}
+            onSave={actions.saveEdit}
+          />
+        )
+      }
+    />
   );
 }
