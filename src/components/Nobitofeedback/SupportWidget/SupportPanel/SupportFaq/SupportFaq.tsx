@@ -36,6 +36,7 @@ type Props = {
   onChat: () => void;
   onSignup: () => void;
   onFaqMessage: (question: string, answer: string) => void;
+  requestHumanSupport: () => void;
   humanLoading: boolean;
   authLoading: boolean;
 };
