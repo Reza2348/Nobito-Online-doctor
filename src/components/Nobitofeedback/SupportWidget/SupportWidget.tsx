@@ -13,16 +13,7 @@ export default function SupportWidget() {
         type="button"
         aria-label="پشتیبانی"
         onClick={() => setOpen(true)}
-        className="
-          group fixed bottom-6 left-6 z-60
-          w-14 h-14 rounded-2xl
-          bg-[#1F7168] text-white
-          flex items-center justify-center
-          shadow-[0_8px_30px_rgba(31,113,104,0.35)]
-          transition-all duration-300
-          hover:scale-110 hover:rounded-full
-          active:scale-95
-        "
+        className="group fixed bottom-6 left-6 z-60 w-14 h-14 rounded-2xl bg-[#1F7168] text-white flex items-center justify-center shadow-[0_8px_30px_rgba(31,113,104,0.35)] transition-all duration-300 hover:scale-110 hover:rounded-full active:scale-95"
       >
         <FiMessageCircle
           size={25}

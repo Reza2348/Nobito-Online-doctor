@@ -37,7 +37,7 @@ const DEFAULT_NAV_LINKS: H.NavLink[] = [
 
 const SERVICE_LINKS = [
   {
-    href: "/Services/dentistry",
+    href: "/Dentistry",
     label: "دندان‌پزشکی",
   },
   {

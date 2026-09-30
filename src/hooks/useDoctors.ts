@@ -8,7 +8,7 @@ import {
   deleteDoctor,
   fetchDoctors,
   updateDoctor,
-} from "@/service/doctors.service";
+} from "@/services/doctors.service";
 
 interface UseDoctorsOptions {
   initialDoctors: AdminDoctor[];

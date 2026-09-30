@@ -13,7 +13,7 @@ import {
   fetchNotifications,
   markAllNotificationsAsRead as markAllNotificationsAsReadRequest,
   markNotificationAsRead as markNotificationAsReadRequest,
-} from "@/service/notifications.service";
+} from "@/services/notifications.service";
 
 const NOTIFICATIONS_QUERY_KEY = ["notifications"];
 

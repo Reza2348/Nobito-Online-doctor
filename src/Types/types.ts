@@ -35,3 +35,4 @@ export * from "./beauty.types";
 export * from "./DiscountItem.types";
 export * from "./support-types";
 export * from "./feedback-card.types";
+export * from "./prescription.types";

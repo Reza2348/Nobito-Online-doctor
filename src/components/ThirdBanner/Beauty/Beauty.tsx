@@ -16,16 +16,17 @@ const BeautyCategories = async () => {
         className="
           mx-6
           grid
-          grid-cols-2
+          grid-cols-1
           gap-4
           sm:mx-8
-          sm:grid-cols-3
+          sm:grid-cols-2
           md:mx-10
-          md:grid-cols-4
+          md:grid-cols-3
           lg:mx-12
-          lg:grid-cols-6
+          lg:grid-cols-4
           lg:gap-5
           xl:mx-16
+          xl:grid-cols-6
         "
       >
         {items.slice(0, 6).map((item) => (

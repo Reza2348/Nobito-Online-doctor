@@ -1,39 +1,79 @@
-import { FaStar, FaCheckCircle } from "react-icons/fa";
-
 interface ClinicsBadgesProps {
   rating?: number;
-  verified?: boolean;
-  category?: string;
+  satisfiedPercent?: number | string;
+  patientsSatisfied?: number;
 }
 
-const ClinicsBadges = ({
-  rating = 0,
-  verified = false,
-  category,
-}: ClinicsBadgesProps) => {
+function normalizePercent(value: unknown): number | null {
+  if (typeof value === "number" && !Number.isNaN(value)) {
+    return value;
+  }
+
+  if (typeof value === "string") {
+    const parsed = Number(value.replace("%", "").trim());
+
+    return Number.isNaN(parsed) ? null : parsed;
+  }
+
+  return null;
+}
+
+export default function ClinicsBadges({
+  rating,
+  satisfiedPercent,
+  patientsSatisfied,
+}: ClinicsBadgesProps) {
+  const normalizedSatisfiedPercent = normalizePercent(satisfiedPercent);
+
   return (
-    <div className="flex flex-wrap items-center gap-2">
-      {rating > 0 && (
-        <span className="flex items-center gap-1 rounded-full bg-yellow-50 px-3 py-1 text-sm font-medium text-yellow-600">
-          <FaStar className="text-yellow-500" />
-          {rating}
+    <div className="mt-3 flex flex-wrap items-center gap-2">
+      {typeof rating === "number" && rating > 0 && (
+        <span
+          className="
+            rounded-full
+            bg-yellow-50
+            px-3
+            py-1
+            text-xs
+            font-bold
+            text-yellow-700
+          "
+        >
+          ⭐ {rating}
         </span>
       )}
 
-      {verified && (
-        <span className="flex items-center gap-1 rounded-full bg-green-50 px-3 py-1 text-sm font-medium text-green-600">
-          <FaCheckCircle />
-          Verified
+      {normalizedSatisfiedPercent !== null && (
+        <span
+          className="
+            rounded-full
+            bg-emerald-50
+            px-3
+            py-1
+            text-xs
+            font-bold
+            text-emerald-700
+          "
+        >
+          {normalizedSatisfiedPercent}٪ رضایت
         </span>
       )}
 
-      {category && (
-        <span className="rounded-full bg-blue-50 px-3 py-1 text-sm font-medium text-blue-600">
-          {category}
+      {typeof patientsSatisfied === "number" && (
+        <span
+          className="
+            rounded-full
+            bg-sky-50
+            px-3
+            py-1
+            text-xs
+            font-bold
+            text-sky-700
+          "
+        >
+          {patientsSatisfied.toLocaleString("fa-IR")} بیمار راضی
         </span>
       )}
     </div>
   );
-};
-
-export default ClinicsBadges;
+}

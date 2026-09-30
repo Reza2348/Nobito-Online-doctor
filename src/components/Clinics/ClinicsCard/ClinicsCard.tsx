@@ -10,7 +10,7 @@ import { Clinic } from "@/Types/types";
 
 import ClinicsImageSection from "./ClinicsImageSection/ClinicsImageSection";
 import ClinicsBadges from "./ClinicsBadges/ClinicsBadges";
-import ClinicsCardButton from "./ClinicsCardButton/ClinicsBadges";
+import ClinicsCardButton from "./ClinicsCardButton/ClinicsCardButton";
 
 interface ClinicsCardProps {
   clinic: Clinic;
@@ -40,7 +40,7 @@ export default function ClinicsCard({ clinic }: ClinicsCardProps) {
         group
         flex
         h-full
-        min-h-[620px]
+        min-h-155
         cursor-pointer
         flex-col
         overflow-hidden
@@ -57,32 +57,38 @@ export default function ClinicsCard({ clinic }: ClinicsCardProps) {
       "
     >
       {/* IMAGE */}
-      <ClinicsImageSection image={clinic.photo_url} alt={clinic.name} />
+      <ClinicsImageSection
+        image={clinic.photo_url}
+        alt={clinic.name}
+        rating={clinic.rating}
+      />
 
       {/* CONTENT */}
       <div className="flex flex-1 flex-col px-5 py-5">
         {/* NAME */}
-        <h3 className="min-h-[30px] line-clamp-1 text-lg font-extrabold text-gray-900">
+        <h3 className="min-h-7.5 line-clamp-1 text-lg font-extrabold text-gray-900">
           {clinic.name}
         </h3>
 
         {/* SPECIALTY */}
-        <p className="mt-2 min-h-[22px] line-clamp-1 text-sm text-gray-500">
+        <p className="mt-2 min-h-5.5 line-clamp-1 text-sm text-gray-500">
           {clinic.specialty}
         </p>
 
         {/* BADGES */}
-        <div className="mt-3">
-          <ClinicsBadges rating={clinic.rating} />
-        </div>
+        <ClinicsBadges
+          rating={clinic.rating}
+          satisfiedPercent={clinic.satisfied_percent}
+          patientsSatisfied={clinic.patients_satisfied}
+        />
 
         {/* FIELDS */}
-        <div className="mt-5 min-h-[60px] overflow-hidden">
+        <div className="mt-5 min-h-15 overflow-hidden">
           <ClinicsFields fields={clinic.fields} />
         </div>
 
         {/* ADDRESS */}
-        <div className="mt-5 mb-6 min-h-[55px]">
+        <div className="mt-5 mb-6 min-h-13.75">
           <ClinicsAddress address={clinic.address} />
         </div>
 
