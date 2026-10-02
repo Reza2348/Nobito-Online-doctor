@@ -3,15 +3,36 @@
 // =========================================================
 
 export type Clinic = {
+  // MongoDB ObjectId
+  _id?: string;
+
+  // Clinic numeric ID
   id: number;
+
   name: string;
-  photo_url: string;
+
+  photo_url: string | null;
+
   specialty: string;
+
   patients_satisfied: number;
+
   address: string;
-  phone?: string;
+
   fields: string[];
+
   rating: number;
-  satisfied_percent: number;
-  bio?: string;
+
+  created_at?: string | null;
+
+  satisfied_percent: string;
+
+  is_active: boolean;
+
+  // Optional frontend fields
+  phone?: string | null;
+
+  bio?: string | null;
+
+  profile_id?: string | null;
 };

@@ -2,13 +2,20 @@
 
 import React, { useEffect, useState } from "react";
 
-import { supabase } from "@/lib/supabaseClient";
+import axiosClient, { getAxiosErrorMessage } from "@/lib/axiosClient";
+
 import type { Doctor } from "@/Types/types";
 
 import { useDoctor } from "@/context/DoctorContext/DoctorContext";
 
 import ProviderProfile from "@/components/shared/ProviderProfile/ProviderProfile";
+
 import { fromDoctor } from "@/components/shared/Adapters/Adapters";
+
+interface DoctorResponse {
+  success: boolean;
+  data: Doctor;
+}
 
 export default function DoctorProfile() {
   const { doctorId } = useDoctor();
@@ -29,21 +36,14 @@ export default function DoctorProfile() {
       setError(null);
 
       try {
-        const { data, error: supabaseError } = await supabase
-          .from("doctors")
-          .select("*")
-          .eq("id", doctorId)
-          .single();
+        const response = await axiosClient.get<DoctorResponse>(
+          `/api/doctors/${doctorId}`,
+        );
 
-        if (supabaseError) {
-          setError("خطا در دریافت اطلاعات پزشک.");
-          setDoctor(null);
-          return;
-        }
+        setDoctor(response.data.data);
+      } catch (error) {
+        setError(getAxiosErrorMessage(error, "خطا در دریافت اطلاعات پزشک."));
 
-        setDoctor(data);
-      } catch {
-        setError("خطایی هنگام دریافت اطلاعات پزشک رخ داد.");
         setDoctor(null);
       } finally {
         setLoading(false);
@@ -56,16 +56,16 @@ export default function DoctorProfile() {
   if (loading) {
     return (
       <div
-        className="flex flex-col sm:flex-row items-center justify-center min-h-screen gap-4 px-4"
+        className="flex min-h-screen flex-col items-center justify-center gap-4 px-4 sm:flex-row"
         role="status"
         aria-live="polite"
       >
-        <span className="text-gray-500 font-bold text-lg whitespace-nowrap">
+        <span className="whitespace-nowrap text-lg font-bold text-gray-500">
           در حال بارگذاری پروفایل پزشک...
         </span>
 
         <div
-          className="w-10 h-10 border-4 border-gray-200 border-t-teal-600 rounded-full animate-spin"
+          className="h-10 w-10 animate-spin rounded-full border-4 border-gray-200 border-t-teal-600"
           aria-hidden="true"
         />
       </div>
@@ -74,7 +74,7 @@ export default function DoctorProfile() {
 
   if (error) {
     return (
-      <div className="p-10 text-center text-red-500 font-bold" role="alert">
+      <div className="p-10 text-center font-bold text-red-500" role="alert">
         {error}
       </div>
     );
@@ -82,7 +82,7 @@ export default function DoctorProfile() {
 
   if (!doctor) {
     return (
-      <div className="p-10 text-center text-gray-500 font-bold">
+      <div className="p-10 text-center font-bold text-gray-500">
         پزشکی انتخاب نشده است.
       </div>
     );

@@ -1,19 +1,31 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+
 import { useClinics } from "@/context/ClinicsContext/ClinicsContext";
-import { supabase } from "@/lib/supabaseClient";
-import { Clinic } from "@/Types/types";
+
+import axiosClient, { getAxiosErrorMessage } from "@/lib/axiosClient";
+
+import type { Clinic } from "@/Types/types";
+
+interface ClinicResponse {
+  success: boolean;
+  data: Clinic;
+}
 
 export function useClinicProfile() {
   const { selectedClinic, setSelectedClinic } = useClinics();
+
   const [clinic, setClinic] = useState<Clinic | null>(null);
+
   const [loading, setLoading] = useState(true);
+
   const [error, setError] = useState<string | null>(null);
 
   const clinicId = selectedClinic?.id;
 
   const selectedClinicRef = useRef(selectedClinic);
+
   useEffect(() => {
     selectedClinicRef.current = selectedClinic;
   }, [selectedClinic]);
@@ -27,30 +39,32 @@ export function useClinicProfile() {
 
       try {
         const id = clinicId ?? 1;
-        const { data, error } = await supabase
-          .from("clinics")
-          .select("*")
-          .eq("id", id)
-          .single();
+
+        const response = await axiosClient.get<ClinicResponse>(
+          `/api/clinics/${id}`,
+        );
 
         if (cancelled) return;
 
-        if (error) {
-          setError(error.message);
-        } else {
-          const fetchedClinic = data as Clinic;
-          setClinic(fetchedClinic);
+        const fetchedClinic = response.data.data;
 
-          if (selectedClinicRef.current?.id !== fetchedClinic.id) {
-            setSelectedClinic(fetchedClinic);
-          }
+        setClinic(fetchedClinic);
+
+        if (selectedClinicRef.current?.id !== fetchedClinic.id) {
+          setSelectedClinic(fetchedClinic);
         }
-      } catch (err) {
+      } catch (error) {
         if (!cancelled) {
-          setError(err instanceof Error ? err.message : "خطای ناشناخته رخ داد");
+          setError(
+            getAxiosErrorMessage(error, "خطا در دریافت اطلاعات کلینیک."),
+          );
+
+          setClinic(null);
         }
       } finally {
-        if (!cancelled) setLoading(false);
+        if (!cancelled) {
+          setLoading(false);
+        }
       }
     };
 
@@ -61,5 +75,9 @@ export function useClinicProfile() {
     };
   }, [clinicId, setSelectedClinic]);
 
-  return { clinic, loading, error };
+  return {
+    clinic,
+    loading,
+    error,
+  };
 }
