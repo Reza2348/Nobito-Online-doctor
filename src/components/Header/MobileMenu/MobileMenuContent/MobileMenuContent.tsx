@@ -93,9 +93,22 @@ const MobileMenuContent: H.React.FC<Props> = ({
   const servicesId = H.React.useId();
   const authId = H.React.useId();
 
+  /*
+   * نام نمایشی کاربر
+   *
+   * در سیستم OTP ما ایمیل را به عنوان شناسه اصلی
+   * کاربر نمایش می‌دهیم.
+   *
+   * نکته:
+   * از user.phone استفاده نمی‌کنیم چون H.User
+   * چنین propertyای ندارد.
+   */
+  const displayName = user?.email || "کاربر";
+
   const handleNavigate = (href: string) => {
     setOpenServices(false);
     setOpenAuth(false);
+
     onClose();
 
     router.push(href);
@@ -114,6 +127,7 @@ const MobileMenuContent: H.React.FC<Props> = ({
   const handleLogout = () => {
     setOpenServices(false);
     setOpenAuth(false);
+
     onClose();
 
     logout();
@@ -333,11 +347,11 @@ const MobileMenuContent: H.React.FC<Props> = ({
           px-4 py-4
         "
       >
-        {!user ? (
-          /* =================================================
-             SIGN IN / SIGN UP
-          ================================================== */
+        {/* =================================================
+            NOT AUTHENTICATED
+        ================================================== */}
 
+        {!user ? (
           <button
             type="button"
             onClick={() => handleNavigate("/auth/signup")}
@@ -373,6 +387,7 @@ const MobileMenuContent: H.React.FC<Props> = ({
               onClick={handleAuthToggle}
               aria-expanded={openAuth}
               aria-controls={authId}
+              title={displayName}
               className="
                 flex min-h-12 w-full
                 items-center justify-center
@@ -393,11 +408,23 @@ const MobileMenuContent: H.React.FC<Props> = ({
                 motion-reduce:transition-none
               "
             >
-              <span>داشبورد</span>
+              {/* EMAIL */}
+
+              <span
+                dir="ltr"
+                className="
+                  min-w-0
+                  max-w-[85%]
+                  truncate
+                "
+              >
+                {displayName}
+              </span>
 
               <H.FaChevronDown
                 aria-hidden="true"
                 className={`
+                  shrink-0
                   transition-transform duration-200
                   motion-reduce:transition-none
                   ${openAuth ? "rotate-180" : "rotate-0"}
@@ -432,6 +459,36 @@ const MobileMenuContent: H.React.FC<Props> = ({
                     shadow-sm
                   "
                 >
+                  {/* USER EMAIL */}
+
+                  <div
+                    className="
+                      border-b border-slate-100
+                      px-4 py-3
+                    "
+                  >
+                    <p className="text-right text-xs text-slate-400">
+                      حساب کاربری
+                    </p>
+
+                    <p
+                      dir="ltr"
+                      className="
+                        mt-1
+                        truncate
+                        text-right
+                        text-sm
+                        font-medium
+                        text-slate-700
+                      "
+                      title={user.email || ""}
+                    >
+                      {user.email || "ایمیل ثبت نشده"}
+                    </p>
+                  </div>
+
+                  {/* DASHBOARD */}
+
                   <button
                     type="button"
                     onClick={() => handleNavigate("/dashboard")}
@@ -456,6 +513,8 @@ const MobileMenuContent: H.React.FC<Props> = ({
                   </button>
 
                   <div aria-hidden="true" className="h-px bg-slate-100" />
+
+                  {/* LOGOUT */}
 
                   <button
                     type="button"

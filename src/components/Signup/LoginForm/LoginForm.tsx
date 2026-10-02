@@ -33,23 +33,17 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
     handleSubmit,
     setValue,
     register,
-    formState: { errors, touchedFields },
+    formState: { errors },
     reset,
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     mode: "onTouched",
   });
 
-  /**
-   * React Hook Form
-   *
-   * فقط onBlur را از register می‌گیریم.
-   * مقدار input توسط setValue مدیریت می‌شود.
-   */
   const { onBlur } = register("identifier");
 
   /**
-   * تشخیص نوع identifier
+   * تشخیص نوع ورودی
    */
   const inputKind = useMemo<IdentifierKind>(() => {
     const value = liveValue.trim();
@@ -70,7 +64,7 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
   }, [liveValue]);
 
   /**
-   * Validation error
+   * خطای validation
    */
   const error = errors.identifier?.message;
 
@@ -87,7 +81,7 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
   };
 
   /**
-   * Submit
+   * ارسال OTP
    */
   const handleSubmitForm = async (data: LoginFormData) => {
     setIsSubmitting(true);
@@ -95,13 +89,21 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
     try {
       const identifier = data.identifier.trim();
 
-      const result = await sendLoginOtp(identifier);
+      // Backend فعلاً فقط Email OTP دارد
+      if (!emailRegex.test(identifier)) {
+        S.toast.error("در حال حاضر ورود با OTP فقط از طریق ایمیل فعال است.");
+        return;
+      }
 
-      S.toast.success(
-        result.channel === "email"
-          ? "لینک ورود به ایمیل شما ارسال شد. لطفا ایمیل خود را بررسی کنید."
-          : "کد ورود به شماره موبایل شما ارسال شد. لطفا پیامک خود را بررسی کنید.",
-      );
+      const email = identifier.toLowerCase();
+
+      // ذخیره ایمیل برای مرحله Verify OTP
+      sessionStorage.setItem("norbin_otp_email", email);
+
+      // ارسال درخواست به Backend
+      const result = await sendLoginOtp(email);
+
+      S.toast.success(result.message || "کد ورود به ایمیل شما ارسال شد.");
 
       reset();
       setLiveValue("");
@@ -112,10 +114,13 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
         router.push("/auth/verify");
       }, 1000);
     } catch (error) {
+      // اگر ارسال OTP شکست خورد، ایمیل ذخیره‌شده را پاک می‌کنیم
+      sessionStorage.removeItem("norbin_otp_email");
+
       const message =
-        error instanceof Error
-          ? error.message
-          : "خطا در ارسال لینک یا کد تایید";
+        error instanceof Error ? error.message : "خطا در ارسال کد تأیید";
+
+      console.error("Send OTP error:", error);
 
       S.toast.error(message);
     } finally {

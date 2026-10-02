@@ -8,49 +8,118 @@ export const OTP_LENGTH = 8;
 
 export function useEmailOtp() {
   const [otp, setOtp] = O.useState<string[]>(Array(OTP_LENGTH).fill(""));
+
   const inputRefs = O.useRef<(HTMLInputElement | null)[]>([]);
+
   const [isSubmitting, setIsSubmitting] = O.useState(false);
+
   const router = O.useRouter();
 
   const handleSubmit = async () => {
     const otpValue = otp.join("");
-    if (otpValue.length < OTP_LENGTH) {
-      O.toast.error("لطفاً تمام ۸ رقم را وارد کنید.");
+
+    // =========================================
+    // بررسی کامل بودن OTP
+    // =========================================
+
+    if (otpValue.length !== OTP_LENGTH) {
+      O.toast.error(`لطفاً تمام ${OTP_LENGTH} رقم را وارد کنید.`);
+      return;
+    }
+
+    // =========================================
+    // دریافت ایمیل
+    // =========================================
+
+    const email = sessionStorage.getItem("norbin_otp_email");
+
+    if (!email) {
+      O.toast.error(
+        "ایمیل ورود پیدا نشد. لطفاً دوباره ایمیل خود را وارد کنید.",
+      );
+
+      router.replace("/auth/signup");
       return;
     }
 
     setIsSubmitting(true);
 
     try {
+      // =========================================
+      // Verify OTP در Backend
+      // =========================================
+
       const { data: result } = await axiosClient.post("/api/auth/verify-otp", {
-        otp: otpValue,
+        email,
+        token: otpValue,
       });
 
-      if (result.session?.access_token && result.session?.refresh_token) {
-        await supabase.auth.setSession({
-          access_token: result.session.access_token,
-          refresh_token: result.session.refresh_token,
-        });
+      // =========================================
+      // بررسی Session برگشتی از Backend
+      // =========================================
+
+      const accessToken = result?.session?.access_token;
+
+      const refreshToken = result?.session?.refresh_token;
+
+      if (!accessToken || !refreshToken) {
+        throw new Error("جلسه ورود از سرور دریافت نشد.");
       }
 
-      O.toast.success("ورود موفق! در حال هدایت به داشبورد...");
+      // =========================================
+      // ثبت Session در Supabase سمت فرانت‌اند
+      // =========================================
+
+      const { error: sessionError } = await supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken,
+      });
+
+      if (sessionError) {
+        throw sessionError;
+      }
+
+      // =========================================
+      // Session با موفقیت ثبت شد
+      // =========================================
+
+      sessionStorage.removeItem("norbin_otp_email");
+
+      O.toast.success("ورود موفق! در حال انتقال...");
+
+      // =========================================
+      // انتقال به صفحه اصلی
+      // =========================================
 
       setTimeout(() => {
-        router.push("/");
-      }, 1500);
-    } catch (err: unknown) {
-      const message = getAxiosErrorMessage(err, "خطا در تایید کد OTP");
+        router.replace("/");
+        router.refresh();
+      }, 500);
+    } catch (error: unknown) {
+      const message = getAxiosErrorMessage(error, "خطا در تأیید کد");
 
-      if (message.includes("منقضی")) {
-        O.toast.error(
-          "شما هنوز ورود را شروع نکرده‌اید. لطفا دوباره ایمیل خود را وارد کنید.",
-        );
-        router.push("/auth/signup");
-        return;
-      }
+      console.error("OTP verification error:", error);
 
-      console.error(err);
       O.toast.error(message);
+
+      // =========================================
+      // OTP نامعتبر / منقضی
+      // =========================================
+
+      const normalizedMessage = message.toLowerCase();
+
+      if (
+        message.includes("منقضی") ||
+        message.includes("نامعتبر") ||
+        normalizedMessage.includes("expired") ||
+        normalizedMessage.includes("invalid")
+      ) {
+        sessionStorage.removeItem("norbin_otp_email");
+
+        setTimeout(() => {
+          router.replace("/auth/signup");
+        }, 1200);
+      }
     } finally {
       setIsSubmitting(false);
     }

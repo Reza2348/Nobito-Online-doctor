@@ -3,7 +3,6 @@
 import * as H from "@/Imports/HeaderImports/HeaderImports";
 import type { SupabaseUser } from "@/Types/types";
 import { useState, useRef, useEffect } from "react";
-
 import { useNotifications } from "@/hooks/useNotifications";
 
 type Props = {
@@ -13,17 +12,12 @@ type Props = {
 
 const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
   const [open, setOpen] = useState(false);
-
   const { unreadCount } = useNotifications();
-
   const menuRef = useRef<HTMLDivElement>(null);
 
+  // ایمیل کاربر بعد از ورود نمایش داده می‌شود
   const displayName =
-    user?.user_metadata?.phone || user?.phone || user?.email || "کاربر";
-
-  // =========================================
-  // بستن منوی کاربر با کلیک بیرون
-  // =========================================
+    user?.email || user?.user_metadata?.phone || user?.phone || "کاربر";
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -41,10 +35,7 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
 
   return (
     <div className="flex items-center gap-3 md:gap-4">
-      {/* =========================================
-          🔔 اعلان‌ها
-      ========================================== */}
-
+      {/* اعلان‌ها */}
       <div className="shrink-0">
         <H.Link
           href="/Notifications"
@@ -102,10 +93,7 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
         </H.Link>
       </div>
 
-      {/* =========================================
-          👤 منوی کاربر
-      ========================================== */}
-
+      {/* منوی کاربر */}
       <div ref={menuRef} className="relative min-w-0">
         {!user?.id ? (
           <H.Link
@@ -134,6 +122,7 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
               onClick={() => setOpen((prev) => !prev)}
               aria-haspopup="menu"
               aria-expanded={open}
+              title={displayName}
               className="
                 block
                 max-w-32
@@ -147,7 +136,7 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
                 text-red-600
                 transition-colors
                 hover:bg-red-100
-                md:max-w-40
+                md:max-w-52
                 md:px-6
               "
             >

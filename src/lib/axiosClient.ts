@@ -1,8 +1,11 @@
 import axios from "axios";
 
 export const axiosClient = axios.create({
-  baseURL: "",
-  withCredentials: true,
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000",
+  withCredentials: false,
+  headers: {
+    "Content-Type": "application/json",
+  },
 });
 
 export function getAxiosErrorMessage(error: unknown, fallback: string): string {

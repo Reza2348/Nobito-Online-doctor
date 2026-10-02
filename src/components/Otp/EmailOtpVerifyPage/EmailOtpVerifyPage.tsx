@@ -2,13 +2,15 @@
 
 import * as O from "@/Imports/OtpImports/OtpImports";
 import { axiosClient, getAxiosErrorMessage } from "@/lib/axiosClient";
-import axios from "axios";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function EmailOtpVerifyPage() {
   const OTP_LENGTH = 8;
 
   const [otp, setOtp] = O.useState<string[]>(Array(OTP_LENGTH).fill(""));
+
   const inputRefs = O.useRef<(HTMLInputElement | null)[]>([]);
+
   const [isSubmitting, setIsSubmitting] = O.useState(false);
 
   const router = O.useRouter();
@@ -21,30 +23,75 @@ export default function EmailOtpVerifyPage() {
       return;
     }
 
+    const email = sessionStorage.getItem("norbin_otp_email");
+
+    if (!email) {
+      O.toast.error(
+        "ایمیل ورود پیدا نشد. لطفاً دوباره ایمیل خود را وارد کنید.",
+      );
+
+      router.replace("/auth/signup");
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      // The server reads the identifier from the HttpOnly cookie set by
-      // /api/auth/send-otp - the client only ever handles the OTP digits.
-      await axiosClient.post("/api/auth/verify-otp", { otp: otpValue });
+      // 1. ارسال OTP به Backend
+      const { data: result } = await axiosClient.post("/api/auth/verify-otp", {
+        email,
+        token: otpValue,
+      });
+
+      // 2. دریافت Session از Backend
+      const accessToken = result?.session?.access_token;
+
+      const refreshToken = result?.session?.refresh_token;
+
+      if (!accessToken || !refreshToken) {
+        throw new Error("جلسه ورود از سرور دریافت نشد.");
+      }
+
+      // 3. ثبت Session در Supabase فرانت‌اند
+      const { error: sessionError } = await supabase.auth.setSession({
+        access_token: accessToken,
+        refresh_token: refreshToken,
+      });
+
+      if (sessionError) {
+        throw sessionError;
+      }
+
+      // 4. ایمیل موقت دیگر لازم نیست
+      sessionStorage.removeItem("norbin_otp_email");
 
       O.toast.success("ورود موفق! در حال انتقال...");
 
+      // 5. برگشت به صفحه اصلی
       setTimeout(() => {
         router.replace("/");
-      }, 1500);
+        router.refresh();
+      }, 500);
     } catch (err: unknown) {
-      // If the identifier cookie expired (or was never set, e.g. the
-      // user landed here directly), send them back to request a new code.
-      if (axios.isAxiosError(err) && err.response?.status === 400) {
-        const serverError = (err.response.data as { error?: string })?.error;
+      const message = getAxiosErrorMessage(err, "خطا در تأیید کد");
 
-        if (!serverError?.includes("نامعتبر")) {
+      console.error("OTP verification error:", err);
+
+      O.toast.error(message);
+
+      const isInvalidOtp =
+        message.includes("منقضی") ||
+        message.includes("expired") ||
+        message.includes("Invalid") ||
+        message.includes("invalid");
+
+      if (isInvalidOtp) {
+        sessionStorage.removeItem("norbin_otp_email");
+
+        setTimeout(() => {
           router.replace("/auth/signup");
-        }
+        }, 1200);
       }
-
-      O.toast.error(getAxiosErrorMessage(err, "خطا در تایید کد"));
     } finally {
       setIsSubmitting(false);
     }
