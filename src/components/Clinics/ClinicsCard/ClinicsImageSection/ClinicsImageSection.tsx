@@ -1,9 +1,10 @@
 import Image from "next/image";
+
 import { FiCheckCircle } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
 
 interface ClinicsImageSectionProps {
-  image: string;
+  image?: string | null;
   alt?: string;
   rating?: number;
 }
@@ -13,11 +14,14 @@ export default function ClinicsImageSection({
   alt = "Clinic",
   rating,
 }: ClinicsImageSectionProps) {
+  const imageSrc =
+    image && image.trim().length > 0 ? image : "/images/clinic-placeholder.jpg";
+
   return (
     <div className="relative h-56 w-full shrink-0 overflow-hidden">
       <Image
-        src={image}
-        alt={alt}
+        src={imageSrc}
+        alt={alt || "Clinic"}
         fill
         className="object-cover transition-transform duration-500 group-hover:scale-105"
       />
