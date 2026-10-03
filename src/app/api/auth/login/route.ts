@@ -1,94 +1,134 @@
 import { NextRequest, NextResponse } from "next/server";
-
-import bcrypt from "bcryptjs";
-import { accounts } from "@/constants/accounts";
-import type { Role } from "@/Types/types";
 import { createToken } from "@/lib/jwt";
 
-const INVALID_CREDENTIALS = {
-  message: "نام کاربری یا رمز عبور اشتباه است.",
-} as const;
+const BACKEND_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function POST(request: NextRequest) {
   try {
+    // بررسی تنظیم بودن آدرس Backend
+    if (!BACKEND_URL) {
+      console.error("NEXT_PUBLIC_API_URL is not configured");
+
+      return NextResponse.json(
+        {
+          success: false,
+          message: "آدرس سرور Backend تنظیم نشده است.",
+        },
+        { status: 500 },
+      );
+    }
+
+    // دریافت اطلاعات فرم
     const body = await request.json();
 
     const username = String(body.username ?? "").trim();
     const password = String(body.password ?? "");
-    const role = String(body.role ?? "").trim() as Role;
-
-    // Remember Me
     const rememberMe = Boolean(body.rememberMe);
 
-    // بررسی ورودی
-    if (!username || !password || !role) {
+    // اعتبارسنجی اولیه
+    if (!username || !password) {
       return NextResponse.json(
-        { message: "لطفاً اطلاعات ورود را کامل کنید." },
+        {
+          success: false,
+          message: "لطفاً نام کاربری و رمز عبور را وارد کنید.",
+        },
         { status: 400 },
       );
     }
 
-    // فقط نقش‌های مجاز
-    if (!["admin", "consultant", "content"].includes(role)) {
+    // ارسال درخواست به Express Backend
+    const backendUrl = `${BACKEND_URL.replace(/\/$/, "")}/api/admin/login`;
+
+    const backendResponse = await fetch(backendUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username,
+        password,
+      }),
+      cache: "no-store",
+    });
+
+    // خواندن پاسخ Backend
+    let backendData: {
+      success?: boolean;
+      message?: string;
+      admin?: {
+        id?: string;
+        username?: string;
+        role?: "admin" | "consultant" | "content";
+      };
+    } = {};
+
+    try {
+      backendData = await backendResponse.json();
+    } catch {
+      backendData = {};
+    }
+
+    // اگر Backend لاگین را قبول نکرد
+    if (!backendResponse.ok || !backendData.success || !backendData.admin) {
       return NextResponse.json(
-        { message: "نقش کاربری نامعتبر است." },
-        { status: 400 },
+        {
+          success: false,
+          message: backendData.message || "نام کاربری یا رمز عبور اشتباه است.",
+        },
+        {
+          status: backendResponse.status || 401,
+        },
       );
     }
 
-    // پیدا کردن حساب
-    const account = accounts[role];
+    const admin = backendData.admin;
 
-    // حساب وجود ندارد یا passwordHash تنظیم نشده
-    if (!account || !account.passwordHash) {
-      return NextResponse.json(INVALID_CREDENTIALS, {
-        status: 401,
-      });
-    }
+    // بررسی اطلاعات کاربر
+    if (
+      !admin.username ||
+      !admin.role ||
+      !["admin", "consultant", "content"].includes(admin.role)
+    ) {
+      console.error("Invalid admin data from backend:", admin);
 
-    // بررسی نام کاربری
-    if (username !== account.username) {
-      return NextResponse.json(INVALID_CREDENTIALS, {
-        status: 401,
-      });
-    }
-
-    // بررسی رمز عبور با bcrypt
-    const passwordMatches = await bcrypt.compare(
-      password,
-      account.passwordHash,
-    );
-
-    if (!passwordMatches) {
-      return NextResponse.json(INVALID_CREDENTIALS, {
-        status: 401,
-      });
+      return NextResponse.json(
+        {
+          success: false,
+          message: "اطلاعات کاربری دریافتی از سرور نامعتبر است.",
+        },
+        { status: 500 },
+      );
     }
 
     // ساخت JWT
     const token = await createToken({
-      username: account.username,
-      role,
+      username: admin.username,
+      role: admin.role,
     });
 
-    // پاسخ موفق
-    const response = NextResponse.json({
-      success: true,
-      path: account.path,
-    });
-
-    /*
-     * اگر Remember Me فعال باشد:
-     * Cookie مدت بیشتری معتبر می‌ماند.
-     *
-     * اگر فعال نباشد:
-     * Cookie فقط برای مدت کوتاه‌تری معتبر خواهد بود.
-     */
+    // مدت اعتبار Cookie
     const maxAge = rememberMe
       ? 60 * 60 * 24 * 30 // 30 روز
       : 60 * 60 * 24; // 1 روز
 
-    response.cookies.set("auth-token", token, {
+    // ساخت پاسخ موفق
+    const response = NextResponse.json(
+      {
+        success: true,
+        message: "ورود با موفقیت انجام شد",
+        admin: {
+          id: admin.id,
+          username: admin.username,
+          role: admin.role,
+        },
+      },
+      { status: 200 },
+    );
+
+    // ذخیره JWT در Cookie دامنه Next.js
+    response.cookies.set({
+      name: "auth-token",
+      value: token,
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
@@ -98,8 +138,14 @@ export async function POST(request: NextRequest) {
 
     return response;
   } catch (error) {
-    console.error("LOGIN ERROR:", error);
+    console.error("NEXT ADMIN LOGIN ERROR:", error);
 
-    return NextResponse.json({ message: "خطای داخلی سرور" }, { status: 500 });
+    return NextResponse.json(
+      {
+        success: false,
+        message: "خطای داخلی سرور. لطفاً دوباره تلاش کنید.",
+      },
+      { status: 500 },
+    );
   }
 }
