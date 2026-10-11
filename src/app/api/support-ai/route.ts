@@ -1,16 +1,53 @@
 import OpenAI from "openai";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabaseServer";
+import { createRateLimiter, getClientIp } from "@/lib/rateLimit";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+const supportAiRateLimiter = createRateLimiter("support-ai:ip", 10, "10 m");
+const supportAiDailyLimiter = createRateLimiter("support-ai:global", Number(process.env.SUPPORT_AI_DAILY_LIMIT || 500), "1 d");
+const MAX_BODY_BYTES = 16 * 1024;
+const MAX_MESSAGE_CHARS = 4000;
+const MAX_HISTORY_MESSAGES = 10;
+const MAX_HISTORY_CHARS = 10000;
+const MAX_CONTEXT_CHARS = 12000;
+const MAX_OUTPUT_TOKENS = 500;
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
-    console.log("===== SUPPORT AI STARTED =====");
+    if (!supportAiRateLimiter || !supportAiDailyLimiter) {
+      if (process.env.NODE_ENV === "production") {
+        console.error("[support-ai] rate limiter is not configured");
+        return NextResponse.json({ error: "سرویس موقتاً در دسترس نیست. لطفاً بعداً تلاش کنید." }, { status: 503 });
+      }
+      console.warn("[support-ai] rate limiter is not configured; development bypass only");
+    } else {
+      try {
+        const ipResult = await supportAiRateLimiter.limit(`ip:${getClientIp(req)}`);
+        if (!ipResult.success) {
+          const retryAfter = Math.max(1, Math.ceil((ipResult.reset - Date.now()) / 1000));
+          return NextResponse.json(
+            { error: "تعداد درخواست‌ها بیش از حد مجاز است. کمی بعد دوباره تلاش کنید." },
+            { status: 429, headers: { "Retry-After": String(retryAfter), "Cache-Control": "no-store" } },
+          );
+        }
+
+        // Global daily request budget is a coarse server-side cost guard.
+        const dailyResult = await supportAiDailyLimiter.limit("all-users");
+        if (!dailyResult.success) {
+          const retryAfter = Math.max(1, Math.ceil((dailyResult.reset - Date.now()) / 1000));
+          return NextResponse.json(
+            { error: "ظرفیت روزانه دستیار تکمیل شده است. لطفاً بعداً تلاش کنید." },
+            { status: 429, headers: { "Retry-After": String(retryAfter), "Cache-Control": "no-store" } },
+          );
+        }
+      } catch {
+        console.error("[support-ai] rate limiter request failed");
+        return NextResponse.json({ error: "سرویس موقتاً در دسترس نیست. لطفاً بعداً تلاش کنید." }, { status: 503 });
+      }
+    }
 
     if (!process.env.OPENAI_API_KEY) {
-      console.error("OPENAI_API_KEY is missing");
+      console.error("[support-ai] OpenAI configuration is missing");
 
       return Response.json(
         {
@@ -46,8 +83,22 @@ export async function POST(req: Request) {
       );
     }
 
-    const message = String(body.message || "").trim();
-    const conversationId = body.conversationId || null;
+    if (!body || typeof body !== "object" || typeof body.message !== "string") {
+      return NextResponse.json({ error: "متن پیام معتبر نیست." }, { status: 400 });
+    }
+
+    const message = body.message.trim();
+    if (message.length > MAX_MESSAGE_CHARS) {
+      return NextResponse.json(
+        { error: `طول پیام نباید بیشتر از ${MAX_MESSAGE_CHARS} نویسه باشد.` },
+        { status: 413 },
+      );
+    }
+
+    const conversationId =
+      typeof body.conversationId === "string" && body.conversationId.length <= 100
+        ? body.conversationId
+        : null;
 
     if (!message) {
       return Response.json(
@@ -60,7 +111,6 @@ export async function POST(req: Request) {
       );
     }
 
-    console.log("MESSAGE:", message);
 
     // ---------------------------------------------------------
     // Supabase / Authentication
@@ -73,16 +123,12 @@ export async function POST(req: Request) {
     try {
       const { data, error: authError } = await supabase.auth.getUser();
 
-      if (authError) {
-        console.warn("AUTH WARNING:", authError.message);
-      }
+      if (authError) console.warn("[support-ai] authentication lookup returned an error");
 
       user = data?.user ?? null;
-    } catch (error) {
-      console.warn("AUTH CHECK FAILED:", error);
+    } catch {
+      console.warn("[support-ai] authentication lookup failed");
     }
-
-    console.log("USER:", user?.id || "GUEST");
 
     // ---------------------------------------------------------
     // Conversation
@@ -94,11 +140,22 @@ export async function POST(req: Request) {
     //   Create conversation if needed.
     // ---------------------------------------------------------
 
-    let currentConversationId = conversationId;
+    let currentConversationId: string | null = null;
 
     if (user) {
+      if (conversationId) {
+        const { data: ownedConversation, error: ownershipError } = await supabase
+          .from("support_conversations")
+          .select("id")
+          .eq("id", conversationId)
+          .eq("user_id", user.id)
+          .maybeSingle();
+        if (ownershipError || !ownedConversation) {
+          return NextResponse.json({ error: "مکالمه موردنظر پیدا نشد." }, { status: 404 });
+        }
+        currentConversationId = ownedConversation.id;
+      }
       if (!currentConversationId) {
-        console.log("CREATING USER CONVERSATION...");
 
         const { data: conversation, error: conversationError } = await supabase
           .from("support_conversations")
@@ -110,14 +167,11 @@ export async function POST(req: Request) {
           .single();
 
         if (conversationError) {
-          console.error("CREATE CONVERSATION ERROR:", conversationError);
+          console.error("[support-ai] conversation creation failed");
 
           return Response.json(
             {
               error: "ساخت مکالمه ناموفق بود.",
-              details: conversationError.message,
-              code: conversationError.code,
-              hint: conversationError.hint,
             },
             {
               status: 500,
@@ -127,38 +181,12 @@ export async function POST(req: Request) {
 
         currentConversationId = conversation.id;
 
-        console.log("CONVERSATION CREATED:", currentConversationId);
       }
     }
 
     // ---------------------------------------------------------
     // Save user message
     // ---------------------------------------------------------
-
-    if (user && currentConversationId) {
-      const { error: userMessageError } = await supabase
-        .from("support_messages")
-        .insert({
-          conversation_id: currentConversationId,
-          role: "user",
-          content: message,
-        });
-
-      if (userMessageError) {
-        console.error("SAVE USER MESSAGE ERROR:", userMessageError);
-
-        return Response.json(
-          {
-            error: "ذخیره پیام کاربر ناموفق بود.",
-            details: userMessageError.message,
-            code: userMessageError.code,
-          },
-          {
-            status: 500,
-          },
-        );
-      }
-    }
 
     // ---------------------------------------------------------
     // Conversation history
@@ -180,16 +208,37 @@ export async function POST(req: Request) {
         .limit(30);
 
       if (historyError) {
-        console.warn("HISTORY ERROR:", historyError);
+        console.warn("[support-ai] conversation history lookup failed");
       } else {
-        history =
-          messages?.map((msg) => ({
-            role:
-              msg.role === "assistant"
-                ? ("assistant" as const)
-                : ("user" as const),
-            content: msg.content,
-          })) || [];
+        let remainingChars = MAX_HISTORY_CHARS;
+        history = (messages || []).slice(-MAX_HISTORY_MESSAGES).map((msg) => {
+          const content = String(msg.content || "").slice(0, Math.min(2000, remainingChars));
+          remainingChars -= content.length;
+          return { role: msg.role === "assistant" ? ("assistant" as const) : ("user" as const), content };
+        }).filter((msg) => msg.content.length > 0).slice(-MAX_HISTORY_MESSAGES);
+      }
+    }
+
+    if (user && currentConversationId) {
+      const { error: userMessageError } = await supabase
+        .from("support_messages")
+        .insert({
+          conversation_id: currentConversationId,
+          role: "user",
+          content: message,
+        });
+
+      if (userMessageError) {
+        console.error("[support-ai] saving user message failed");
+
+        return NextResponse.json(
+          {
+            error: "ذخیره پیام کاربر ناموفق بود.",
+          },
+          {
+            status: 500,
+          },
+        );
       }
     }
 
@@ -204,7 +253,7 @@ export async function POST(req: Request) {
       .limit(30);
 
     if (faqError) {
-      console.warn("FAQ ERROR:", faqError);
+      console.warn("[support-ai] FAQ lookup failed");
     }
 
     // ---------------------------------------------------------
@@ -218,7 +267,7 @@ export async function POST(req: Request) {
       .limit(50);
 
     if (knowledgeError) {
-      console.warn("KNOWLEDGE ERROR:", knowledgeError);
+      console.warn("[support-ai] knowledge lookup failed");
     }
 
     // ---------------------------------------------------------
@@ -234,6 +283,8 @@ export async function POST(req: Request) {
       knowledge
         ?.map((item) => `عنوان: ${item.title}\nمحتوا: ${item.content}`)
         .join("\n\n") || "";
+    const boundedFaqContext = faqContext.slice(0, Math.floor(MAX_CONTEXT_CHARS / 2));
+    const boundedKnowledgeContext = knowledgeContext.slice(0, Math.floor(MAX_CONTEXT_CHARS / 2));
 
     // ---------------------------------------------------------
     // AI input
@@ -247,14 +298,15 @@ export async function POST(req: Request) {
       },
     ];
 
-    console.log("CALLING OPENAI...");
 
     // ---------------------------------------------------------
     // OpenAI
     // ---------------------------------------------------------
 
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     const response = await openai.responses.create({
       model: "gpt-5.6-luna",
+      max_output_tokens: MAX_OUTPUT_TOKENS,
 
       instructions: `
 تو دستیار هوشمند پشتیبانی وب‌سایت نوبیتو هستی.
@@ -294,17 +346,16 @@ export async function POST(req: Request) {
 
 اطلاعات FAQ سایت:
 
-${faqContext}
+${boundedFaqContext}
 
 اطلاعات سایت:
 
-${knowledgeContext}
+${boundedKnowledgeContext}
         `,
 
       input,
     });
 
-    console.log("OPENAI RESPONSE RECEIVED");
 
     const reply =
       response.output_text?.trim() ||
@@ -324,13 +375,11 @@ ${knowledgeContext}
         });
 
       if (assistantMessageError) {
-        console.error("SAVE AI MESSAGE ERROR:", assistantMessageError);
+        console.error("[support-ai] saving assistant response failed");
 
         return Response.json(
           {
             error: "پاسخ دریافت شد اما ذخیره آن ناموفق بود.",
-            details: assistantMessageError.message,
-            code: assistantMessageError.code,
           },
           {
             status: 500,
@@ -353,15 +402,11 @@ ${knowledgeContext}
 
       isGuest: !user,
     });
-  } catch (error) {
-    console.error("SUPPORT AI FATAL ERROR:", error);
-
-    return Response.json(
+  } catch {
+    console.error("[support-ai] request failed");
+    return NextResponse.json(
       {
-        error:
-          error instanceof Error
-            ? error.message
-            : "خطای ناشناخته در سیستم پشتیبانی.",
+        error: "در حال حاضر امکان پاسخ‌گویی وجود ندارد. لطفاً کمی بعد دوباره تلاش کنید.",
       },
       {
         status: 500,
