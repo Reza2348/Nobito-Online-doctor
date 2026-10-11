@@ -58,24 +58,21 @@ export async function POST(req: NextRequest) {
     // Request body
     // ---------------------------------------------------------
 
-    let body: {
-      message?: string;
-      conversationId?: string | null;
-    };
+    const contentLength = Number(req.headers.get("content-length") || 0);
+    if (contentLength > MAX_BODY_BYTES) {
+      return NextResponse.json({ error: "حجم درخواست بیش از حد مجاز است." }, { status: 413 });
+    }
 
+    let body: { message?: unknown; conversationId?: unknown };
     try {
-      body = await req.json();
-    } catch (error) {
-      console.error("BODY JSON ERROR:", error);
-
-      return Response.json(
-        {
-          error: "اطلاعات ارسال‌شده معتبر نیست.",
-        },
-        {
-          status: 400,
-        },
-      );
+      const rawBody = await req.text();
+      if (new TextEncoder().encode(rawBody).byteLength > MAX_BODY_BYTES) {
+        return NextResponse.json({ error: "حجم درخواست بیش از حد مجاز است." }, { status: 413 });
+      }
+      body = JSON.parse(rawBody);
+    } catch {
+      console.warn("[support-ai] invalid JSON request");
+      return NextResponse.json({ error: "اطلاعات ارسال‌شده معتبر نیست." }, { status: 400 });
     }
 
     if (!body || typeof body !== "object" || typeof body.message !== "string") {
@@ -83,6 +80,9 @@ export async function POST(req: NextRequest) {
     }
 
     const message = body.message.trim();
+    if (!message) {
+      return NextResponse.json({ error: "پیام خالی است." }, { status: 400 });
+    }
     if (message.length > MAX_MESSAGE_CHARS) {
       return NextResponse.json(
         { error: `طول پیام نباید بیشتر از ${MAX_MESSAGE_CHARS} نویسه باشد.` },
@@ -114,18 +114,6 @@ export async function POST(req: NextRequest) {
         );
       }
     }
-
-    if (!message) {
-      return Response.json(
-        {
-          error: "پیام خالی است.",
-        },
-        {
-          status: 400,
-        },
-      );
-    }
-
 
     // ---------------------------------------------------------
     // Supabase / Authentication
