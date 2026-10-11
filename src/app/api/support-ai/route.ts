@@ -3,8 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabaseServer";
 import { createRateLimiter, getClientIp } from "@/lib/rateLimit";
 
+const configuredDailyLimit = Number(process.env.SUPPORT_AI_DAILY_LIMIT || 500);
+const dailyLimit = Number.isSafeInteger(configuredDailyLimit) && configuredDailyLimit > 0
+  ? configuredDailyLimit
+  : 500;
 const supportAiRateLimiter = createRateLimiter("support-ai:ip", 10, "10 m");
-const supportAiDailyLimiter = createRateLimiter("support-ai:global", Number(process.env.SUPPORT_AI_DAILY_LIMIT || 500), "1 d");
+const supportAiDailyLimiter = createRateLimiter("support-ai:global", dailyLimit, "1 d");
 const MAX_BODY_BYTES = 16 * 1024;
 const MAX_MESSAGE_CHARS = 4000;
 const MAX_HISTORY_MESSAGES = 10;
@@ -31,15 +35,6 @@ export async function POST(req: NextRequest) {
           );
         }
 
-        // Global daily request budget is a coarse server-side cost guard.
-        const dailyResult = await supportAiDailyLimiter.limit("all-users");
-        if (!dailyResult.success) {
-          const retryAfter = Math.max(1, Math.ceil((dailyResult.reset - Date.now()) / 1000));
-          return NextResponse.json(
-            { error: "ظرفیت روزانه دستیار تکمیل شده است. لطفاً بعداً تلاش کنید." },
-            { status: 429, headers: { "Retry-After": String(retryAfter), "Cache-Control": "no-store" } },
-          );
-        }
       } catch {
         console.error("[support-ai] rate limiter request failed");
         return NextResponse.json({ error: "سرویس موقتاً در دسترس نیست. لطفاً بعداً تلاش کنید." }, { status: 503 });
@@ -99,6 +94,26 @@ export async function POST(req: NextRequest) {
       typeof body.conversationId === "string" && body.conversationId.length <= 100
         ? body.conversationId
         : null;
+
+    // Count only valid messages against the global daily OpenAI request budget.
+    if (supportAiDailyLimiter) {
+      try {
+        const dailyResult = await supportAiDailyLimiter.limit("all-users");
+        if (!dailyResult.success) {
+          const retryAfter = Math.max(1, Math.ceil((dailyResult.reset - Date.now()) / 1000));
+          return NextResponse.json(
+            { error: "ظرفیت روزانه دستیار تکمیل شده است. لطفاً بعداً تلاش کنید." },
+            { status: 429, headers: { "Retry-After": String(retryAfter), "Cache-Control": "no-store" } },
+          );
+        }
+      } catch {
+        console.error("[support-ai] daily budget check failed");
+        return NextResponse.json(
+          { error: "سرویس موقتاً در دسترس نیست. لطفاً بعداً تلاش کنید." },
+          { status: 503 },
+        );
+      }
+    }
 
     if (!message) {
       return Response.json(
