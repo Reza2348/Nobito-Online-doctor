@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Nobito — Online Doctor & Appointment Platform
 
-## Getting Started
+Nobito is a web application starter for a medical appointment and online-doctor service. The frontend is built with Next.js, React, TypeScript, and Tailwind CSS; the companion API uses Node.js, Express, MongoDB/Mongoose, and Supabase.
 
-First, run the development server:
+> **Marketplace preparation status:** This repository is being prepared for commercial distribution. Review the feature set, configure your own third-party services, and complete the production checklist before deploying. No medical, security, or marketplace approval is implied.
+
+## Highlights
+
+- Next.js App Router application with TypeScript
+- Persian/RTL and Jalali-date utilities in the codebase
+- Authentication flows using Supabase and OTP-related routes
+- Admin area with role-oriented sections
+- Doctor, clinic, consultant, and support-related application areas
+- API integration through a configurable backend URL
+- Support AI endpoint with request-size, message-size, history, and rate-limit controls
+- Responsive web application structure
+
+Feature availability may depend on the companion backend, Supabase schema, environment configuration, and services configured by the buyer. Verify each flow in a clean installation before representing it as production-ready.
+
+## Technology
+
+- Next.js / React / TypeScript
+- Tailwind CSS
+- Supabase Auth and database integration
+- Axios
+- Upstash Redis rate limiting
+- OpenAI API for the support AI endpoint
+- Companion Express API and MongoDB
+
+## Requirements
+
+- Node.js LTS compatible with the installed Next.js version
+- npm
+- A Supabase project for authentication/data features
+- Companion Nobito API for backend-dependent screens
+- Upstash Redis REST credentials for production rate limiting
+- OpenAI API key if using the support AI endpoint
+
+## Local setup
+
+1. Clone or download the frontend source.
+2. Install dependencies:
+
+   ```bash
+   npm install
+   ```
+
+3. Copy `.env.example` to `.env.local` and fill in values from your own accounts.
+4. Start the development server:
+
+   ```bash
+   npm run dev
+   ```
+
+5. Open http://localhost:3000.
+
+Build and lint checks:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run build
+npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+These checks must be run in the target environment before a commercial release.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+See `.env.example`. Never put private service-role keys, real user data, passwords, or production secrets in source control. Variables prefixed with `NEXT_PUBLIC_` are exposed to the browser; use only public/anon keys there.
 
-## Learn More
+## Companion backend
 
-To learn more about Next.js, take a look at the following resources:
+The frontend expects the API URL in `NEXT_PUBLIC_API_URL` (defaults to `http://localhost:5000` for local development). Configure the companion backend separately and set this variable to its base URL.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Production checklist
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Create fresh Supabase and MongoDB projects for the buyer.
+- Configure redirect URLs, authentication providers, database tables, and policies.
+- Configure production environment variables and a valid HTTPS API URL.
+- Configure Upstash credentials; production rate limits should fail closed if not configured.
+- Configure OpenAI billing and usage limits if AI support is enabled.
+- Test sign-in/OTP, role-based access, API integration, and all key user journeys.
+- Remove all demo/test data and verify there are no credentials in Git history or release archives.
+- Review privacy, security, accessibility, and applicable healthcare/data-protection requirements.
+- Review all third-party asset and dependency licenses before resale.
 
-## Deploy on Vercel
+## License and support
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+No commercial license or support SLA is granted by this README. Set the sales license, update policy, and support scope before publishing a listing. Ensure you have the right to redistribute all code, fonts, icons, images, and other included assets.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Marketplace listing draft
+
+See [MARKETPLACE_LISTING.md](./MARKETPLACE_LISTING.md) for a draft product description and release checklist.
