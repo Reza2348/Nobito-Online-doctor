@@ -8,6 +8,11 @@ import "react-toastify/dist/ReactToastify.css";
 import { useProfessionalForm } from "@/hooks/useProfessionalForm";
 import { useProfessionalPhoto } from "@/hooks/useProfessionalPhoto";
 
+import {
+  updateMongoPhotoUrl,
+  uploadPhotoToMongo,
+} from "@/services/professionalMongo.service";
+
 import ProfessionalPhoto from "@/components/Forms/professional/ProfessionalPhoto/ProfessionalPhoto";
 import ProfessionalPersonalInfo from "@/components/Forms/professional/ProfessionalPersonalInfo/ProfessionalPersonalInfo";
 import ProfessionalInfo from "@/components/Forms/professional/ProfessionalInfo/ProfessionalInfo";
@@ -76,7 +81,16 @@ export default function ProfessionalForm({
       }
 
       if (photo) {
+        // اگر رکورد فقط در MongoDB ذخیره شده، Supabase Storage هم خاموش است
+        const savedInMongoOnly = Boolean(
+          (result as { usedFallback?: boolean }).usedFallback,
+        );
+
         try {
+          if (savedInMongoOnly) {
+            throw new Error("SUPABASE_UNAVAILABLE");
+          }
+
           const uploadedUrl = await uploadProfessionalPhoto(result.id);
 
           if (uploadedUrl) {
@@ -87,9 +101,26 @@ export default function ProfessionalForm({
         } catch (photoUploadError) {
           console.error("خطا در آپلود عکس بعد از ثبت:", photoUploadError);
 
-          toast.warning(
-            `${title} ثبت شد اما آپلود عکس با خطا مواجه شد. می‌توانید بعداً عکس را اضافه کنید.`,
-          );
+          // تلاش دوم: ذخیره عکس در MongoDB
+          try {
+            const mongoUrl = await uploadPhotoToMongo(
+              photo,
+              type,
+              result.id,
+            );
+
+            await updateMongoPhotoUrl(type, result.id, mongoUrl);
+
+            setPhotoUrl(mongoUrl);
+
+            toast.info("عکس در MongoDB ذخیره شد.");
+          } catch (mongoPhotoError) {
+            console.error("خطا در ذخیره عکس در MongoDB:", mongoPhotoError);
+
+            toast.warning(
+              `${title} ثبت شد اما آپلود عکس با خطا مواجه شد. می‌توانید بعداً عکس را اضافه کنید.`,
+            );
+          }
         }
       }
 

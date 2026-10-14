@@ -1,4 +1,4 @@
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
 
@@ -7,16 +7,20 @@ import { Redis } from "@upstash/redis";
 // --------------------------------------------------
 
 export function getClientIp(request: NextRequest): string {
+  const realIp = request.headers.get("x-real-ip")?.trim();
+
+  if (realIp) {
+    return realIp;
+  }
+
   const forwardedFor = request.headers.get("x-forwarded-for");
 
   if (forwardedFor) {
-    return forwardedFor.split(",")[0].trim();
-  }
+    const ip = forwardedFor.split(",")[0]?.trim();
 
-  const realIp = request.headers.get("x-real-ip");
-
-  if (realIp) {
-    return realIp.trim();
+    if (ip) {
+      return ip;
+    }
   }
 
   return "unknown";
@@ -34,34 +38,52 @@ export function getRetryAfter(reset: number): string {
 // Rate limiter factory
 // --------------------------------------------------
 
+type RateLimitWindow = `${number} ${"ms" | "s" | "m" | "h" | "d"}`;
+
 export function createRateLimiter(
   prefix: string,
   limit: number,
-  window: `${number} ${"ms" | "s" | "m" | "h" | "d"}`,
+  window: RateLimitWindow,
 ): Ratelimit | null {
-  // Environment variables را هنگام اجرای درخواست می‌خوانیم
   const url = process.env.UPSTASH_REDIS_REST_URL?.trim();
   const token = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
 
-  // اگر تنظیم نشده باشند، Rate Limit غیرفعال می‌شود
   if (!url || !token) {
     console.error("[rateLimit] Upstash environment variables are missing.");
 
     return null;
   }
 
-  // URL باید حتماً https باشد
-  if (!url.startsWith("https://")) {
-    console.error(
-      "[rateLimit] UPSTASH_REDIS_REST_URL must start with https://",
-    );
+  let parsedUrl: URL;
+
+  try {
+    parsedUrl = new URL(url);
+  } catch {
+    console.error("[rateLimit] Invalid Upstash Redis URL.");
+    return null;
+  }
+
+  if (
+    parsedUrl.protocol !== "https:" ||
+    !parsedUrl.hostname ||
+    parsedUrl.username ||
+    parsedUrl.password
+  ) {
+    console.error("[rateLimit] Upstash URL must be a valid HTTPS URL.");
 
     return null;
   }
 
-  // Redis فقط هنگام اجرای درخواست ساخته می‌شود
+  if (
+    !Number.isInteger(limit) ||
+    limit < 1 ||
+    !Number.isFinite(Number.parseFloat(window))
+  ) {
+    throw new Error("[rateLimit] Invalid limiter configuration.");
+  }
+
   const redis = new Redis({
-    url,
+    url: parsedUrl.toString(),
     token,
   });
 
@@ -71,4 +93,88 @@ export function createRateLimiter(
     analytics: true,
     prefix,
   });
+}
+
+// --------------------------------------------------
+// Fail-closed rate-limit check
+// --------------------------------------------------
+
+type RateLimitResult =
+  | { allowed: true; response: null }
+  | { allowed: false; response: NextResponse };
+
+function unavailableResponse(): NextResponse {
+  return NextResponse.json(
+    {
+      success: false,
+      message: "سرویس امنیتی موقتاً در دسترس نیست. لطفاً بعداً تلاش کنید.",
+    },
+    {
+      status: 503,
+      headers: {
+        "Cache-Control": "no-store",
+        "Retry-After": "30",
+      },
+    },
+  );
+}
+
+export async function checkRateLimit(
+  limiter: Ratelimit | null,
+  identifier: string,
+): Promise<RateLimitResult> {
+  // اگر محدودکننده ساخته نشده باشد، در Production اجازه عبور نده
+  if (!limiter) {
+    if (process.env.NODE_ENV === "production") {
+      return {
+        allowed: false,
+        response: unavailableResponse(),
+      };
+    }
+
+    // فقط برای توسعه محلی؛ در Production هرگز اجرا نمی‌شود
+    console.warn(
+      "[rateLimit] Limiter unavailable; bypassing only in development.",
+    );
+
+    return { allowed: true, response: null };
+  }
+
+  try {
+    const result = await limiter.limit(identifier);
+
+    if (result.success) {
+      return { allowed: true, response: null };
+    }
+
+    const retryAfter = getRetryAfter(result.reset);
+
+    return {
+      allowed: false,
+      response: NextResponse.json(
+        {
+          success: false,
+          message: "تعداد درخواست‌ها زیاد است؛ کمی بعد دوباره تلاش کنید.",
+        },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": retryAfter,
+            "Cache-Control": "no-store",
+          },
+        },
+      ),
+    };
+  } catch (error) {
+    console.error(
+      "[rateLimit] Upstash request failed.",
+      error instanceof Error ? error.message : "Unknown error",
+    );
+
+    // در صورت خطای Redis، درخواست احراز هویت را آزاد نکن
+    return {
+      allowed: false,
+      response: unavailableResponse(),
+    };
+  }
 }

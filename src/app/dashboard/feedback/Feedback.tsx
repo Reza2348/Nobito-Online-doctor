@@ -2,21 +2,32 @@
 
 import { useState } from "react";
 
+import { useSubmitFeedback } from "@/hooks/useMyData";
+
 export default function Feedback() {
   const [message, setMessage] = useState("");
   const [rating, setRating] = useState(0);
   const [submitted, setSubmitted] = useState(false);
 
+  const feedback = useSubmitFeedback();
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (!message.trim() || rating === 0) {
+    if (!message.trim() || rating === 0 || feedback.isPending) {
       return;
     }
 
-    setSubmitted(true);
-    setMessage("");
-    setRating(0);
+    feedback.mutate(
+      { rating, message: message.trim() },
+      {
+        onSuccess: () => {
+          setSubmitted(true);
+          setMessage("");
+          setRating(0);
+        },
+      },
+    );
   };
 
   return (
@@ -76,13 +87,19 @@ export default function Feedback() {
                 />
               </div>
 
+              {feedback.isError && (
+                <p role="alert" className="text-sm text-red-600">
+                  {feedback.error.message}
+                </p>
+              )}
+
               {/* Submit */}
               <button
                 type="submit"
-                disabled={!message.trim() || rating === 0}
+                disabled={!message.trim() || rating === 0 || feedback.isPending}
                 className="w-full rounded-xl bg-blue-600 py-3 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-300"
               >
-                ارسال بازخورد
+                {feedback.isPending ? "در حال ارسال..." : "ارسال بازخورد"}
               </button>
             </form>
           )}

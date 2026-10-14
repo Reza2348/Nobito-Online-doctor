@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
-import { historyList } from "./historyitem";
 import HistoryCard from "./HistoryCard";
 import HistoryEmpty from "./HistoryEmpty";
+
+import { useAppointments } from "@/hooks/useMyData";
 
 import { HistoryStatus } from "@/Types/types";
 
@@ -29,18 +30,22 @@ const tabs: {
 const History = () => {
   const [activeTab, setActiveTab] = useState<HistoryStatus>("current");
 
-  const [openId, setOpenId] = useState<number | null>(null);
+  const [openId, setOpenId] = useState<string | null>(null);
 
-  const filteredHistory = useMemo(() => {
-    return historyList.filter((item) => item.status === activeTab);
-  }, [activeTab]);
+  // نوبت‌های همین کاربر (فیلتر وضعیت سمت سرور)
+  const {
+    data: filteredHistory = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useAppointments(activeTab);
 
   const handleTabChange = (tab: HistoryStatus) => {
     setActiveTab(tab);
     setOpenId(null);
   };
 
-  const handleToggle = (id: number) => {
+  const handleToggle = (id: string) => {
     setOpenId((currentId) => (currentId === id ? null : id));
   };
 
@@ -97,7 +102,25 @@ const History = () => {
 
         {/* History list */}
         <div className="px-4 md:px-8">
-          {filteredHistory.length === 0 ? (
+          {isLoading ? (
+            <p className="py-10 text-center text-sm text-gray-400">
+              در حال دریافت نوبت‌ها...
+            </p>
+          ) : isError ? (
+            <div
+              role="alert"
+              className="my-6 flex items-center justify-between rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            >
+              <span>دریافت نوبت‌ها انجام نشد.</span>
+              <button
+                type="button"
+                onClick={() => refetch()}
+                className="font-bold underline"
+              >
+                تلاش دوباره
+              </button>
+            </div>
+          ) : filteredHistory.length === 0 ? (
             <HistoryEmpty />
           ) : (
             filteredHistory.map((item) => (

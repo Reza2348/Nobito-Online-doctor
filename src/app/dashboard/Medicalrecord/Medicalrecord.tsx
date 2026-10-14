@@ -14,11 +14,9 @@ import {
 
 import { pdf } from "@react-pdf/renderer";
 
-import { medicalRecordList } from "@/app/dashboard/Medicalrecord/Medicalrecorditem";
+import { fetchPrescription, useMedicalRecords } from "@/hooks/useMyData";
 
 import { MedicalRecord, MedicalRecordType } from "@/Types/types";
-
-import { prescriptions } from "@/data/prescriptions";
 
 import PrescriptionPDF from "@/components/prescription/PrescriptionPDF/PrescriptionPDF";
 
@@ -81,31 +79,28 @@ export default function Medicalrecord() {
 
   const [loadingPdf, setLoadingPdf] = useState<string | null>(null);
 
-  const filteredRecords =
-    activeTab === "all"
-      ? medicalRecordList
-      : medicalRecordList.filter((record) => record.type === activeTab);
-
-  /**
-   * پیدا کردن نسخه واقعی
-   */
-  const getPrescription = (record: MedicalRecord) => {
-    if (record.type !== "prescription" || !record.prescriptionId) {
-      return null;
-    }
-
-    return (
-      prescriptions.find(
-        (prescription) => prescription.id === record.prescriptionId,
-      ) ?? null
-    );
-  };
+  // سوابق همین کاربر (فیلتر نوع سمت سرور)
+  const {
+    data: records = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useMedicalRecords(activeTab);
 
   /**
    * ساخت PDF واقعی
    */
   const createPrescriptionPdf = async (record: MedicalRecord) => {
-    const prescription = getPrescription(record);
+    let prescription = null;
+
+    // نسخه از سرور گرفته می‌شود و فقط نسخه‌ی خود کاربر برمی‌گردد
+    if (record.type === "prescription" && record.prescriptionId) {
+      try {
+        prescription = await fetchPrescription(record.prescriptionId);
+      } catch {
+        prescription = null;
+      }
+    }
 
     if (!prescription) {
       alert("نسخه مورد نظر پیدا نشد.");
@@ -267,7 +262,29 @@ export default function Medicalrecord() {
 
         {/* Records */}
         <div className="space-y-5">
-          {filteredRecords.map((record: MedicalRecord) => (
+          {isLoading && (
+            <p className="py-10 text-center text-sm text-gray-400">
+              در حال دریافت پرونده پزشکی...
+            </p>
+          )}
+
+          {isError && (
+            <div
+              role="alert"
+              className="flex items-center justify-between rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            >
+              <span>دریافت پرونده پزشکی انجام نشد.</span>
+              <button
+                type="button"
+                onClick={() => refetch()}
+                className="font-bold underline"
+              >
+                تلاش دوباره
+              </button>
+            </div>
+          )}
+
+          {records.map((record: MedicalRecord) => (
             <div
               key={record.id}
               className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:shadow-md"
@@ -402,7 +419,7 @@ export default function Medicalrecord() {
           ))}
 
           {/* Empty state */}
-          {filteredRecords.length === 0 && (
+          {!isLoading && !isError && records.length === 0 && (
             <div className="rounded-2xl border border-dashed border-gray-200 bg-white py-16 text-center shadow-sm">
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-50">
                 <FaFileMedicalAlt className="text-3xl text-gray-300" />

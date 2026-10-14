@@ -13,6 +13,7 @@ import {
   SettingsPanel,
 } from "@/components/admin/AdminDashboard/AdminDynamicPages/AdminDynamicPages";
 
+import LoginFailoverPanel from "@/components/LoginFailoverPanel/LoginFailoverPanel";
 import AddPage from "@/components/admin/add/AddPage/AddPage";
 
 interface AdminPageRendererProps {
@@ -41,6 +42,9 @@ export default function AdminPageRenderer({ page }: AdminPageRendererProps) {
 
     case "settings":
       return <SettingsPanel />;
+
+    case "failover-test":
+      return <LoginFailoverPanel />;
 
     case "add":
       return <AddPage />;

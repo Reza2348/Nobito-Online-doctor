@@ -36,3 +36,4 @@ export * from "./DiscountItem.types";
 export * from "./support-types";
 export * from "./feedback-card.types";
 export * from "./prescription.types";
+export * from "./login-failover.types";

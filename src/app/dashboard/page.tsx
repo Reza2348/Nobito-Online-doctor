@@ -2,7 +2,12 @@
 
 import React from "react";
 
+import { useProfile } from "@/hooks/useProfile";
+
 const DashboardContentPage = () => {
+  const { data: profile } = useProfile();
+  const name = profile?.fullName || profile?.email.split("@")[0] || "";
+
   return (
     <main dir="rtl" className="w-full" aria-labelledby="dashboard-title">
       <section className="min-h-[60vh] rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-6 lg:p-8">
@@ -13,7 +18,7 @@ const DashboardContentPage = () => {
               id="dashboard-title"
               className="text-xl font-bold tracking-tight text-gray-900 sm:text-2xl"
             >
-              خوش آمدید 👋
+              {name ? `${name} عزیز، خوش آمدید 👋` : "خوش آمدید 👋"}
             </h1>
 
             <p className="max-w-2xl text-sm leading-7 text-gray-500 sm:text-base">

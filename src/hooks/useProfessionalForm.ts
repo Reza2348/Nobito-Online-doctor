@@ -4,7 +4,15 @@ import { useCallback, useState } from "react";
 
 import type { ChangeEvent, Dispatch, SetStateAction } from "react";
 
+import { toast } from "react-toastify";
+
 import { supabase } from "@/lib/supabaseClient";
+
+import { insertProfessional } from "@/services/professionalInsert.service";
+import {
+  saveProfessionalToMongo,
+  updateMongoPhotoUrl,
+} from "@/services/professionalMongo.service";
 
 import {
   initialProfessionalFormData,
@@ -168,6 +176,15 @@ export function useProfessionalForm(
 
         throw new Error("عکس آپلود شد اما آدرس آن در پایگاه داده ثبت نشد.");
       }
+
+      // MongoDB (دیتابیس دوم)
+      try {
+        await updateMongoPhotoUrl(type, id, url);
+      } catch (mongoError) {
+        console.error("MONGO PHOTO UPDATE ERROR:", mongoError);
+
+        toast.warning("آدرس عکس در MongoDB ثبت نشد.");
+      }
     },
     [type],
   );
@@ -199,6 +216,8 @@ export function useProfessionalForm(
         const finalPhotoUrl = submittedPhotoUrl ?? photoUrl ?? "";
 
         let data: Record<string, unknown> | null = null;
+        let mongoPayload: Record<string, unknown> | null = null;
+        let usedFallback = false;
 
         // =================================================
         // DOCTOR
@@ -254,11 +273,13 @@ export function useProfessionalForm(
 
           console.log("DOCTOR PAYLOAD:", payload);
 
-          const result = await supabase
-            .from("doctors")
-            .insert(payload)
-            .select()
-            .single();
+          mongoPayload = payload;
+
+          const result = await insertProfessional(
+            "doctors",
+            "doctor",
+            payload,
+          );
 
           if (result.error) {
             console.error("DOCTOR INSERT ERROR:", result.error);
@@ -276,6 +297,7 @@ export function useProfessionalForm(
           }
 
           data = result.data as Record<string, unknown> | null;
+          usedFallback = result.usedFallback;
         }
 
         // =================================================
@@ -319,11 +341,13 @@ export function useProfessionalForm(
 
           console.log("CONSULTANT PAYLOAD:", payload);
 
-          const result = await supabase
-            .from("consultants")
-            .insert(payload)
-            .select()
-            .single();
+          mongoPayload = payload;
+
+          const result = await insertProfessional(
+            "consultants",
+            "consultant",
+            payload,
+          );
 
           if (result.error) {
             console.error("CONSULTANT INSERT ERROR:", result.error);
@@ -341,6 +365,7 @@ export function useProfessionalForm(
           }
 
           data = result.data as Record<string, unknown> | null;
+          usedFallback = result.usedFallback;
         }
 
         // =================================================
@@ -391,11 +416,13 @@ export function useProfessionalForm(
 
           console.log("CLINIC PAYLOAD:", payload);
 
-          const result = await supabase
-            .from("clinics")
-            .insert(payload)
-            .select()
-            .single();
+          mongoPayload = payload;
+
+          const result = await insertProfessional(
+            "clinics",
+            "clinic",
+            payload,
+          );
 
           if (result.error) {
             console.error("CLINIC INSERT ERROR:", result.error);
@@ -413,6 +440,7 @@ export function useProfessionalForm(
           }
 
           data = result.data as Record<string, unknown> | null;
+          usedFallback = result.usedFallback;
         }
 
         // =================================================
@@ -421,6 +449,30 @@ export function useProfessionalForm(
 
         if (!data) {
           throw new Error("اطلاعات ثبت شد اما داده‌ای از سرور دریافت نشد.");
+        }
+
+        // =================================================
+        // MONGODB (دیتابیس دوم)
+        // =================================================
+        //
+        // ثبت در Supabase انجام شده است. اگر MongoDB خطا بدهد،
+        // کاربر را متوقف نمی‌کنیم تا رکورد تکراری در Supabase نسازد.
+
+        if (usedFallback) {
+          // Supabase خاموش بود و رکورد همین الان در MongoDB ذخیره شده
+          toast.warning(
+            "Supabase در دسترس نبود. اطلاعات در MongoDB ذخیره شد و بعداً همگام‌سازی می‌شود.",
+          );
+        } else if (mongoPayload) {
+          try {
+            await saveProfessionalToMongo(type, String(data.id), mongoPayload);
+          } catch (mongoError) {
+            console.error("MONGO SAVE ERROR:", mongoError);
+
+            toast.warning(
+              "اطلاعات در Supabase ثبت شد ولی ذخیره در MongoDB انجام نشد.",
+            );
+          }
         }
 
         // =================================================
@@ -481,11 +533,14 @@ export function useProfessionalForm(
         // که ثبت اطلاعات در دیتابیس موفق شده باشد.
         // =================================================
 
-        onSuccess?.(successData);
+        // usedFallback: رکورد فقط در MongoDB ذخیره شده (Supabase خاموش بوده)
+        const result = Object.assign(successData, { usedFallback });
+
+        onSuccess?.(result);
 
         resetForm();
 
-        return successData;
+        return result;
       } catch (submitError) {
         console.error("Professional form submit error:", submitError);
 

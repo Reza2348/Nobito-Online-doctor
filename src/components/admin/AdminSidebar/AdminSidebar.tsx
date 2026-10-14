@@ -10,10 +10,13 @@ import {
   MdLocalHospital,
   MdCalendarMonth,
   MdSettings,
+  MdFactCheck,
   MdAddCircle,
   MdLogout,
   MdClose,
 } from "react-icons/md";
+
+import type { IconType } from "react-icons";
 
 import { AdminPage } from "@/Types/types";
 
@@ -40,7 +43,8 @@ export default function AdminSidebar({
     { title: "نوبت‌ها", icon: MdCalendarMonth, page: "appointments" },
     { title: "افزودن", icon: MdAddCircle, page: "add" },
     { title: "تنظیمات", icon: MdSettings, page: "settings" },
-  ];
+    { title: "تست سیستم", icon: MdFactCheck, page: "failover-test" },
+  ] satisfies { title: string; icon: IconType; page: AdminPage }[];
 
   const handleLogout = () => {
     if (typeof window !== "undefined") {

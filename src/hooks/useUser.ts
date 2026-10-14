@@ -27,6 +27,25 @@ const formatUser = (user: User): FormattedUser => ({
       : (user.email?.split("@")[0] ?? "کاربر"),
 });
 
+async function fetchLocalUser(): Promise<FormattedUser | null> {
+  try {
+    const res = await fetch("/api/auth/user-session", { cache: "no-store" });
+    const data = await res.json();
+
+    if (data?.authenticated && data.source === "local" && data.user) {
+      return {
+        id: data.user.id,
+        email: data.user.email ?? "",
+        username: data.user.username || data.user.email?.split("@")[0] || "کاربر",
+      };
+    }
+  } catch {
+    // ignore
+  }
+
+  return null;
+}
+
 export function useUser() {
   const router = useRouter();
 
@@ -67,6 +86,20 @@ export function useUser() {
 
         if (!mounted) return;
 
+        if (!session?.user) {
+          // نشست محلی (Failover) را هم بررسی کن
+          const local = await fetchLocalUser();
+
+          if (!mounted) return;
+
+          if (local) {
+            sessionStorage.setItem(BROWSER_SESSION_FLAG, "1");
+            setUser(local);
+            setStatus("authenticated");
+            return;
+          }
+        }
+
         updateAuthState(session);
       } catch (error) {
         console.error("❌ Auth initialization error:", error);
@@ -88,6 +121,21 @@ export function useUser() {
     } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!mounted) return;
 
+      if (!session?.user) {
+        fetchLocalUser().then((local) => {
+          if (!mounted) return;
+
+          if (local) {
+            setUser(local);
+            setStatus("authenticated");
+          } else {
+            updateAuthState(null);
+          }
+        });
+
+        return;
+      }
+
       updateAuthState(session);
     });
 
@@ -101,6 +149,10 @@ export function useUser() {
    * خروج از حساب
    */
   const logout = useCallback(async () => {
+    await fetch("/api/auth/user-session", { method: "DELETE" }).catch(
+      () => undefined,
+    );
+
     const { error } = await supabase.auth.signOut();
 
     if (error) {

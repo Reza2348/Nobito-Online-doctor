@@ -85,4 +85,5 @@ export type AdminPage =
   | "clinics"
   | "appointments"
   | "add"
-  | "settings";
+  | "settings"
+  | "failover-test";

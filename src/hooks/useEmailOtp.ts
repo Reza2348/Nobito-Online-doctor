@@ -58,11 +58,26 @@ export function useEmailOtp() {
       // بررسی Session برگشتی از Backend
       // =========================================
 
+      // نشست محلی: توکن بک‌اند را به کوکی httpOnly تبدیل می‌کنیم
+      // (هم برای ورود محلی/Failover و هم کنار نشست Supabase)
+      const sessionToken = result?.sessionToken;
+
+      if (typeof sessionToken === "string" && sessionToken) {
+        await fetch("/api/auth/user-session", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ sessionToken }),
+        }).catch(() => undefined);
+      }
+
       const accessToken = result?.session?.access_token;
 
       const refreshToken = result?.session?.refresh_token;
 
-      if (!accessToken || !refreshToken) {
+      const isLocalLogin =
+        !accessToken && !refreshToken && typeof sessionToken === "string";
+
+      if (!isLocalLogin && (!accessToken || !refreshToken)) {
         throw new Error("جلسه ورود از سرور دریافت نشد.");
       }
 
@@ -70,13 +85,15 @@ export function useEmailOtp() {
       // ثبت Session در Supabase سمت فرانت‌اند
       // =========================================
 
-      const { error: sessionError } = await supabase.auth.setSession({
-        access_token: accessToken,
-        refresh_token: refreshToken,
-      });
+      if (!isLocalLogin) {
+        const { error: sessionError } = await supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken,
+        });
 
-      if (sessionError) {
-        throw sessionError;
+        if (sessionError) {
+          throw sessionError;
+        }
       }
 
       // =========================================

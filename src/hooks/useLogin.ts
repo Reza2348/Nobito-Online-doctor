@@ -26,26 +26,19 @@ export function useLogin() {
   const isSubmittingRef = useRef(false);
 
   const handleLogin = useCallback(async () => {
-    console.log("1. LOGIN STARTED");
-
     if (isSubmittingRef.current) {
-      console.log("2. LOGIN ALREADY RUNNING");
       return;
     }
 
     setError("");
 
     if (!username.trim()) {
-      console.log("2. USERNAME EMPTY");
-
       setError("لطفاً نام کاربری را وارد کنید");
 
       return;
     }
 
     if (!password) {
-      console.log("2. PASSWORD EMPTY");
-
       setError("لطفاً رمز عبور را وارد کنید");
 
       return;
@@ -55,8 +48,6 @@ export function useLogin() {
     setLoading(true);
 
     try {
-      console.log("3. SENDING REQUEST TO BACKEND");
-
       const response = await axiosClient.post(
         "/api/admin/login",
         {
@@ -67,8 +58,6 @@ export function useLogin() {
           timeout: 10000,
         },
       );
-
-      console.log("4. BACKEND RESPONSE:", response.data);
 
       if (
         !response.data?.success ||
@@ -86,27 +75,19 @@ export function useLogin() {
 
       const loggedInRole = response.data.admin.role as Role;
 
-      console.log("5. ADMIN ROLE:", loggedInRole);
-
       if (loggedInRole === "admin") {
-        console.log("6. REDIRECTING TO /Admin/dashboard");
-
         router.replace("/Admin/dashboard");
 
         return;
       }
 
       if (loggedInRole === "consultant") {
-        console.log("6. REDIRECTING TO /Admin/Consultant");
-
         router.replace("/Admin/Consultant");
 
         return;
       }
 
       if (loggedInRole === "content") {
-        console.log("6. REDIRECTING TO /Admin/Content");
-
         router.replace("/Admin/Content");
 
         return;

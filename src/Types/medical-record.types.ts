@@ -5,7 +5,7 @@
 export type MedicalRecordType = "test" | "prescription" | "diagnosis";
 
 export interface MedicalRecord {
-  id: number;
+  id: string;
 
   type: MedicalRecordType;
 
