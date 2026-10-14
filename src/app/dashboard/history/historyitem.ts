@@ -2,7 +2,7 @@ import { HistoryItem } from "@/Types/types";
 
 export const historyList: HistoryItem[] = [
   {
-    id: 1,
+    id: "1",
     doctorName: "دکتر بهرام میرزایی",
     specialty: "متخصص مغز و اعصاب",
     avatar: "/doctor-1.jpg.jfif",
@@ -14,7 +14,7 @@ export const historyList: HistoryItem[] = [
   },
 
   {
-    id: 2,
+    id: "2",
     doctorName: "دکتر نازنین کریمی",
     specialty: "متخصص پوست و مو",
     avatar: "/doctor-2.jpg.jfif",
@@ -26,7 +26,7 @@ export const historyList: HistoryItem[] = [
   },
 
   {
-    id: 3,
+    id: " 3",
     doctorName: "دکتر محمد رضایی",
     specialty: "متخصص ارتوپدی",
     avatar: "/wepik (9).png",
@@ -38,7 +38,7 @@ export const historyList: HistoryItem[] = [
   },
 
   {
-    id: 4,
+    id: "4",
     doctorName: "دکتر سارا احمدی",
     specialty: "متخصص داخلی",
     avatar: "/doctor-3.jpg",
@@ -50,7 +50,7 @@ export const historyList: HistoryItem[] = [
   },
 
   {
-    id: 5,
+    id: "5",
     doctorName: "دکتر علی رضایی",
     specialty: "متخصص قلب",
     avatar: "/doctor-4.jpg",

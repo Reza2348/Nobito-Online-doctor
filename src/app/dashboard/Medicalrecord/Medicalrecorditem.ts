@@ -2,7 +2,7 @@ import { MedicalRecord } from "@/Types/types";
 
 export const medicalRecordList: MedicalRecord[] = [
   {
-    id: 1,
+    id: "1",
     type: "test",
     title: "آزمایش خون کامل (CBC)",
     doctorName: "بهرام میرزایی",
@@ -13,7 +13,7 @@ export const medicalRecordList: MedicalRecord[] = [
   },
 
   {
-    id: 2,
+    id: "2",
     type: "prescription",
     title: "نسخه‌ی دارویی - دوره‌ی درمان دو هفته‌ای",
     doctorName: "دکتر محمد احمدی",
@@ -27,7 +27,7 @@ export const medicalRecordList: MedicalRecord[] = [
   },
 
   {
-    id: 3,
+    id: "3",
     type: "diagnosis",
     title: "گزارش تشخیص - ویزیت حضوری",
     doctorName: "بهرام میرزایی",
