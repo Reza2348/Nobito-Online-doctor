@@ -2,8 +2,6 @@
 
 import axios, { AxiosError } from "axios";
 
-import { axiosClient } from "@/lib/axiosClient";
-
 import type { ProfessionalType } from "@/Types/types";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
@@ -235,10 +233,13 @@ export async function uploadPhoto(
      * صحیح خودش تنظیم کند.
      */
 
-    const response = await axiosClient.post<ApiResponse>(
+    const response = await axios.post<ApiResponse>(
+      // آدرس نسبی: درخواست به route داخلی Next می‌رود تا کوکی auth-token
+      // سمت سرور خوانده شود (نه مستقیم به بک‌اند Express بدون توکن)
       "/api/admin/professionals/photo",
       formData,
       {
+        timeout: 60000,
         onUploadProgress: (progressEvent) => {
           if (!onProgress || !progressEvent.total) {
             return;
@@ -348,9 +349,10 @@ export async function deleteUploadedPhoto(
   // -------------------------------------------------------
 
   try {
-    const response = await axiosClient.delete<ApiResponse>(
+    const response = await axios.delete<ApiResponse>(
       "/api/admin/professionals/photo",
       {
+        headers: { "Content-Type": "application/json" },
         data: {
           path: normalizedPath,
           type: normalizedType,

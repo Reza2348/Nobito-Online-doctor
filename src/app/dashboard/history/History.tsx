@@ -77,21 +77,7 @@ const History = () => {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => handleTabChange(tab.key)}
-                  className={`
-                    relative
-                    whitespace-nowrap
-                    border-b-2
-                    pb-3
-                    text-sm
-                    transition-colors
-                    md:pb-4
-                    md:text-base
-                    ${
-                      isActive
-                        ? "border-[#1F7168] font-bold text-[#1F7168]"
-                        : "border-transparent text-[#919191] hover:text-[#1F7168]"
-                    }
-                  `}
+                  className={`relative whitespace-nowrap border-b-2 pb-3 text-sm transition-colors md:pb-4 md:text-base ${ isActive ? "border-[#1F7168] font-bold text-[#1F7168]" : "border-transparent text-[#919191] hover:text-[#1F7168]" }`}
                 >
                   {tab.label}
                 </button>

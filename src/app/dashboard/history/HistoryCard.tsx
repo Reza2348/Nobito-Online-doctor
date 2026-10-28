@@ -64,15 +64,7 @@ const HistoryCard = ({ item, isOpen, onToggle }: HistoryCardProps) => {
       <div
         id={detailsId}
         aria-hidden={!isOpen}
-        className={`
-          grid overflow-hidden
-          transition-all duration-300 ease-in-out
-          ${
-            isOpen
-              ? "mt-4 grid-rows-[1fr] opacity-100"
-              : "grid-rows-[0fr] opacity-0"
-          }
-        `}
+        className={`grid overflow-hidden transition-all duration-300 ease-in-out ${ isOpen ? "mt-4 grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0" }`}
       >
         <div className="min-h-0">
           <div className="rounded-2xl bg-[#F7FAF9] p-4">
@@ -104,25 +96,11 @@ const HistoryCard = ({ item, isOpen, onToggle }: HistoryCardProps) => {
           onClick={onToggle}
           aria-expanded={isOpen}
           aria-controls={detailsId}
-          className="
-            flex items-center gap-1
-            text-xs text-[#0683C9]
-            transition-colors
-            hover:text-[#05699F]
-            focus:outline-none
-            focus:ring-2
-            focus:ring-[#0683C9]/30
-            md:text-sm
-          "
+          className="flex items-center gap-1 text-xs text-[#0683C9] transition-colors hover:text-[#05699F] focus:outline-none focus:ring-2 focus:ring-[#0683C9]/30 md:text-sm"
         >
           <FaChevronDown
             aria-hidden="true"
-            className={`
-              h-3 w-3
-              transition-transform
-              duration-200
-              ${isOpen ? "rotate-180" : ""}
-            `}
+            className={`h-3 w-3 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
           />
 
           <span>{isOpen ? "بستن جزئیات" : "جزئیات بیشتر"}</span>

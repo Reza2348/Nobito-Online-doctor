@@ -33,19 +33,7 @@ export default function AdminUsersPage() {
       {/* Header */}
       <div className="mb-8 flex items-center gap-3">
         <div
-          className="
-            flex
-            h-12
-            w-12
-            items-center
-            justify-center
-            rounded-2xl
-            bg-linear-to-br
-            from-teal-600
-            to-emerald-400
-            text-white
-            shadow-lg
-          "
+          className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-teal-600 to-emerald-400 text-white shadow-lg"
         >
           <MdPeople size={28} />
         </div>

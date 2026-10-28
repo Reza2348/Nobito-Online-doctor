@@ -61,17 +61,7 @@ export default function ConsultantPanel() {
             <button
               type="button"
               onClick={handleLogout}
-              className="
-                rounded-2xl
-                bg-red-600
-                px-5
-                py-3
-                font-bold
-                text-white
-                shadow-lg
-                transition
-                hover:bg-red-700
-              "
+              className="rounded-2xl bg-red-600 px-5 py-3 font-bold text-white shadow-lg transition hover:bg-red-700"
             >
               خروج
             </button>

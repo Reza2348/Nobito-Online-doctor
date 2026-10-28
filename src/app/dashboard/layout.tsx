@@ -53,29 +53,10 @@ export default function DashboardLayout({
   if (status === "unauthenticated") {
     return (
       <div
-        className="
-          flex
-          items-center
-          p-4
-          mt-4
-          mb-4
-          ml-4
-          mr-4
-          text-red-700
-          bg-red-100
-          border
-          border-red-300
-          rounded-lg
-          shadow-sm
-        "
+        className="flex items-center p-4 mt-4 mb-4 ml-4 mr-4 text-red-700 bg-red-100 border border-red-300 rounded-lg shadow-sm"
       >
         <AiOutlineWarning
-          className="
-            w-6
-            h-6
-            ml-2
-            shrink-0
-          "
+          className="w-6 h-6 ml-2 shrink-0"
         />
 
         <span className="text-sm md:text-base">
@@ -94,29 +75,10 @@ export default function DashboardLayout({
   if (status === "authenticated" && !userId) {
     return (
       <div
-        className="
-          flex
-          items-center
-          p-4
-          mt-4
-          mb-4
-          ml-4
-          mr-4
-          text-red-700
-          bg-red-100
-          border
-          border-red-300
-          rounded-lg
-          shadow-sm
-        "
+        className="flex items-center p-4 mt-4 mb-4 ml-4 mr-4 text-red-700 bg-red-100 border border-red-300 rounded-lg shadow-sm"
       >
         <AiOutlineWarning
-          className="
-            w-6
-            h-6
-            ml-2
-            shrink-0
-          "
+          className="w-6 h-6 ml-2 shrink-0"
         />
 
         <span className="text-sm md:text-base">

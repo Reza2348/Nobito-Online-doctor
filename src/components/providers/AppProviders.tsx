@@ -4,6 +4,7 @@
 import { DoctorProvider } from "@/context/DoctorContext/DoctorContext";
 import { ClinicsProvider } from "@/context/ClinicsContext/ClinicsContext"; // اصلاح شد
 import { ConsultantProvider } from "@/context/ConsultantsContext/ConsultantsContext";
+import { CampaignProvider } from "@/context/CampaignContext/CampaignContext";
 
 export default function AppProviders({
   children,
@@ -13,7 +14,9 @@ export default function AppProviders({
   return (
     <DoctorProvider>
       <ClinicsProvider>
-        <ConsultantProvider>{children}</ConsultantProvider>
+        <ConsultantProvider>
+          <CampaignProvider>{children}</CampaignProvider>
+        </ConsultantProvider>
       </ClinicsProvider>
     </DoctorProvider>
   );

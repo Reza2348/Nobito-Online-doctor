@@ -170,15 +170,7 @@ export default function Password() {
               {[1, 2, 3, 4].map((level) => (
                 <div
                   key={level}
-                  className={`h-2 flex-1 rounded-md transition-all ${
-                    strength >= level
-                      ? strength <= 1
-                        ? "bg-red-500"
-                        : strength <= 3
-                          ? "bg-yellow-400"
-                          : "bg-green-500"
-                      : "bg-gray-300"
-                  }`}
+                  className={`h-2 flex-1 rounded-md transition-all ${ strength >= level ? strength <= 1 ? "bg-red-500" : strength <= 3 ? "bg-yellow-400" : "bg-green-500" : "bg-gray-300" }`}
                 />
               ))}
             </div>

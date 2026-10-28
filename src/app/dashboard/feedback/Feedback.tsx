@@ -58,9 +58,7 @@ export default function Feedback() {
                       key={item}
                       type="button"
                       onClick={() => setRating(item)}
-                      className={`text-3xl transition ${
-                        item <= rating ? "text-yellow-400" : "text-gray-300"
-                      }`}
+                      className={`text-3xl transition ${ item <= rating ? "text-yellow-400" : "text-gray-300" }`}
                     >
                       ★
                     </button>

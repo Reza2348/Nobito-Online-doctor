@@ -80,11 +80,7 @@ export default function Message() {
             <button
               key={t}
               type="button"
-              className={`flex items-center gap-2 px-3 md:px-4 py-2 text-xs md:text-sm rounded-full border whitespace-nowrap transition-all ${
-                tab === t
-                  ? "text-[#1F7168] border-[#1F7168]"
-                  : "text-[#919191] border-[#E4E4E4]"
-              }`}
+              className={`flex items-center gap-2 px-3 md:px-4 py-2 text-xs md:text-sm rounded-full border whitespace-nowrap transition-all ${ tab === t ? "text-[#1F7168] border-[#1F7168]" : "text-[#919191] border-[#E4E4E4]" }`}
               onClick={() => setTab(t)}
             >
               {t === "all" && "همه پیام‌ها"}
@@ -158,9 +154,7 @@ export default function Message() {
                   </h3>
 
                   <p
-                    className={`text-[#919191] text-xs md:text-sm mt-1 leading-5 ${
-                      isOpen ? "" : "line-clamp-2"
-                    }`}
+                    className={`text-[#919191] text-xs md:text-sm mt-1 leading-5 ${ isOpen ? "" : "line-clamp-2" }`}
                   >
                     {msg.body}
                   </p>
@@ -174,9 +168,7 @@ export default function Message() {
                     >
                       {isOpen ? "بستن جزئیات" : "جزئیات بیشتر"}
                       <FaChevronDown
-                        className={`w-3 h-3 transition-transform ${
-                          isOpen ? "rotate-180" : ""
-                        }`}
+                        className={`w-3 h-3 transition-transform ${ isOpen ? "rotate-180" : "" }`}
                       />
                     </button>
 

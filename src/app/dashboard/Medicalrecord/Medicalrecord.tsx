@@ -249,11 +249,7 @@ export default function Medicalrecord() {
               key={tab.key}
               type="button"
               onClick={() => setActiveTab(tab.key)}
-              className={`rounded-xl px-5 py-2.5 text-sm font-medium transition ${
-                activeTab === tab.key
-                  ? "bg-blue-600 text-white shadow-sm"
-                  : "text-gray-600 hover:bg-gray-100"
-              }`}
+              className={`rounded-xl px-5 py-2.5 text-sm font-medium transition ${ activeTab === tab.key ? "bg-blue-600 text-white shadow-sm" : "text-gray-600 hover:bg-gray-100" }`}
             >
               {tab.label}
             </button>
@@ -294,13 +290,7 @@ export default function Medicalrecord() {
                   {/* Record information */}
                   <div className="flex items-start gap-4">
                     <div
-                      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-xl ${
-                        record.type === "prescription"
-                          ? "bg-emerald-50 text-emerald-600"
-                          : record.type === "test"
-                            ? "bg-purple-50 text-purple-600"
-                            : "bg-blue-50 text-blue-600"
-                      }`}
+                      className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-xl ${ record.type === "prescription" ? "bg-emerald-50 text-emerald-600" : record.type === "test" ? "bg-purple-50 text-purple-600" : "bg-blue-50 text-blue-600" }`}
                     >
                       {getIcon(record.type)}
                     </div>
@@ -312,11 +302,7 @@ export default function Medicalrecord() {
                         </h2>
 
                         <span
-                          className={`rounded-full px-3 py-1 text-xs font-medium ${
-                            record.type === "prescription"
-                              ? "bg-emerald-50 text-emerald-700"
-                              : "bg-gray-100 text-gray-600"
-                          }`}
+                          className={`rounded-full px-3 py-1 text-xs font-medium ${ record.type === "prescription" ? "bg-emerald-50 text-emerald-700" : "bg-gray-100 text-gray-600" }`}
                         >
                           {getTypeLabel(record.type)}
                         </span>
@@ -355,11 +341,7 @@ export default function Medicalrecord() {
                           ? `/patient/prescriptions/${record.prescriptionId}`
                           : "#"
                       }
-                      className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white transition ${
-                        record.prescriptionId
-                          ? "bg-blue-600 hover:bg-blue-700"
-                          : "cursor-not-allowed bg-gray-300"
-                      }`}
+                      className={`inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white transition ${ record.prescriptionId ? "bg-blue-600 hover:bg-blue-700" : "cursor-not-allowed bg-gray-300" }`}
                       aria-disabled={!record.prescriptionId}
                     >
                       <FaEye />

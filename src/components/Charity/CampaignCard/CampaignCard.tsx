@@ -1,4 +1,7 @@
+"use client";
+
 import { FiArrowLeft, FiCheckCircle, FiHeart, FiUsers } from "react-icons/fi";
+import { useRouter } from "next/navigation";
 
 import type { CampaignCardProps } from "@/Types/types";
 import {
@@ -7,17 +10,29 @@ import {
 } from "@/components/Charity/utils/charity.utils";
 
 const CampaignCard = ({ campaign }: CampaignCardProps) => {
+  const router = useRouter();
+
   const progress = getCampaignProgress(campaign.raised, campaign.goal);
+
+  const handleCampaignClick = () => {
+    if (!campaign.active) return;
+
+    sessionStorage.setItem("selectedCampaignId", String(campaign.id));
+
+    router.push("/Campaign-prfile");
+  };
 
   return (
     <article className="group overflow-hidden rounded-[28px] border border-slate-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
       {/* Image */}
       <div className="relative h-56 overflow-hidden">
-        <img
-          src={campaign.image}
-          alt={campaign.title}
-          className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
-        />
+        {campaign.image && (
+          <img
+            src={campaign.image}
+            alt={campaign.title}
+            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+          />
+        )}
 
         <div className="absolute inset-0 bg-linear-to-t from-slate-950/50 to-transparent" />
 
@@ -38,6 +53,7 @@ const CampaignCard = ({ campaign }: CampaignCardProps) => {
         <button
           type="button"
           aria-label="افزودن به علاقه‌مندی‌ها"
+          onClick={(event) => event.stopPropagation()}
           className="absolute left-4 top-4 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-slate-500 backdrop-blur transition hover:text-rose-500"
         >
           <FiHeart size={18} />
@@ -98,11 +114,14 @@ const CampaignCard = ({ campaign }: CampaignCardProps) => {
 
         {/* CTA */}
         <button
+          onClick={handleCampaignClick}
           type="button"
-          className="group/button mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-900 py-3.5 text-sm font-bold text-white transition hover:bg-emerald-600"
+          disabled={!campaign.active}
+          className="group/button mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-900 py-3.5 text-sm font-bold text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:bg-slate-400"
         >
           <FiHeart size={17} />
-          حمایت از کمپین
+          {campaign.active ? "حمایت از کمپین" : "این کمپین غیرفعال است"}
+
           <FiArrowLeft
             size={17}
             className="transition-transform group-hover/button:-translate-x-1"
