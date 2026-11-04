@@ -17,18 +17,15 @@ export default function ClinicAvatar({ photoUrl, name }: ClinicAvatarProps) {
         items-center
         justify-center
         overflow-hidden
-        rounded-[22px]
+        rounded-xl
         border
         border-slate-200
-        bg-linear-to-br
-        from-blue-50
-        via-white
-        to-indigo-50
+        bg-surface
         shadow-sm
         transition-all
         duration-300
         group-hover:border-blue-200
-        group-hover:shadow-md
+        group-hover:shadow-sm
       "
     >
       {photoUrl ? (
@@ -41,7 +38,7 @@ export default function ClinicAvatar({ photoUrl, name }: ClinicAvatarProps) {
             object-cover
             transition-transform
             duration-500
-            group-hover:scale-105
+           
           "
           onError={(event) => {
             event.currentTarget.style.display = "none";

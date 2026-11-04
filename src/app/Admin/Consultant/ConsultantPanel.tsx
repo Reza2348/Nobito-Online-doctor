@@ -1,5 +1,6 @@
 "use client";
 
+import { adminLogout } from "@/lib/adminLogout";
 import {
   FaUserDoctor,
   FaCalendarCheck,
@@ -34,16 +35,17 @@ export default function ConsultantPanel() {
     },
   ];
 
-  const handleLogout = (): void => {
+  const handleLogout = async (): Promise<void> => {
+    await adminLogout();
     router.push("/Admin");
   };
 
   return (
     <main
       dir="rtl"
-      className="min-h-screen bg-linear-to-br from-teal-50 via-white to-cyan-100 p-6"
+      className="min-h-screen bg-surface p-6"
     >
-      <div className="mx-auto max-w-7xl rounded-3xl bg-white/80 p-8 shadow-xl backdrop-blur">
+      <div className="mx-auto max-w-7xl rounded-xl bg-white/80 p-8 shadow-sm backdrop-blur">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-4xl font-black text-teal-700">پنل مشاور</h1>
@@ -54,14 +56,14 @@ export default function ConsultantPanel() {
           </div>
 
           <div className="flex items-center gap-3">
-            <div className="rounded-2xl bg-teal-600 px-5 py-3 font-bold text-white shadow-lg">
+            <div className="rounded-xl bg-teal-600 px-5 py-3 font-bold text-white shadow-sm">
               Consultant
             </div>
 
             <button
               type="button"
               onClick={handleLogout}
-              className="rounded-2xl bg-red-600 px-5 py-3 font-bold text-white shadow-lg transition hover:bg-red-700"
+              className="rounded-xl bg-red-600 px-5 py-3 font-bold text-white shadow-sm transition hover:bg-red-700"
             >
               خروج
             </button>
@@ -75,9 +77,9 @@ export default function ConsultantPanel() {
             return (
               <div
                 key={item.title}
-                className="group cursor-pointer rounded-3xl bg-white p-7 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+                className="group cursor-pointer rounded-xl bg-white p-7 shadow-sm transition-all duration-300 hover:shadow-sm"
               >
-                <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-teal-500 to-cyan-500 text-white shadow-lg">
+                <div className="flex h-16 w-16 items-center justify-center rounded-xl bg-brand text-white shadow-sm">
                   <Icon size={30} />
                 </div>
 

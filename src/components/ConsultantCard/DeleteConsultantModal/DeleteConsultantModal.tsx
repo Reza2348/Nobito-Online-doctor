@@ -31,7 +31,7 @@ export default function DeleteConsultantModal({
         justify-center
         bg-slate-950/60
         p-4
-        backdrop-blur-sm
+       
       "
     >
       <div
@@ -39,11 +39,11 @@ export default function DeleteConsultantModal({
           w-full
           max-w-md
           overflow-hidden
-          rounded-3xl
+          rounded-xl
           border
           border-white/20
           bg-white
-          shadow-2xl
+          shadow-sm
         "
       >
         {/* Header */}
@@ -70,7 +70,7 @@ export default function DeleteConsultantModal({
                 shrink-0
                 items-center
                 justify-center
-                rounded-2xl
+                rounded-xl
                 bg-red-50
                 text-red-500
               "
@@ -79,7 +79,7 @@ export default function DeleteConsultantModal({
             </div>
 
             <div className="min-w-0">
-              <h3 className="text-lg font-extrabold text-slate-900">
+              <h3 className="text-lg font-bold text-slate-900">
                 حذف مشاور
               </h3>
 
@@ -116,10 +116,10 @@ export default function DeleteConsultantModal({
 
         {/* Body */}
         <div className="px-4 py-6 sm:px-6">
-          <div className="rounded-2xl bg-red-50 p-4">
+          <div className="rounded-xl bg-red-50 p-4">
             <p className="text-sm leading-7 text-slate-700">
               اطلاعات مشاور
-              <span className="mx-1 font-extrabold text-slate-900">
+              <span className="mx-1 font-bold text-slate-900">
                 «{consultantName || "بدون نام"}»
               </span>
               از سامانه حذف خواهد شد.
@@ -146,7 +146,7 @@ export default function DeleteConsultantModal({
             onClick={onClose}
             className="
               flex-1
-              rounded-2xl
+              rounded-xl
               border
               border-slate-200
               bg-white
@@ -169,13 +169,13 @@ export default function DeleteConsultantModal({
             onClick={onConfirm}
             className="
               flex-1
-              rounded-2xl
+              rounded-xl
               bg-red-600
               px-4
               py-3
               font-bold
               text-white
-              shadow-lg
+              shadow-sm
               shadow-red-200
               transition
               hover:bg-red-700

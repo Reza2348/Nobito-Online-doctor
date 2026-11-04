@@ -21,7 +21,7 @@ const ConsultantPhoto: React.FC<Props> = ({ name, photoUrl }) => {
         border-4
         border-white
         bg-gray-100
-        shadow-xl
+        shadow-sm
         "
       >
         <Image
@@ -33,7 +33,7 @@ const ConsultantPhoto: React.FC<Props> = ({ name, photoUrl }) => {
           object-cover
           transition-transform
           duration-500
-          group-hover:scale-110
+         
           "
         />
       </div>

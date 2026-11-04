@@ -27,7 +27,7 @@ export default function ProfessionalPhoto({
   const isDisabled = disabled || loading || isUploading;
 
   const cardClassName = [
-    "overflow-hidden rounded-2xl border bg-white",
+    "overflow-hidden rounded-xl border bg-white",
     "transition-all duration-300",
     error
       ? "border-red-200 shadow-sm shadow-red-100"

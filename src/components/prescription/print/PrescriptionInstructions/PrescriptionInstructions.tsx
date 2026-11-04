@@ -35,9 +35,7 @@ export default function PrescriptionInstructions({
           rounded-lg
           border
           border-blue-100
-          bg-linear-to-l
-          from-blue-50
-          to-cyan-50
+          bg-surface
           px-3
           py-2.5
           text-[11px]

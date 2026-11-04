@@ -30,9 +30,7 @@ export default function PrescriptionDiagnosis({
             items-center
             justify-center
             rounded-xl
-           bg-linear-to-br
-            from-blue-500
-            to-cyan-400
+           bg-brand
             text-white
             shadow-sm
           "
@@ -40,7 +38,7 @@ export default function PrescriptionDiagnosis({
           <FaStethoscope className="text-base" />
         </div>
 
-        <h2 className="text-base font-extrabold text-blue-700">تشخیص</h2>
+        <h2 className="text-base font-bold text-blue-700">تشخیص</h2>
 
         <div className="h-px flex-1 bg-linear-to-l from-blue-100 to-transparent" />
       </div>
@@ -51,10 +49,7 @@ export default function PrescriptionDiagnosis({
           rounded-xl
           border
           border-blue-100
-          bg-linear-to-r
-          from-blue-50
-          via-cyan-50
-          to-white
+          bg-surface
           px-4
           py-3
           text-sm

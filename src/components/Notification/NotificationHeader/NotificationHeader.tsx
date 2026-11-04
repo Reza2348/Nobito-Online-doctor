@@ -16,7 +16,7 @@ export function NotificationHeader({
       {/* سمت راست: آیکون و عنوان */}
       <div className="flex items-center gap-3">
         {/* آیکون اعلان */}
-        <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-100 text-purple-600">
+        <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100 text-purple-600">
           <FaBell className="text-xl" />
 
           {/* تعداد اعلان‌های خوانده نشده */}

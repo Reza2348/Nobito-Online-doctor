@@ -54,7 +54,7 @@ const History = () => {
       dir="rtl"
       className="min-h-screen w-full bg-[#F8FAFA] px-4 py-6 font-[Tahoma] md:px-12 md:py-12"
     >
-      <section className="mx-auto w-full max-w-5xl overflow-hidden rounded-[20px] border border-gray-100 bg-white shadow-sm md:rounded-[30px]">
+      <section className="mx-auto w-full max-w-5xl overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm md:rounded-xl">
         {/* Header */}
         <header className="border-b border-[#E4E4E4] px-4 pt-5 md:px-8 md:pt-7">
           <h1 className="text-lg font-bold text-gray-700 md:text-xl">
@@ -77,7 +77,7 @@ const History = () => {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => handleTabChange(tab.key)}
-                  className={`relative whitespace-nowrap border-b-2 pb-3 text-sm transition-colors md:pb-4 md:text-base ${ isActive ? "border-[#1F7168] font-bold text-[#1F7168]" : "border-transparent text-[#919191] hover:text-[#1F7168]" }`}
+                  className={`relative whitespace-nowrap border-b-2 pb-3 text-sm transition-colors md:pb-4 md:text-base ${ isActive ? "border-brand font-bold text-brand" : "border-transparent text-muted hover:text-brand" }`}
                 >
                   {tab.label}
                 </button>

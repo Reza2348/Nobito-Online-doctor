@@ -5,12 +5,11 @@ export default function NotFound() {
   return (
     <main
       dir="rtl"
-      className="min-h-screen flex items-center justify-center px-4 bg-linear-to-br from-emerald-50 via-white to-blue-50 relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center px-4 bg-surface relative overflow-hidden"
     >
-      <div className="absolute top-0 right-0 w-112.5 h-112.5 bg-emerald-200/40 blur-3xl rounded-full" />
 
-      <div className="relative max-w-xl w-full text-center bg-white/80 backdrop-blur-xl border border-white shadow-2xl rounded-[40px] p-8 md:p-12">
-        <div className="mx-auto w-20 h-20 rounded-3xl bg-emerald-100 flex items-center justify-center">
+      <div className="relative max-w-xl w-full text-center bg-white/80 border border-white shadow-sm rounded-xl p-8 md:p-12">
+        <div className="mx-auto w-20 h-20 rounded-xl bg-emerald-100 flex items-center justify-center">
           <FiSearch className="text-4xl text-emerald-600" />
         </div>
 
@@ -29,7 +28,7 @@ export default function NotFound() {
         <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
           <Link
             href="/"
-            className="flex items-center justify-center gap-2 rounded-2xl bg-[#1F7168] text-white px-7 py-4 font-bold transition hover:-translate-y-1 hover:shadow-xl"
+            className="flex items-center justify-center gap-2 rounded-xl bg-brand text-white px-7 py-4 font-bold transition hover:shadow-sm"
           >
             <FiHome />
             بازگشت به خانه
@@ -37,7 +36,7 @@ export default function NotFound() {
 
           <Link
             href="/search"
-            className="flex items-center justify-center gap-2 rounded-2xl bg-gray-100 text-gray-800 px-7 py-4 font-bold transition hover:bg-gray-200"
+            className="flex items-center justify-center gap-2 rounded-xl bg-gray-100 text-gray-800 px-7 py-4 font-bold transition hover:bg-gray-200"
           >
             <FiSearch />
             جستجو

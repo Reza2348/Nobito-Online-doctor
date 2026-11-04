@@ -38,7 +38,7 @@ const OnlineConsultationTimeline = () => {
             key={step.title}
             className="flex-1 flex flex-col items-center text-center mb-12 md:mb-0 relative"
           >
-            <div className="bg-white p-4 rounded-full shadow-lg z-10 mb-4">
+            <div className="bg-white p-4 rounded-full shadow-sm z-10 mb-4">
               {step.icon}
             </div>
 

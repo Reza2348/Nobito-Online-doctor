@@ -29,7 +29,7 @@ const VolunteerTherapist: React.FC = () => {
   return (
     <section className="bg-gray-50 py-16 px-4" dir="rtl">
       <div className="max-w-6xl mx-auto text-center mb-16">
-        <h2 className="text-3xl lg:text-4xl font-extrabold text-black mb-4">
+        <h2 className="text-3xl lg:text-4xl font-bold text-black mb-4">
           درمانگران داوطلب
         </h2>
 
@@ -42,7 +42,7 @@ const VolunteerTherapist: React.FC = () => {
         {volunteers.map((vol) => (
           <div
             key={vol.id}
-            className="group bg-white rounded-3xl shadow-md hover:shadow-xl p-8 flex flex-col items-center text-center transition-transform transform hover:-translate-y-2 hover:scale-[1.03]"
+            className="group bg-white rounded-xl shadow-sm hover:shadow-sm p-8 flex flex-col items-center text-center transition-transform transform"
           >
             <div className="w-24 h-24 flex items-center justify-center rounded-full bg-blue-100 text-blue-600 text-5xl mb-4 transition-colors duration-300 group-hover:bg-emerald-100">
               <FaUserNurse />
@@ -63,7 +63,7 @@ const VolunteerTherapist: React.FC = () => {
               </div>
             </div>
 
-            <button className="w-full bg-emerald-600 text-white py-2 rounded-xl font-semibold shadow hover:bg-emerald-700 transition transform hover:scale-105">
+            <button className="w-full bg-emerald-600 text-white py-2 rounded-xl font-semibold shadow hover:bg-emerald-700 transition transform">
               تماس با درمانگر
             </button>
           </div>

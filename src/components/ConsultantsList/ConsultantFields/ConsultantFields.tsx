@@ -32,7 +32,7 @@ const ConsultantFields: React.FC<Props> = ({ fields }) => {
           duration-300
           hover:bg-teal-600
           hover:text-white
-          hover:shadow-md
+          hover:shadow-sm
           "
         >
           {field}

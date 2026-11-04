@@ -37,7 +37,7 @@ const MedicalServicesCards: React.FC = () => {
   return (
     <section dir="rtl" className="py-20 bg-gray-50">
       <div className="max-w-6xl mx-auto text-center mb-16">
-        <h2 className="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4">
+        <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
           خدمات ما
         </h2>
         <div className="w-20 h-1 bg-emerald-500 mx-auto rounded-full"></div>
@@ -51,14 +51,14 @@ const MedicalServicesCards: React.FC = () => {
         {services.map((service, idx) => (
           <div
             key={idx}
-            className="group bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-transform transform hover:-translate-y-2 p-8 flex flex-col items-center text-center"
+            className="group bg-white rounded-xl shadow-sm hover:shadow-sm transition-transform transform p-8 flex flex-col items-center text-center"
           >
             <div
-              className={`w-20 h-20 flex items-center justify-center rounded-full mb-6 ${service.color} transition-transform group-hover:scale-110`}
+              className={`w-20 h-20 flex items-center justify-center rounded-full mb-6 ${service.color} transition-transform`}
             >
               {service.icon}
             </div>
-            <h3 className="font-extrabold text-xl text-gray-900 mb-3 group-hover:text-teal-600 transition-colors">
+            <h3 className="font-bold text-xl text-gray-900 mb-3 group-hover:text-teal-600 transition-colors">
               {service.name}
             </h3>
             <p className="text-gray-500 text-sm mb-6 leading-relaxed">

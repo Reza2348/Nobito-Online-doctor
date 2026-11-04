@@ -81,10 +81,10 @@ export default function EntityTableState(props: Props) {
   // Loading state
   if (props.type === "loading") {
     return (
-      <div dir="rtl" className="rounded-3xl bg-white p-6 shadow">
+      <div dir="rtl" className="rounded-xl bg-white p-6 shadow">
         <div className="mb-6 flex items-center gap-3">
           <div
-            className={`flex h-12 w-12 items-center justify-center rounded-2xl ${classes.iconBox}`}
+            className={`flex h-12 w-12 items-center justify-center rounded-xl ${classes.iconBox}`}
           >
             {icon}
           </div>
@@ -103,10 +103,10 @@ export default function EntityTableState(props: Props) {
   // Error state
   if (props.type === "error") {
     return (
-      <div dir="rtl" className="rounded-3xl bg-white p-6 shadow">
+      <div dir="rtl" className="rounded-xl bg-white p-6 shadow">
         <div className="mb-6 flex items-center gap-3">
           <div
-            className={`flex h-12 w-12 items-center justify-center rounded-2xl ${classes.errorIconBox}`}
+            className={`flex h-12 w-12 items-center justify-center rounded-xl ${classes.errorIconBox}`}
           >
             {icon}
           </div>
@@ -117,7 +117,7 @@ export default function EntityTableState(props: Props) {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-red-200 bg-red-50 p-5">
+        <div className="rounded-xl border border-red-200 bg-red-50 p-5">
           <p className="mb-2 font-bold text-red-700">{errorTitle}</p>
 
           <p
@@ -144,7 +144,7 @@ export default function EntityTableState(props: Props) {
   return (
     <div
       dir="rtl"
-      className="rounded-2xl border border-dashed border-gray-200 bg-gray-50 py-12 text-center"
+      className="rounded-xl border border-dashed border-gray-200 bg-gray-50 py-12 text-center"
     >
       <div className="mx-auto mb-3 flex h-fit w-fit items-center justify-center text-gray-300">
         {icon}

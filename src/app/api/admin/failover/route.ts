@@ -36,6 +36,7 @@ export async function GET() {
     const [statusRes, failoverRes] = await Promise.all([
       fetch(`${BACKEND}/api/auth/status`, {
         method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
         cache: "no-store",
         signal: AbortSignal.timeout(8000),
       }),

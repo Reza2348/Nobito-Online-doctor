@@ -32,7 +32,7 @@ export default function PrescriptionPrintHeader({
           <div
             className="
               text-2xl
-              font-extrabold
+              font-bold
               tracking-wide
               text-blue-600
             "
@@ -64,15 +64,13 @@ export default function PrescriptionPrintHeader({
         <div
           className="
     rounded-xl
-   bg-linear-to-r
-    from-blue-500
-    to-cyan-400
+   bg-brand
     px-6
     py-3
     text-lg
     font-bold
     text-white
-    shadow-md
+    shadow-sm
   "
         >
           نسخه پزشکی

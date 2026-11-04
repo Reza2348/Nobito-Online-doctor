@@ -34,8 +34,8 @@ export default function ChatInput({
             border border-gray-200
             text-sm text-gray-700
             outline-none
-            focus:border-[#1F7168]
-            focus:ring-2 focus:ring-[#1F7168]/10
+            focus:border-brand
+            focus:ring-2 focus:ring-brand/10
             disabled:opacity-50
           "
         />
@@ -46,7 +46,7 @@ export default function ChatInput({
           aria-label="ارسال پیام"
           className="
             w-11 h-11 rounded-xl
-            bg-[#1F7168] text-white
+            bg-brand text-white
             flex items-center justify-center
             disabled:opacity-40
           "

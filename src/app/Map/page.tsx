@@ -14,14 +14,13 @@ export default function LocationPicker() {
   return (
     <section
       dir="rtl"
-      className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-emerald-50 via-white to-blue-50 relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center p-4 bg-surface relative overflow-hidden"
     >
-      <div className="absolute top-0 right-0 w-[450px] h-[450px] bg-emerald-200/30 blur-3xl rounded-full" />
 
-      <div className="relative w-full max-w-2xl rounded-[40px] bg-white/80 backdrop-blur-xl border border-white shadow-2xl overflow-hidden">
-        <div className="p-6 bg-gradient-to-l from-emerald-600 to-blue-600 text-white">
+      <div className="relative w-full max-w-2xl rounded-xl bg-white/80 border border-white shadow-sm overflow-hidden">
+        <div className="p-6 bg-brand text-white">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
+            <div className="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center">
               <FiMapPin className="text-2xl" />
             </div>
 
@@ -36,7 +35,7 @@ export default function LocationPicker() {
         </div>
 
         <div className="p-6 space-y-6">
-          <div className="flex items-center gap-3 rounded-2xl bg-gray-100 px-5 h-14 transition focus-within:ring-4 focus-within:ring-emerald-100">
+          <div className="flex items-center gap-3 rounded-xl bg-gray-100 px-5 h-14 transition focus-within:ring-4 focus-within:ring-emerald-100">
             <FiSearch className="text-gray-400 text-xl" />
 
             <input
@@ -48,7 +47,7 @@ export default function LocationPicker() {
             />
           </div>
 
-          <div className="relative h-80 rounded-[32px] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 border border-gray-200 flex items-center justify-center">
+          <div className="relative h-80 rounded-xl overflow-hidden bg-surface border border-gray-200 flex items-center justify-center">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.15),transparent_40%)]" />
 
             <div className="relative text-center space-y-3">
@@ -66,11 +65,11 @@ export default function LocationPicker() {
             </div>
           </div>
 
-          <div className="rounded-2xl bg-gray-50 border p-4 text-sm text-gray-600 leading-6">
+          <div className="rounded-xl bg-gray-50 border p-4 text-sm text-gray-600 leading-6">
             برای دقت بیشتر، روی نقشه زوم کنید و محل دقیق را انتخاب نمایید.
           </div>
 
-          <button className="w-full h-14 rounded-2xl bg-gradient-to-l from-emerald-600 to-blue-600 text-white font-bold flex items-center justify-center gap-3 transition-all hover:-translate-y-1 hover:shadow-xl active:scale-[0.98]">
+          <button className="w-full h-14 rounded-xl bg-brand text-white font-bold flex items-center justify-center gap-3 transition-all hover:shadow-sm active:scale-[0.98]">
             <FiCheckCircle className="text-xl" />
             تأیید و ثبت آدرس
           </button>

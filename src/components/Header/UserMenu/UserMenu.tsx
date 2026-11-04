@@ -158,7 +158,7 @@ const UserMenu: H.React.FC<Props> = ({ user, logout }) => {
                   border
                   border-gray-200
                   bg-white
-                  shadow-lg
+                  shadow-sm
                 "
               >
                 <H.Link

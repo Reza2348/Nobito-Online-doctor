@@ -40,7 +40,7 @@ export default function FeedbackCard({ item, active }: Props) {
 
       <button
         type="button"
-        className="flex items-center justify-start gap-1 text-[#1F7168] text-xs font-medium hover:opacity-80 ml-auto"
+        className="flex items-center justify-start gap-1 text-brand text-xs font-medium hover:opacity-80 ml-auto"
       >
         <FaRegThumbsUp size={14} />
         پیشنهاد میکنم

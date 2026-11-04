@@ -23,14 +23,14 @@ const CampaignCard = ({ campaign }: CampaignCardProps) => {
   };
 
   return (
-    <article className="group overflow-hidden rounded-[28px] border border-slate-100 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl">
+    <article className="group overflow-hidden rounded-xl border border-slate-100 bg-white shadow-sm transition-all duration-300 hover:shadow-sm">
       {/* Image */}
       <div className="relative h-56 overflow-hidden">
         {campaign.image && (
           <img
             src={campaign.image}
             alt={campaign.title}
-            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+            className="h-full w-full object-cover transition duration-500"
           />
         )}
 
@@ -117,7 +117,7 @@ const CampaignCard = ({ campaign }: CampaignCardProps) => {
           onClick={handleCampaignClick}
           type="button"
           disabled={!campaign.active}
-          className="group/button mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-slate-900 py-3.5 text-sm font-bold text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:bg-slate-400"
+          className="group/button mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-slate-900 py-3.5 text-sm font-bold text-white transition hover:bg-emerald-600 disabled:cursor-not-allowed disabled:bg-slate-400"
         >
           <FiHeart size={17} />
           {campaign.active ? "حمایت از کمپین" : "این کمپین غیرفعال است"}

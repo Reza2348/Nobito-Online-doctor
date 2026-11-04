@@ -12,7 +12,7 @@ export default function ServicesSection() {
               flex
               items-center
               gap-6
-              rounded-3xl
+              rounded-xl
               border
               border-gray-100
               bg-white
@@ -20,8 +20,8 @@ export default function ServicesSection() {
               shadow-sm
               transition-all
               duration-300
-              hover:-translate-y-1
-              hover:shadow-md
+             
+              hover:shadow-sm
               sm:p-8
             "
           >
@@ -31,13 +31,11 @@ export default function ServicesSection() {
               </h3>
 
               <p className="text-sm leading-7 text-gray-500">
-                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با
-                استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله
-                در ستون و سطر آنچنان لازم است، و برای شرایط
+                این خدمت به‌زودی در نوبیتو فعال می‌شود.
               </p>
             </div>
 
-            <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl sm:h-32 sm:w-32">
+            <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl sm:h-32 sm:w-32">
               <Image
                 src="/contebt.png"
                 alt="آزمایش در محل"
@@ -55,7 +53,7 @@ export default function ServicesSection() {
               flex
               items-center
               gap-6
-              rounded-3xl
+              rounded-xl
               border
               border-gray-100
               bg-white
@@ -63,8 +61,8 @@ export default function ServicesSection() {
               shadow-sm
               transition-all
               duration-300
-              hover:-translate-y-1
-              hover:shadow-md
+             
+              hover:shadow-sm
               sm:p-8
             "
           >
@@ -74,13 +72,11 @@ export default function ServicesSection() {
               </h3>
 
               <p className="text-sm leading-7 text-gray-500">
-                لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با
-                استفاده از طراحان گرافیک است، چاپگرها و متون بلکه روزنامه و مجله
-                در ستون و سطر آنچنان لازم است، و برای شرایط
+                این خدمت به‌زودی در نوبیتو فعال می‌شود.
               </p>
             </div>
 
-            <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-2xl sm:h-32 sm:w-32">
+            <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-xl sm:h-32 sm:w-32">
               <Image
                 src="/contebt (1).png"
                 alt="مشاوره آنلاین"

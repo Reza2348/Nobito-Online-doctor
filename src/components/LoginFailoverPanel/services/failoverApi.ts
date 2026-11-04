@@ -1,4 +1,3 @@
-import { mongoRequest } from "@/services/mongoFallback.service";
 import type { AuthStatus, FailoverAction, FailoverStatus } from "@/Types/types";
 
 const API_URL = "/api/admin/database-mode";
@@ -80,6 +79,21 @@ export async function saveFailoverAction(
   return getMessage(result, "تنظیمات با موفقیت تغییر کرد.");
 }
 
+/** وضعیت ورود؛ بک‌اند فقط به ادمین می‌دهد، پس از مسیر سروری عبور می‌کند. */
 export async function getAuthStatus(): Promise<AuthStatus> {
-  return mongoRequest<AuthStatus>("POST", "/api/auth/status", {});
+  const response = await fetch("/api/admin/failover", {
+    credentials: "same-origin",
+    cache: "no-store",
+  });
+
+  const result = (await response.json().catch(() => null)) as {
+    authStatus?: AuthStatus;
+    error?: string;
+  } | null;
+
+  if (!response.ok || !result?.authStatus) {
+    throw new Error(result?.error ?? "دریافت وضعیت ورود ناموفق بود.");
+  }
+
+  return result.authStatus;
 }

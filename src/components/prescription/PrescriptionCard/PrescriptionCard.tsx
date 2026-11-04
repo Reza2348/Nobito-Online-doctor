@@ -9,11 +9,11 @@ export default function PrescriptionCard({
   prescription,
 }: PrescriptionCardProps) {
   return (
-    <article className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:-translate-y-1 hover:shadow-lg">
+    <article className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition duration-300 hover:shadow-sm">
       <div className="p-6">
         <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-center gap-4">
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-teal-50 text-2xl">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-2xl">
               💊
             </div>
 
@@ -44,7 +44,7 @@ export default function PrescriptionCard({
         </div>
 
         <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          <div className="rounded-2xl bg-slate-50 p-4">
+          <div className="rounded-xl bg-slate-50 p-4">
             <p className="text-xs text-slate-400">پزشک</p>
 
             <p className="mt-1 font-semibold text-slate-800">
@@ -56,7 +56,7 @@ export default function PrescriptionCard({
             </p>
           </div>
 
-          <div className="rounded-2xl bg-slate-50 p-4">
+          <div className="rounded-xl bg-slate-50 p-4">
             <p className="text-xs text-slate-400">تاریخ صدور</p>
 
             <p className="mt-1 font-semibold text-slate-800">
@@ -65,7 +65,7 @@ export default function PrescriptionCard({
           </div>
         </div>
 
-        <div className="mt-4 rounded-2xl border border-slate-100 p-4">
+        <div className="mt-4 rounded-xl border border-slate-100 p-4">
           <p className="text-xs text-slate-400">تشخیص</p>
 
           <p className="mt-1 font-semibold text-slate-800">

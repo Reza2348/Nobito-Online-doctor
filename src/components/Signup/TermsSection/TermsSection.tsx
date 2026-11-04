@@ -5,10 +5,10 @@ export default function TermsSection() {
         ورود شما به معنای پذیرش است{" "}
       </p>
       و
-      <span className="text-[#347469] border-b border-[#347469] cursor-pointer">
+      <span className="text-brand border-b border-brand cursor-pointer">
         شرایط و قوانین
       </span>{" "}
-      <span className="text-[#347469] border-b border-[#347469] cursor-pointer">
+      <span className="text-brand border-b border-brand cursor-pointer">
         حریم خصوصی
       </span>
     </div>

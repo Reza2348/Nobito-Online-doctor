@@ -6,7 +6,7 @@ interface PhoneTabProps {
 
 export default function PhoneTab({ secretaryPhone }: PhoneTabProps) {
   return (
-    <div className="rounded-2xl border border-slate-100 bg-slate-50/60 p-4">
+    <div className="rounded-xl border border-slate-100 bg-slate-50/60 p-4">
       <p className="text-[11px] font-bold text-slate-400">
         شماره تماس منشی مطب
       </p>

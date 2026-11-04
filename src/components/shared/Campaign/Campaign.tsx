@@ -22,7 +22,7 @@ export default function CampaignProfile({ campaign }: CampaignProfileProps) {
 
   return (
     <main dir="rtl" className="min-h-screen bg-slate-50 px-4 py-10 sm:px-6">
-      <article className="mx-auto max-w-4xl overflow-hidden rounded-3xl bg-white shadow-sm">
+      <article className="mx-auto max-w-4xl overflow-hidden rounded-xl bg-white shadow-sm">
         {campaign.image && (
           <img
             src={campaign.image}
@@ -94,11 +94,11 @@ export default function CampaignProfile({ campaign }: CampaignProfileProps) {
 
             <button
               className="inline-flex items-center justify-center gap-2
-    rounded-xl bg-linear-to-l from-green-700 to-emerald-500
+    rounded-xl bg-brand
     px-5 py-2.5 text-sm font-semibold text-white
-    shadow-md shadow-green-700/20
+    shadow-sm shadow-green-700/20
     transition-all duration-300
-    hover:-translate-y-0.5 hover:shadow-lg hover:shadow-green-700/30
+    hover:shadow-sm hover:shadow-green-700/30
     active:translate-y-0 active:scale-95
     focus-visible:outline-none focus-visible:ring-2
     focus-visible:ring-green-500 focus-visible:ring-offset-2"

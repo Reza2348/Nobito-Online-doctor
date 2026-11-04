@@ -39,8 +39,8 @@ export default function FeedbackSection() {
       <div className="flex items-center justify-center mt-4 mb-8 gap-4 max-w-xl mx-auto">
         <div className="flex-1 border-t border-gray-300" />
 
-        <p className="text-[#414141] text-2xl whitespace-nowrap font-medium">
-          <span className="text-[#1F7168]">بازخورد</span> بیماران نوبیتو
+        <p className="text-ink text-2xl whitespace-nowrap font-medium">
+          <span className="text-brand">بازخورد</span> بیماران نوبیتو
         </p>
 
         <div className="flex-1 border-t border-gray-300" />

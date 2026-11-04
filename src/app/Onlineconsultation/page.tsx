@@ -1,10 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import {
   FiArrowLeft,
   FiCheckCircle,
-  FiClock,
-  FiHeart,
   FiMessageCircle,
   FiShield,
   FiUsers,
@@ -15,42 +14,30 @@ import ConsultationHeader from "@/components/Consultation/ConsultationHeader/Con
 import ConsultationTypes from "@/components/Consultation/ConsultationTypes/ConsultationTypes";
 import DoctorVisual from "@/components/Consultation/DoctorVisual/DoctorVisual";
 
-import type { OnlineConsultationProps } from "@/Types/types";
 
-const OnlineConsultation = ({
-  doctorsOnline = 38,
-  responseTime = "کمتر از ۱۰ دقیقه",
-}: OnlineConsultationProps) => {
+const OnlineConsultation = () => {
   return (
     <section
       dir="rtl"
-      className="relative overflow-hidden bg-[#f5fbff] py-20 sm:py-24"
+      className="relative overflow-hidden bg-surface py-20 sm:py-24"
     >
       {/* Background */}
-      <div className="pointer-events-none absolute -right-40 top-10 h-96 w-96 rounded-full bg-cyan-200/30 blur-3xl" />
 
-      <div className="pointer-events-none absolute -bottom-40 left-10 h-96 w-96 rounded-full bg-blue-200/30 blur-3xl" />
 
-      <div className="pointer-events-none absolute right-1/2 top-1/2 h-72 w-72 -translate-y-1/2 translate-x-1/2 rounded-full bg-emerald-100/20 blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl px-6">
         {/* Header */}
-        <ConsultationHeader doctorsOnline={doctorsOnline} />
+        <ConsultationHeader />
 
         {/* Main Card */}
-        <div className="relative overflow-hidden rounded-[36px] border border-white bg-white shadow-[0_30px_100px_rgba(15,23,42,0.10)]">
+        <div className="relative overflow-hidden rounded-xl border border-line bg-white">
           <div className="grid lg:grid-cols-[1.05fr_0.95fr]">
             {/* Content */}
             <div className="p-7 sm:p-10 lg:p-14">
-              {/* Status */}
-              <div className="mb-7 flex w-fit items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-bold text-emerald-700">
-                <FiCheckCircle size={17} />
-                سرویس مشاوره آنلاین فعال است
-              </div>
 
               <h3 className="max-w-xl text-3xl font-black leading-[1.35] text-slate-900 sm:text-4xl">
                 با پزشک مناسب،
-                <span className="text-cyan-600"> همین امروز صحبت کنید</span>
+                <span className="text-brand"> همین امروز صحبت کنید</span>
               </h3>
 
               <p className="mt-5 max-w-xl text-base leading-8 text-slate-500">
@@ -63,25 +50,19 @@ const OnlineConsultation = ({
 
               {/* CTA */}
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <button
-                  type="button"
-                  className="group flex items-center justify-center gap-2 rounded-2xl bg-cyan-600 px-7 py-4 font-bold text-white shadow-xl shadow-cyan-600/20 transition-all duration-300 hover:-translate-y-0.5 hover:bg-cyan-700"
-                >
+                <Link href="/AppointmentCard" className="group flex items-center justify-center gap-2 rounded-xl bg-brand px-7 py-4 font-bold text-white shadow-sm shadow-brand/20 transition-all duration-300 hover:bg-brand-strong">
                   <FiMessageCircle size={20} />
                   شروع مشاوره آنلاین
                   <FiArrowLeft
                     size={18}
-                    className="transition-transform group-hover:-translate-x-1"
+                    className="transition-transform"
                   />
-                </button>
+                </Link>
 
-                <button
-                  type="button"
-                  className="flex items-center justify-center gap-2 rounded-2xl border border-slate-200 bg-white px-7 py-4 font-bold text-slate-700 transition hover:border-cyan-200 hover:bg-cyan-50"
-                >
+                <Link href="/AppointmentCard" className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-7 py-4 font-bold text-slate-700 transition hover:border-brand-soft hover:bg-brand-soft">
                   <FiUsers size={19} />
                   مشاهده پزشکان
-                </button>
+                </Link>
               </div>
 
               {/* Trust */}
@@ -92,11 +73,6 @@ const OnlineConsultation = ({
                 </span>
 
                 <span className="flex items-center gap-2">
-                  <FiClock size={15} className="text-cyan-500" />
-                  پاسخ {responseTime}
-                </span>
-
-                <span className="flex items-center gap-2">
                   <FiCheckCircle size={15} className="text-emerald-500" />
                   پزشکان تأیید شده
                 </span>
@@ -104,7 +80,7 @@ const OnlineConsultation = ({
             </div>
 
             {/* Visual */}
-            <DoctorVisual responseTime={responseTime} />
+            <DoctorVisual />
           </div>
         </div>
 

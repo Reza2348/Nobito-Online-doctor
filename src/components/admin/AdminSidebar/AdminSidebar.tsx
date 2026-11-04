@@ -1,5 +1,6 @@
 "use client";
 
+import { adminLogout } from "@/lib/adminLogout";
 import { useRouter } from "next/navigation";
 
 import {
@@ -46,10 +47,8 @@ export default function AdminSidebar({
     { title: "تست سیستم", icon: MdFactCheck, page: "failover-test" },
   ] satisfies { title: string; icon: IconType; page: AdminPage }[];
 
-  const handleLogout = () => {
-    if (typeof window !== "undefined") {
-      localStorage.removeItem("admin-auth");
-    }
+  const handleLogout = async () => {
+    await adminLogout();
     router.push("/Admin");
   };
 
@@ -72,7 +71,7 @@ export default function AdminSidebar({
         ${
           isMobile
             ? "h-full w-full bg-teal-700 p-5"
-            : "h-[calc(100vh-32px)] w-64 rounded-2xl bg-teal-700 p-5 shadow-lg"
+            : "h-[calc(100vh-32px)] w-64 rounded-xl bg-teal-700 p-5 shadow-sm"
         }
       `}
     >
@@ -151,13 +150,13 @@ export default function AdminSidebar({
           duration-300
           hover:bg-red-500
           hover:text-white
-          hover:shadow-lg
+          hover:shadow-sm
           hover:shadow-red-500/30
         "
       >
         <MdLogout
           size={22}
-          className="transition-transform duration-300 group-hover:translate-x-1"
+          className="transition-transform duration-300"
         />
         <span className="font-medium">خروج</span>
       </button>

@@ -39,14 +39,14 @@ export default async function PrescriptionDetailsPage({
 
         <div
           id="prescription-print"
-          className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm"
+          className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"
         >
           <PrescriptionHeader prescription={prescription} />
 
           <div className="space-y-8 p-6 sm:p-8">
             {/* Patient & Doctor */}
             <section className="grid gap-5 md:grid-cols-2">
-              <div className="rounded-2xl border border-slate-200 p-5">
+              <div className="rounded-xl border border-slate-200 p-5">
                 <div className="mb-4 flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600">
                     👤
@@ -62,7 +62,7 @@ export default async function PrescriptionDetailsPage({
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-slate-200 p-5">
+              <div className="rounded-xl border border-slate-200 p-5">
                 <div className="mb-4 flex items-center gap-3">
                   <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
                     👨‍⚕️
@@ -99,7 +99,7 @@ export default async function PrescriptionDetailsPage({
                 </div>
               </div>
 
-              <div className="rounded-2xl bg-amber-50 p-5">
+              <div className="rounded-xl bg-amber-50 p-5">
                 <p className="font-semibold text-amber-900">
                   {prescription.diagnosis}
                 </p>
@@ -126,7 +126,7 @@ export default async function PrescriptionDetailsPage({
                   </div>
                 </div>
 
-                <div className="rounded-2xl border border-purple-100 bg-purple-50/50 p-5 leading-8 text-slate-700">
+                <div className="rounded-xl border border-purple-100 bg-purple-50/50 p-5 leading-8 text-slate-700">
                   {prescription.instructions}
                 </div>
               </section>
@@ -134,7 +134,7 @@ export default async function PrescriptionDetailsPage({
 
             {/* Next Visit */}
             {prescription.nextVisit && (
-              <section className="rounded-2xl border border-teal-100 bg-teal-50 p-5">
+              <section className="rounded-xl border border-teal-100 bg-teal-50 p-5">
                 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <div>
                     <p className="text-sm font-medium text-teal-700">

@@ -65,13 +65,13 @@ export default function ContactForm() {
       onSubmit={handleSubmit(onSubmit)}
       className="
         space-y-6
-        rounded-[35px]
+        rounded-xl
         border
         border-white
         bg-white/80
         p-6
-        shadow-xl
-        backdrop-blur-xl
+        shadow-sm
+       
         md:p-10
       "
     >
@@ -119,14 +119,14 @@ export default function ContactForm() {
           className="
             w-full
             resize-none
-            rounded-2xl
+            rounded-xl
             border
             border-gray-200
             p-5
             text-black
             outline-none
             focus:ring-2
-            focus:ring-[#1F7168]
+            focus:ring-brand
           "
         />
 
@@ -141,15 +141,15 @@ export default function ContactForm() {
         disabled={isSubmitting}
         className="
           w-full
-          rounded-2xl
-          bg-[#1F7168]
+          rounded-xl
+          bg-brand
           py-4
           font-bold
           text-white
           transition-all
           duration-300
-          hover:-translate-y-1
-          hover:shadow-xl
+         
+          hover:shadow-sm
           disabled:cursor-not-allowed
           disabled:opacity-50
         "

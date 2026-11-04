@@ -32,7 +32,7 @@ export default function FeedbackNavigation({
             onClick={() => onChange(index)}
             className={
               index === activeIndex
-                ? "h-2 w-6 rounded-full bg-[#1F7168] transition-all duration-300"
+                ? "h-2 w-6 rounded-full bg-brand transition-all duration-300"
                 : "h-2 w-2 rounded-full bg-gray-300 transition-all duration-300"
             }
           />

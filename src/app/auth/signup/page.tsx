@@ -11,8 +11,8 @@ export default function MagicLinkPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F2F2F2] font-[tahoma]">
-      <div className="w-[95%] max-w-112.5 bg-white p-8 rounded-2xl shadow-lg flex flex-col items-center">
+    <div className="min-h-screen flex items-center justify-center bg-surface font-[tahoma]">
+      <div className="w-[95%] max-w-112.5 bg-white p-8 rounded-xl shadow-sm flex flex-col items-center">
         <LogoSection />
 
         <HeaderSection />

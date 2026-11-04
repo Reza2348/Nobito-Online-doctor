@@ -25,7 +25,7 @@ export default function FeedbackRating({
             aria-checked={rating === star}
             aria-label={`امتیاز ${star} از 5`}
             onClick={() => onChange(star)}
-            className={`text-3xl transition hover:scale-110 ${
+            className={`text-3xl transition ${
               star <= rating ? "text-yellow-400" : "text-gray-300"
             }`}
           >

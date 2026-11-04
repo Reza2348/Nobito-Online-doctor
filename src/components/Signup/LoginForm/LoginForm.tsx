@@ -15,7 +15,7 @@ import {
 
 import type { LoginFormData } from "@/components/Signup/LoginForm/login/login.schema";
 
-import { sendLoginOtp } from "@/lib/login.api";
+import { sendLoginOtp, sendPhoneOtp } from "@/lib/login.api";
 
 import { LoginIdentifierField } from "@/components/Signup/LoginForm/LoginIdentifierField/LoginIdentifierField";
 
@@ -89,21 +89,25 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
     try {
       const identifier = data.identifier.trim();
 
-      // Backend فعلاً فقط Email OTP دارد
-      if (!emailRegex.test(identifier)) {
-        S.toast.error("در حال حاضر ورود با OTP فقط از طریق ایمیل فعال است.");
-        return;
-      }
+      const isEmail = emailRegex.test(identifier);
 
-      const email = identifier.toLowerCase();
+      // ذخیره شناسه برای مرحله Verify OTP
+      sessionStorage.setItem(
+        "norbin_otp_email",
+        isEmail ? identifier.toLowerCase() : identifier.replace(/\s/g, ""),
+      );
 
-      // ذخیره ایمیل برای مرحله Verify OTP
-      sessionStorage.setItem("norbin_otp_email", email);
+      // ایمیل: بک‌اند فعلی؛ موبایل: مسیر همین اپلیکیشن (پیامک)
+      const result = isEmail
+        ? await sendLoginOtp(identifier.toLowerCase())
+        : await sendPhoneOtp(identifier);
 
-      // ارسال درخواست به Backend
-      const result = await sendLoginOtp(email);
-
-      S.toast.success(result.message || "کد ورود به ایمیل شما ارسال شد.");
+      S.toast.success(
+        result.message ||
+          (isEmail
+            ? "کد ورود به ایمیل شما ارسال شد."
+            : "کد ورود به شماره موبایل شما پیامک شد."),
+      );
 
       reset();
       setLiveValue("");

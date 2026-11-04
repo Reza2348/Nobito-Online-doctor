@@ -69,7 +69,7 @@ const baseItemClasses = `
   flex min-h-12 w-full items-center
   rounded-xl px-3 py-3
   text-right text-sm font-medium
-  text-[#757575]
+  text-muted
   transition-colors duration-200
   hover:bg-emerald-50 hover:text-emerald-700
   active:bg-emerald-100

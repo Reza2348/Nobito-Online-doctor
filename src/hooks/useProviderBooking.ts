@@ -1,10 +1,13 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 
-import { supabase } from "@/lib/supabaseClient";
+import {
+  calendarDayKey,
+  getLocalCalendarDay,
+} from "@/lib/appointmentSlots";
 
 import {
   defaultPriceByType,
@@ -25,6 +28,12 @@ type UseProviderBookingArgs = Pick<
   feedbackPath: string;
 };
 
+const PROVIDER_TYPE_BY_ID_PARAM: Record<string, string> = {
+  doctorId: "doctor",
+  clinicId: "clinic",
+  consultantId: "consultant",
+};
+
 export function useProviderBooking({
   id,
   chatHref,
@@ -36,94 +45,171 @@ export function useProviderBooking({
 
   const [type, setType] = useState<ConsultType>("inPerson");
   const [selectedDate, setSelectedDate] = useState<Date>(() => new Date());
-  const [slotId, setSlotId] = useState<string | undefined>(undefined);
+  const [pickedSlotId, setSlotId] = useState<string | undefined>(undefined);
   const [submitting, setSubmitting] = useState(false);
+  const [booked, setBooked] = useState<{ key: string; times: number[] }>({
+    key: "",
+    times: [],
+  });
+  const [now, setNow] = useState<number>(() => Date.now());
+  const [refreshKey, setRefreshKey] = useState(0);
+
+  // جلوگیری از ثبت دوباره در فاصلهٔ بین کلیک و رندر
+  const submittingRef = useRef(false);
+
+  const providerType = PROVIDER_TYPE_BY_ID_PARAM[idParamName] ?? "doctor";
+  const providerId = String(id);
 
   /**
    * فقط مشاوره‌های حضوری و آنلاین نیاز به انتخاب زمان دارند.
    */
   const needsSlot = type === "inPerson" || type === "video";
 
-  /**
-   * برای جلوگیری از cast غیرضروری، فقط زمانی SlotType ساخته می‌شود
-   * که نوع مشاوره واقعاً یکی از انواع دارای slot باشد.
-   */
   const slotType: SlotType | null = needsSlot ? (type as SlotType) : null;
+
+  const dayKey = calendarDayKey(getLocalCalendarDay(selectedDate));
+
+  /**
+   * زمان‌های رزروشدهٔ همین روز را از سرور می‌گیرد.
+   * با تغییر refreshKey (مثلاً بعد از ثبت یا خطای ۴۰۹) دوباره خوانده می‌شود.
+   */
+  useEffect(() => {
+    if (!needsSlot) return;
+
+    const controller = new AbortController();
+
+    const query = new URLSearchParams({
+      providerType,
+      providerId,
+      date: dayKey,
+    });
+
+    fetch(`/api/appointments?${query}`, {
+      signal: controller.signal,
+      cache: "no-store",
+    })
+      .then(async (response) => {
+        if (!response.ok) return;
+
+        const data = (await response.json()) as { booked?: string[] };
+
+        setBooked({
+          key: `${providerType}:${providerId}:${dayKey}`,
+          times: (data.booked ?? []).map((value) => new Date(value).getTime()),
+        });
+        setNow(Date.now());
+      })
+      .catch(() => {
+        // قطع شبکه یا لغو درخواست؛ سرور هنگام ثبت دوباره بررسی می‌کند
+      });
+
+    return () => controller.abort();
+  }, [needsSlot, providerType, providerId, dayKey, refreshKey]);
 
   const currentSlots = useMemo(() => {
     if (!slotType) {
       return [];
     }
 
-    return generateSlotsForDate(selectedDate, slotType);
-  }, [selectedDate, slotType]);
+    const bookedTimes =
+      booked.key === `${providerType}:${providerId}:${dayKey}`
+        ? booked.times
+        : [];
+
+    return generateSlotsForDate(selectedDate, slotType).filter(
+      (slot) =>
+        slot.date.getTime() > now && !bookedTimes.includes(slot.date.getTime()),
+    );
+  }, [slotType, selectedDate, booked, providerType, providerId, dayKey, now]);
 
   /**
-   * وقتی تاریخ یا نوع مشاوره تغییر می‌کند،
-   * اولین slot به صورت خودکار انتخاب می‌شود.
-   *
-   * این کار نباید مستقیماً داخل render انجام شود.
+   * اگر زمان انتخاب‌شده دیگر در لیست نباشد (روز یا نوع مشاوره عوض شده یا
+   * رزرو شده)، اولین زمان آزاد انتخاب می‌شود؛ بدون effect و بدون زمانِ
+   * «نمایش‌داده‌شده ولی انتخاب‌نشده».
    */
-  useEffect(() => {
-    if (!needsSlot) {
-      setSlotId(undefined);
-      return;
-    }
-
-    setSlotId(currentSlots[0]?.id);
-  }, [needsSlot, selectedDate, type, currentSlots]);
+  const slotId = currentSlots.some((slot) => slot.id === pickedSlotId)
+    ? pickedSlotId
+    : currentSlots[0]?.id;
 
   const currentPrice =
     slotType && priceByType ? (priceByType[slotType] ?? null) : null;
 
-  const selectedSlot =
-    currentSlots.find((slot) => slot.id === slotId) ?? currentSlots[0];
+  const selectedSlot = currentSlots.find((slot) => slot.id === slotId);
 
   const feedbackUrl = `${feedbackPath}?${idParamName}=${encodeURIComponent(
-    String(id),
+    providerId,
   )}`;
 
   const resolvedChatHref =
-    chatHref ?? `/Chat?${idParamName}=${encodeURIComponent(String(id))}`;
+    chatHref ?? `/Chat?${idParamName}=${encodeURIComponent(providerId)}`;
 
   const handleBook = useCallback(async () => {
-    if (submitting) {
+    if (submittingRef.current || !slotType || !selectedSlot) {
       return;
     }
 
-    try {
-      const {
-        data: { user },
-        error,
-      } = await supabase.auth.getUser();
+    submittingRef.current = true;
+    setSubmitting(true);
 
-      if (error || !user) {
+    try {
+      const response = await fetch("/api/appointments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          providerType,
+          providerId,
+          consultType: slotType,
+          startsAt: selectedSlot.date.toISOString(),
+        }),
+      });
+
+      const data = (await response.json().catch(() => null)) as {
+        message?: string;
+      } | null;
+
+      if (response.status === 401) {
         toast.error("ابتدا وارد حساب کاربری شوید");
 
-        setTimeout(() => {
-          router.push(
-            `/auth/signup?redirect=${encodeURIComponent(feedbackUrl)}`,
-          );
-        }, 1200);
+        router.push(`/auth/signup?redirect=${encodeURIComponent(feedbackUrl)}`);
 
         return;
       }
 
-      setSubmitting(true);
+      if (response.status === 409) {
+        toast.error(data?.message ?? "این زمان قبلاً رزرو شده است.");
+
+        setRefreshKey((value) => value + 1);
+
+        return;
+      }
+
+      if (!response.ok) {
+        toast.error(data?.message ?? "ثبت نوبت ناموفق بود.");
+
+        return;
+      }
 
       toast.success("نوبت شما با موفقیت ثبت شد ✅");
 
-      setTimeout(() => {
-        router.push(feedbackUrl);
-        setSubmitting(false);
-      }, 1200);
-    } catch (err) {
-      console.error("Booking auth check failed:", err);
+      setRefreshKey((value) => value + 1);
 
-      toast.error("خطا در بررسی وضعیت ورود کاربر");
+      router.push(feedbackUrl);
+    } catch (err) {
+      console.error("Booking request failed:", err);
+
+      toast.error("ارتباط با سرور برقرار نشد. لطفاً دوباره تلاش کنید.");
+    } finally {
+      submittingRef.current = false;
       setSubmitting(false);
     }
-  }, [feedbackUrl, router, submitting]);
+  }, [
+    feedbackUrl,
+    providerId,
+    providerType,
+    router,
+    selectedSlot,
+    slotType,
+  ]);
 
   return {
     type,

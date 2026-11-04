@@ -1,51 +1,20 @@
-import React from "react";
-import { FaUserMd, FaCalendarAlt, FaClock } from "react-icons/fa";
-import { appointments } from "@/app/AppointmentCard/AppData";
-import BookButton from "./BookButton";
+import type { Metadata } from "next";
 
-const AppointmentCard: React.FC = () => {
-  return (
-    <section className="bg-gray-50 py-16 px-4" dir="rtl">
-      <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-3xl font-bold text-black mb-12">نوبت‌دهی پزشکان</h2>
+import DoctorList from "@/components/DoctorList/DoctorList";
 
-        <div className="grid md:grid-cols-3 sm:grid-cols-2 gap-8">
-          {appointments.map((item) => (
-            <div
-              key={item.id}
-              className="group bg-white rounded-2xl shadow-md p-6 transition-all duration-300 hover:shadow-xl hover:-translate-y-2 hover:scale-[1.03]"
-            >
-              <div className="w-24 h-24 mx-auto mb-4 flex items-center justify-center bg-blue-100 text-blue-600 rounded-full text-4xl transition-colors duration-300 group-hover:bg-teal-100">
-                <FaUserMd />
-              </div>
-
-              <h3 className="text-lg font-semibold text-gray-800 mb-1 group-hover:text-emerald-600">
-                {item.doctor}
-              </h3>
-
-              <p className="text-gray-500 text-sm mb-4 leading-relaxed">
-                {item.specialty}
-              </p>
-
-              <div className="text-sm text-gray-700 space-y-2 mb-6 text-right">
-                <div className="flex items-center gap-2 bg-blue-50 rounded-lg p-2">
-                  <FaCalendarAlt className="text-teal-600 shrink-0" />
-                  <span>{item.day}</span>
-                </div>
-
-                <div className="flex items-center gap-2 bg-blue-50 rounded-lg p-2">
-                  <FaClock className="text-teal-600 shrink-0" />
-                  <span>{item.time}</span>
-                </div>
-              </div>
-
-              <BookButton appointmentId={item.id} />
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
+export const metadata: Metadata = {
+  title: "نوبت‌دهی پزشکان | نوبیتو",
+  description: "پزشک موردنظر خود را انتخاب کنید و نوبت آنلاین یا حضوری رزرو کنید.",
 };
 
-export default AppointmentCard;
+export default function AppointmentCardPage() {
+  return (
+    <section className="bg-gray-50 py-16" dir="rtl">
+      <div className="mx-auto max-w-6xl px-4 text-center">
+        <h1 className="mb-12 text-3xl font-bold text-black">نوبت‌دهی پزشکان</h1>
+      </div>
+
+      <DoctorList />
+    </section>
+  );
+}

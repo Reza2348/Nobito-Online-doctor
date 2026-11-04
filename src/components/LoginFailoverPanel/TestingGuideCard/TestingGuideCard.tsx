@@ -12,7 +12,7 @@ const steps = [
 
 export default function TestingGuideCard({ lastChecked }: Props) {
   return (
-    <section className="rounded-2xl border border-blue-200 bg-blue-50 p-5">
+    <section className="rounded-xl border border-blue-200 bg-blue-50 p-5">
       <h2 className="font-bold text-blue-950">راهنمای تست Failover</h2>
 
       <ol className="mt-3 list-inside list-decimal space-y-2 text-sm leading-6 text-blue-900">

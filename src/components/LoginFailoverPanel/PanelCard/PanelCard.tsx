@@ -30,13 +30,13 @@ export default function PanelCard({
 }: PanelCardProps) {
   return (
     <section
-      className={`rounded-3xl border border-slate-200/80 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(15,23,42,0.08)] sm:p-6 ${className}`}
+      className={`rounded-xl border border-slate-200/80 bg-white p-5 shadow-[0_1px_2px_rgba(15,23,42,0.04),0_8px_24px_-12px_rgba(15,23,42,0.08)] sm:p-6 ${className}`}
     >
       <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-start gap-3.5">
           <span
             aria-hidden="true"
-            className={`flex size-11 shrink-0 items-center justify-center rounded-2xl ring-1 ring-inset ${toneClasses[tone]}`}
+            className={`flex size-11 shrink-0 items-center justify-center rounded-xl ring-1 ring-inset ${toneClasses[tone]}`}
           >
             <Icon size={22} />
           </span>

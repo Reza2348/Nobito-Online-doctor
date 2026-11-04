@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 
-import { supabase } from "@/lib/supabaseClient";
 import { feedbackConfig } from "@/config/feedbackConfig";
 
 import type {
@@ -180,28 +179,26 @@ export function useFeedbackForm({
       };
 
       // -----------------------------
-      // Insert into Supabase
-      // Table: feedbacks
+      // ارسال به سرور (احراز هویت، rate limit و یک نظر برای هر کاربر)
       // -----------------------------
 
-      const { error: insertError } = await supabase.from("feedbacks").insert({
-        name: entity.name,
-        entity_type: type,
-        entity_id: numericEntityId,
-        rating: payload.rating,
-        positive_or_negative: payload.positive_or_negative,
-        options: payload.options,
-        comment: payload.comment,
+      const response = await fetch("/api/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type,
+          entityId: numericEntityId,
+          ...payload,
+        }),
       });
-      // -----------------------------
-      // Handle Supabase Error
-      // -----------------------------
 
-      if (insertError) {
-        console.error("Feedback insert error:", insertError);
+      if (!response.ok) {
+        const data = (await response.json().catch(() => null)) as {
+          message?: string;
+        } | null;
 
         throw new Error(
-          insertError.message || "ثبت نظر انجام نشد. لطفاً دوباره تلاش کنید.",
+          data?.message || "ثبت نظر انجام نشد. لطفاً دوباره تلاش کنید.",
         );
       }
 

@@ -37,7 +37,7 @@ export default function DeleteClinicModal({
         justify-center
         bg-slate-950/60
         p-4
-        backdrop-blur-md
+       
       "
       onClick={() => {
         if (!deleting) {
@@ -53,7 +53,7 @@ export default function DeleteClinicModal({
           w-full
           max-w-107.5
           overflow-hidden
-          rounded-[28px]
+          rounded-xl
           border
           border-white/70
           bg-white
@@ -110,7 +110,7 @@ export default function DeleteClinicModal({
                 shrink-0
                 items-center
                 justify-center
-                rounded-2xl
+                rounded-xl
                 border
                 border-red-100
                 bg-red-50
@@ -158,7 +158,7 @@ export default function DeleteClinicModal({
               flex
               items-center
               gap-3
-              rounded-2xl
+              rounded-xl
               border
               border-slate-100
               bg-slate-50
@@ -199,7 +199,7 @@ export default function DeleteClinicModal({
                 className="
                   truncate
                   text-sm
-                  font-extrabold
+                  font-bold
                   text-slate-800
                 "
               >
@@ -239,7 +239,7 @@ export default function DeleteClinicModal({
             onClick={onClose}
             className="
               flex-1
-              rounded-2xl
+              rounded-xl
               border
               border-slate-200
               bg-white
@@ -269,19 +269,19 @@ export default function DeleteClinicModal({
               items-center
               justify-center
               gap-2
-              rounded-2xl
+              rounded-xl
               bg-red-600
               px-4
               py-3
               text-sm
               font-bold
               text-white
-              shadow-lg
+              shadow-sm
               shadow-red-200
               transition-all
               duration-200
               hover:bg-red-700
-              hover:shadow-xl
+              hover:shadow-sm
               disabled:cursor-not-allowed
               disabled:opacity-50
             "

@@ -50,7 +50,7 @@ export default function About() {
     >
       {/* Background Glow */}
       <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-150 h-150 bg-green-100/40 blur-3xl rounded-full -z-10"
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-150 h-150 bg-green-100/40 rounded-full -z-10"
         aria-hidden="true"
       />
 
@@ -91,10 +91,10 @@ export default function About() {
           {features.map(({ icon: Icon, title, desc }) => (
             <article
               key={title}
-              className="group relative rounded-3xl border border-gray-100 bg-white/80 backdrop-blur-xl p-6 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl"
+              className="group relative rounded-xl border border-gray-100 bg-white/80 p-6 shadow-sm transition-all duration-300 hover:shadow-sm"
             >
               <div
-                className="flex h-14 w-14 items-center justify-center rounded-2xl bg-green-50 transition group-hover:bg-green-600"
+                className="flex h-14 w-14 items-center justify-center rounded-xl bg-green-50 transition group-hover:bg-green-600"
               >
                 <Icon
                   className="text-3xl text-green-600 transition group-hover:text-white"
@@ -119,7 +119,7 @@ export default function About() {
 
         {/* Trust Banner */}
         <div
-          className="mt-12 rounded-3xl bg-gray-950 px-6 py-8 text-center text-white shadow-xl"
+          className="mt-12 rounded-xl bg-gray-950 px-6 py-8 text-center text-white shadow-sm"
         >
           <h2
             className="text-xl sm:text-2xl font-bold"

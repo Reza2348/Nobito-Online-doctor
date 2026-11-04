@@ -20,7 +20,7 @@ export default function ProfessionalStatus({
     <section
       dir="rtl"
       className={`
-        rounded-2xl
+        rounded-xl
         border
         p-5
         sm:p-6
@@ -33,14 +33,14 @@ export default function ProfessionalStatus({
               bg-emerald-50/30
               shadow-[0_2px_12px_rgba(16,185,129,0.06)]
               hover:border-emerald-300
-              hover:shadow-[0_6px_24px_rgba(16,185,129,0.10)]
+             
             `
             : `
               border-gray-200/80
               bg-white
               shadow-[0_2px_12px_rgba(0,0,0,0.04)]
               hover:border-gray-300
-              hover:shadow-[0_4px_20px_rgba(0,0,0,0.06)]
+             
             `
         }
       `}

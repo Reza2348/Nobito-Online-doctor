@@ -19,7 +19,7 @@ export function NotificationItem({
 
   return (
     <article
-      className={`relative rounded-2xl border bg-white p-5 shadow-sm transition ${
+      className={`relative rounded-xl border bg-white p-5 shadow-sm transition ${
         is_read ? "border-gray-100" : "border-red-100 bg-red-50/30"
       }`}
     >

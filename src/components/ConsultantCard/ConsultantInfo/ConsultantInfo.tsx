@@ -25,7 +25,7 @@ export default function ConsultantInfo({
             flex-1
             truncate
             text-lg
-            font-extrabold
+            font-bold
             text-slate-900
             sm:text-xl
           "

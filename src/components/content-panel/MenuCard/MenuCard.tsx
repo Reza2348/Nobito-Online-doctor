@@ -9,20 +9,20 @@ export default function MenuCard({
   color,
 }: MenuCardProps) {
   return (
-    <div className="group cursor-pointer rounded-3xl bg-white p-7 shadow-lg transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl">
+    <div className="group cursor-pointer rounded-xl bg-white p-7 shadow-sm transition-all duration-300 hover:shadow-sm">
       {/* Icon */}
       <div
         className={`
           flex h-16 w-16
           items-center justify-center
-          rounded-2xl
+          rounded-xl
          bg-linear-to-br
           ${color}
           text-white
-          shadow-lg
+          shadow-sm
           transition-transform
           duration-300
-          group-hover:scale-110
+         
         `}
       >
         <Icon className="text-2xl" />
@@ -45,7 +45,7 @@ export default function MenuCard({
           opacity-0
           transition-all
           duration-300
-          group-hover:translate-x-1
+         
           group-hover:opacity-100
         "
       >

@@ -17,12 +17,10 @@ export default function ConsultantAvatar({
         w-20
         shrink-0
         overflow-hidden
-        rounded-3xl
+        rounded-xl
         border
         border-purple-100
-        bg-linear-to-br
-        from-purple-50
-        to-fuchsia-50
+        bg-surface
         shadow-sm
         sm:h-24
         sm:w-24
@@ -40,7 +38,7 @@ export default function ConsultantAvatar({
             object-cover
             transition-transform
             duration-500
-            group-hover:scale-105
+           
           "
         />
       ) : (
@@ -73,7 +71,7 @@ export default function ConsultantAvatar({
           rounded-full
           bg-white
           text-purple-600
-          shadow-md
+          shadow-sm
           sm:bottom-2
           sm:right-2
           sm:h-7

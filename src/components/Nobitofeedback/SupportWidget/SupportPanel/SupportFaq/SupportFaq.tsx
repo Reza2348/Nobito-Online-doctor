@@ -135,7 +135,7 @@ export default function SupportFaq({
     <div dir="rtl" className="flex-1 overflow-y-auto p-5">
       {/* Header */}
       <div className="mb-6 text-center">
-        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-3xl bg-[#1F7168]/10 text-[#1F7168]">
+        <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-brand/10 text-brand">
           <FiHelpCircle size={30} aria-hidden="true" />
         </div>
 
@@ -163,16 +163,16 @@ export default function SupportFaq({
               className="
                 group
                 w-full
-                rounded-2xl
+                rounded-xl
                 border border-gray-100
                 bg-gray-50
                 p-4
                 text-right
                 transition-all
-                hover:bg-[#1F7168]/5
+                hover:bg-brand/5
                 focus:outline-none
                 focus:ring-2
-                focus:ring-[#1F7168]/20
+                focus:ring-brand/20
                 disabled:cursor-not-allowed
                 disabled:opacity-50
               "
@@ -189,7 +189,7 @@ export default function SupportFaq({
                     shrink-0
                     text-gray-400
                     transition-colors
-                    group-hover:text-[#1F7168]
+                    group-hover:text-brand
                   "
                 />
               </div>
@@ -206,15 +206,15 @@ export default function SupportFaq({
         className="
           mt-4
           w-full
-          rounded-2xl
-          bg-[#1F7168]
+          rounded-xl
+          bg-brand
           p-4
           text-white
           transition-all
           hover:bg-[#185f58]
           focus:outline-none
           focus:ring-2
-          focus:ring-[#1F7168]/30
+          focus:ring-brand/30
         "
       >
         <div className="flex items-center gap-3">
@@ -241,22 +241,22 @@ export default function SupportFaq({
         className="
           mt-3
           w-full
-          rounded-2xl
+          rounded-xl
           border border-gray-200
           p-4
           text-gray-700
           transition-all
-          hover:border-[#1F7168]/30
+          hover:border-brand/30
           hover:bg-gray-50
           focus:outline-none
           focus:ring-2
-          focus:ring-[#1F7168]/20
+          focus:ring-brand/20
           disabled:cursor-not-allowed
           disabled:opacity-50
         "
       >
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-[#1F7168]">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-gray-100 text-brand">
             <FiUser size={20} aria-hidden="true" />
           </div>
 

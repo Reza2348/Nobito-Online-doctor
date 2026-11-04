@@ -33,7 +33,7 @@ export default function AdminUsersPage() {
       {/* Header */}
       <div className="mb-8 flex items-center gap-3">
         <div
-          className="flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br from-teal-600 to-emerald-400 text-white shadow-lg"
+          className="flex h-12 w-12 items-center justify-center rounded-xl bg-brand text-white shadow-sm"
         >
           <MdPeople size={28} />
         </div>
@@ -49,7 +49,7 @@ export default function AdminUsersPage() {
       </div>
 
       {isError && (
-        <div className="mb-6 rounded-2xl border border-red-100 bg-red-50 p-4 text-sm text-red-600">
+        <div className="mb-6 rounded-xl border border-red-100 bg-red-50 p-4 text-sm text-red-600">
           {error instanceof Error ? error.message : "خطا در دریافت کاربران"}
         </div>
       )}

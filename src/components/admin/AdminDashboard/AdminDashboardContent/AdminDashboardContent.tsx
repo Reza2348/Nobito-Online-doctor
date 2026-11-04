@@ -37,7 +37,7 @@ export default function AdminDashboardContent({
           border-b
           border-gray-100
           bg-white/80
-          backdrop-blur-xl
+         
         "
       >
         <AdminHeader

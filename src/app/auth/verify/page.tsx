@@ -7,7 +7,7 @@ export default function EmailOtpVerifyPage() {
   const { otp, setOtp, inputRefs, isSubmitting, handleSubmit } = useEmailOtp();
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#F2F2F2] font-[tahoma] px-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-surface font-[tahoma] px-4">
       <O.OtpCard
         otp={otp}
         setOtp={setOtp}

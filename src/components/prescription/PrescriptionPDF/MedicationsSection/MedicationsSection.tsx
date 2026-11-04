@@ -47,14 +47,14 @@ export default function MedicationsSection({
                   className="
                     inline-flex h-5.25 w-5.25
                     items-center justify-center rounded-full
-                    bg-emerald-50 font-extrabold text-emerald-600
+                    bg-emerald-50 font-bold text-emerald-600
                   "
                 >
                   {index + 1}
                 </span>
               </td>
 
-              <td className={`${cellClass} font-extrabold text-emerald-700`}>
+              <td className={`${cellClass} font-bold text-emerald-700`}>
                 {medication.name}
               </td>
 
@@ -86,7 +86,7 @@ function TableHeader({ children, width }: TableHeaderProps) {
       style={{ width }}
       className="
         border border-gray-300 bg-emerald-50
-        px-1 py-2 font-extrabold text-emerald-700
+        px-1 py-2 font-bold text-emerald-700
       "
     >
       {children}

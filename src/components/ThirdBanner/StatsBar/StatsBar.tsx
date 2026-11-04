@@ -95,7 +95,7 @@ export default function StatsBar() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <div
           className="
-            grid grid-cols-2 overflow-hidden rounded-[28px]
+            grid grid-cols-2 overflow-hidden rounded-xl
             border border-gray-100 bg-white
             shadow-[0_10px_40px_rgba(0,0,0,0.05)]
             sm:grid-cols-3
@@ -121,7 +121,7 @@ export default function StatsBar() {
                 className="
                   mt-4 text-2xl font-black tracking-tight
                   transition-transform duration-300
-                  group-hover:-translate-y-0.5
+                 
                 "
                 style={{ color: ACCENT }}
               >

@@ -57,7 +57,7 @@ export default function ConsultantCard({
           group
           relative
           overflow-hidden
-          rounded-3xl
+          rounded-xl
           border
           border-slate-200
           bg-white
@@ -65,9 +65,9 @@ export default function ConsultantCard({
           shadow-sm
           transition-all
           duration-300
-          hover:-translate-y-0.5
+         
           hover:border-purple-200
-          hover:shadow-xl
+          hover:shadow-sm
         "
       >
         {/* نوار بالای کارت */}
@@ -77,10 +77,7 @@ export default function ConsultantCard({
             inset-x-0
             top-0
             h-1
-            bg-linear-to-l
-            from-purple-600
-            via-fuchsia-500
-            to-violet-400
+            bg-brand
           "
         />
 

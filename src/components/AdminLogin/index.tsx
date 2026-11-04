@@ -10,10 +10,7 @@ export default function AdminLogin() {
       flex
       items-center
       justify-center
-      bg-linear-to-br
-      from-emerald-50
-      via-white
-      to-teal-100
+      bg-surface
       px-4
       "
     >

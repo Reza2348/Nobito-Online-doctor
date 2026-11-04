@@ -18,8 +18,8 @@ export default function PrescriptionHeader({
           <div
             className="
               flex h-12 w-12 shrink-0 items-center justify-center
-              rounded-xl bg-linear-to-br from-blue-500 to-cyan-400
-              text-white shadow-md print:shadow-none
+              rounded-xl bg-brand
+              text-white shadow-sm print:shadow-none
             "
           >
             <FaFileMedical className="text-2xl" />
@@ -28,7 +28,7 @@ export default function PrescriptionHeader({
           <div>
             <div
               className="
-                text-[22px] font-extrabold tracking-wide text-blue-600
+                text-[22px] font-bold tracking-wide text-blue-600
               "
             >
               Nobito
@@ -47,7 +47,7 @@ export default function PrescriptionHeader({
               <span
                 className="
                   rounded-md bg-blue-50 px-2 py-0.5
-                  font-extrabold text-blue-700
+                  font-bold text-blue-700
                 "
               >
                 {prescriptionNumber}
@@ -59,8 +59,7 @@ export default function PrescriptionHeader({
         <div
           className="
             flex items-center gap-2.5 rounded-xl border
-            border-cyan-200 bg-linear-to-r
-            from-blue-50 to-cyan-50 px-4 py-2.5
+            border-cyan-200 bg-surface px-4 py-2.5
           "
         >
           <div
@@ -82,7 +81,7 @@ export default function PrescriptionHeader({
               MEDICAL PRESCRIPTION
             </div>
 
-            <div className="text-[18px] font-extrabold text-blue-800">
+            <div className="text-[18px] font-bold text-blue-800">
               نسخه پزشکی
             </div>
           </div>

@@ -39,9 +39,9 @@ export default function RoleSelector({ role, onChange }: Props) {
             key={item.id}
             type="button"
             onClick={() => onChange(item.id as Role)}
-            className={`flex h-24 w-24 flex-col items-center justify-center rounded-2xl border transition ${
+            className={`flex h-24 w-24 flex-col items-center justify-center rounded-xl border transition ${
               active
-                ? "bg-teal-600 text-white shadow-lg"
+                ? "bg-teal-600 text-white shadow-sm"
                 : "bg-gray-50 text-gray-500 hover:bg-gray-100"
             }`}
           >

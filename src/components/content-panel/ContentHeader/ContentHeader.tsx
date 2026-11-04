@@ -1,16 +1,18 @@
 "use client";
 
+import { adminLogout } from "@/lib/adminLogout";
 import { useRouter } from "next/navigation";
 
 export default function ContentHeader() {
   const router = useRouter();
 
-  const handleLogout = (): void => {
+  const handleLogout = async (): Promise<void> => {
+    await adminLogout();
     router.push("/Admin");
   };
 
   return (
-    <section className="rounded-3xl border border-white bg-white/80 p-8 shadow-xl backdrop-blur-xl">
+    <section className="rounded-xl border border-white bg-white/80 p-8 shadow-sm">
       <div className="flex items-center justify-between gap-6">
         {/* Title */}
         <div>
@@ -29,13 +31,13 @@ export default function ContentHeader() {
           <button
             type="button"
             className="
-              rounded-2xl
+              rounded-xl
               bg-blue-600
               px-5
               py-3
               font-bold
               text-white
-              shadow-lg
+              shadow-sm
               transition
               hover:bg-blue-700
             "
@@ -48,13 +50,13 @@ export default function ContentHeader() {
             type="button"
             onClick={handleLogout}
             className="
-              rounded-2xl
+              rounded-xl
               bg-red-600
               px-5
               py-3
               font-bold
               text-white
-              shadow-lg
+              shadow-sm
               transition
               hover:bg-red-700
             "

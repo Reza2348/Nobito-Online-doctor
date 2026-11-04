@@ -10,7 +10,7 @@ const DashboardContentPage = () => {
 
   return (
     <main dir="rtl" className="w-full" aria-labelledby="dashboard-title">
-      <section className="min-h-[60vh] rounded-2xl border border-gray-100 bg-white p-5 shadow-sm sm:p-6 lg:p-8">
+      <section className="min-h-[60vh] rounded-xl border border-gray-100 bg-white p-5 shadow-sm sm:p-6 lg:p-8">
         {/* Header */}
         <header className="mb-8">
           <div className="flex flex-col gap-2">
@@ -29,10 +29,10 @@ const DashboardContentPage = () => {
         </header>
 
         {/* Welcome Card */}
-        <div className="rounded-2xl border border-[#DDEDEA] bg-[#F5FAF9] p-5 sm:p-6">
+        <div className="rounded-xl border border-[#DDEDEA] bg-[#F5FAF9] p-5 sm:p-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-base font-bold text-[#1F7168] sm:text-lg">
+              <h2 className="text-base font-bold text-brand sm:text-lg">
                 داشبورد شما آماده است
               </h2>
 
@@ -53,7 +53,7 @@ const DashboardContentPage = () => {
 
         {/* Navigation Hint */}
         <aside
-          className="mt-6 rounded-2xl border border-gray-100 bg-gray-50 p-5"
+          className="mt-6 rounded-xl border border-gray-100 bg-gray-50 p-5"
           aria-label="راهنمای داشبورد"
         >
           <h2 className="text-sm font-bold text-gray-800 sm:text-base">

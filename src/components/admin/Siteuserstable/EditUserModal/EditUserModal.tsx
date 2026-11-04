@@ -161,7 +161,7 @@ export default function EditUserModal({ user, onClose }: EditUserModalProps) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-950/50 p-3 backdrop-blur-sm sm:p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-slate-950/50 p-3 sm:p-4"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) {
           handleClose();
@@ -175,7 +175,7 @@ export default function EditUserModal({ user, onClose }: EditUserModalProps) {
         aria-modal="true"
         aria-labelledby={`${id}-title`}
         aria-describedby={`${id}-description`}
-        className="my-auto flex max-h-[calc(100dvh-1.5rem)] w-full max-w-md flex-col overflow-hidden rounded-3xl border border-white/70 bg-white shadow-2xl shadow-slate-950/20 sm:max-h-[calc(100dvh-2rem)]"
+        className="my-auto flex max-h-[calc(100dvh-1.5rem)] w-full max-w-md flex-col overflow-hidden rounded-xl border border-white/70 bg-white shadow-sm shadow-slate-950/20 sm:max-h-[calc(100dvh-2rem)]"
       >
         {/* Header */}
         <header className="flex shrink-0 items-center justify-between border-b border-slate-100 px-5 py-4 sm:px-6 sm:py-5">
@@ -236,7 +236,7 @@ export default function EditUserModal({ user, onClose }: EditUserModalProps) {
                 placeholder="نام و نام خانوادگی"
                 aria-invalid={nameHasError}
                 aria-describedby={errorMessage ? `${id}-error` : undefined}
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:bg-white focus:ring-4 focus:ring-teal-500/10"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:bg-white focus:ring-4 focus:ring-teal-500/10"
               />
             </div>
 
@@ -266,7 +266,7 @@ export default function EditUserModal({ user, onClose }: EditUserModalProps) {
                 placeholder="user@example.com"
                 aria-invalid={emailHasError}
                 aria-describedby={errorMessage ? `${id}-error` : undefined}
-                className="w-full rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:bg-white focus:ring-4 focus:ring-teal-500/10"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-left text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:bg-white focus:ring-4 focus:ring-teal-500/10"
               />
             </div>
 
@@ -308,7 +308,7 @@ export default function EditUserModal({ user, onClose }: EditUserModalProps) {
                 form.requestSubmit();
               }
             }}
-            className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-gradient-to-l from-teal-600 to-emerald-500 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-teal-500/20 transition hover:from-teal-700 hover:to-emerald-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-brand px-5 py-3 text-sm font-semibold text-white shadow-sm shadow-teal-500/20 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60"
           >
             {isPending ? (
               <>

@@ -20,7 +20,7 @@ const DesktopNav: H.React.FC = () => {
 
   return (
     <nav className="hidden md:flex items-center gap-8 text-gray-700 relative overflow-visible">
-      <H.Link href="/" className="hover:text-[#1F7168] font-medium">
+      <H.Link href="/" className="hover:text-brand font-medium">
         نوبت دهی مطب
       </H.Link>
 
@@ -29,7 +29,7 @@ const DesktopNav: H.React.FC = () => {
         <button
           type="button"
           onClick={() => setOpen((prev) => !prev)}
-          className="flex items-center gap-1 hover:text-[#1F7168] font-medium"
+          className="flex items-center gap-1 hover:text-brand font-medium"
         >
           خدمات
           <H.FaChevronDown
@@ -40,7 +40,7 @@ const DesktopNav: H.React.FC = () => {
         </button>
 
         {open && (
-          <div className="absolute top-full right-0 mt-2 w-44 bg-white rounded-xl shadow-xl z-50">
+          <div className="absolute top-full right-0 mt-2 w-44 bg-white rounded-xl shadow-sm z-50">
             <H.Link
               href="/Dentistry"
               className="block px-4 py-2 hover:bg-gray-50"
@@ -68,15 +68,15 @@ const DesktopNav: H.React.FC = () => {
         )}
       </div>
 
-      <H.Link href="/Onlineconsultation" className="hover:text-[#1F7168]">
+      <H.Link href="/Onlineconsultation" className="hover:text-brand">
         مشاوره آنلاین
       </H.Link>
 
-      <H.Link href="/HealthMagazine" className="hover:text-[#1F7168]">
+      <H.Link href="/HealthMagazine" className="hover:text-brand">
         مجله سلامت
       </H.Link>
 
-      <H.Link href="/Charity" className="hover:text-[#1F7168]">
+      <H.Link href="/Charity" className="hover:text-brand">
         نیکوکاری
       </H.Link>
     </nav>

@@ -27,7 +27,7 @@ export default function ConsultantStats({ ratingValue }: ConsultantStatsProps) {
       {/* امتیاز */}
       <div
         className="
-          rounded-2xl
+          rounded-xl
           border
           border-amber-100
           bg-amber-50/70
@@ -64,7 +64,7 @@ export default function ConsultantStats({ ratingValue }: ConsultantStatsProps) {
       {/* میزان رضایت */}
       <div
         className="
-          rounded-2xl
+          rounded-xl
           border
           border-emerald-100
           bg-emerald-50/70

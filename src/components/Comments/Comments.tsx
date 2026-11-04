@@ -34,7 +34,7 @@ const Comments = () => {
         items-center
         justify-center
         gap-3
-        rounded-2xl
+        rounded-xl
         border
         border-teal-600
         py-3
@@ -49,7 +49,7 @@ const Comments = () => {
         <FaChevronDown
           className="
           transition-transform
-          group-hover:translate-y-1
+         
           "
         />
       </button>

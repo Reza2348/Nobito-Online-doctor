@@ -1,5 +1,6 @@
 "use client";
 
+import { adminLogout } from "@/lib/adminLogout";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -63,12 +64,15 @@ export default function AdminHeader({
   // =========================
   // خروج از حساب
   // =========================
-  const handleLogoutClick = () => {
+  const handleLogoutClick = async () => {
     // بستن منوی کاربر
     setMenuOpen(false);
 
     // اگر والد تابع خروج داشته باشد اجرا می‌شود
     onLogout?.();
+
+    // پاک کردن کوکی نشست از سرور
+    await adminLogout();
 
     // رفتن به صفحه Admin
     router.push("/Admin");
@@ -161,7 +165,7 @@ export default function AdminHeader({
           >
             {/* آیکون کاربر */}
             <div className="relative shrink-0">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-emerald-500 to-teal-600 text-white shadow-md shadow-emerald-500/20">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-white shadow-sm shadow-emerald-500/20">
                 <FaUserShield className="text-base" />
               </div>
 
@@ -198,7 +202,7 @@ export default function AdminHeader({
           {menuOpen && (
             <div
               role="menu"
-              className="absolute left-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-2xl border border-gray-100 bg-white py-2 shadow-xl shadow-black/5"
+              className="absolute left-0 top-full z-50 mt-2 w-56 overflow-hidden rounded-xl border border-gray-100 bg-white py-2 shadow-sm shadow-black/5"
             >
               {/* اطلاعات کاربر */}
               <div className="border-b border-gray-100 px-4 py-3">

@@ -2,6 +2,8 @@ import dayjs, { type Dayjs } from "dayjs";
 import jalaliday from "jalaliday";
 import "dayjs/locale/fa";
 
+import { formatTehranTime } from "@/lib/appointmentSlots";
+
 dayjs.extend(jalaliday);
 dayjs.locale("fa");
 
@@ -28,6 +30,7 @@ export function formatJalaliDate(date: DateInput): string {
   return toPersianDigits(toJalali(date).format("YYYY/MM/DD"));
 }
 
+/** ساعت به وقت تهران (مطابق زمان‌های نوبت‌دهی) */
 export function formatTime(date: DateInput): string {
-  return toPersianDigits(dayjs(date).format("HH:mm"));
+  return toPersianDigits(formatTehranTime(dayjs(date).toDate()));
 }

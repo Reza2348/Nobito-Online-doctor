@@ -10,7 +10,7 @@ export default function Error({
   return (
     <div className="p-10 text-center">
       <h2 className="text-xl font-bold mb-2">خطایی رخ داد</h2>
-      <button onClick={() => reset()} className="text-[#1F7168] underline">
+      <button onClick={() => reset()} className="text-brand underline">
         تلاش مجدد
       </button>
     </div>

@@ -45,7 +45,7 @@ export default function NotificationsPage() {
       <div className="mx-auto w-full max-w-4xl">
         <div className="mb-6 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="relative flex h-12 w-12 items-center justify-center rounded-2xl bg-purple-100 text-purple-600">
+            <div className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-purple-100 text-purple-600">
               <FaBell className="text-xl" />
 
               {unreadCount > 0 && (
@@ -82,7 +82,7 @@ export default function NotificationsPage() {
 
         {notifications.length === 0 ? (
           <div
-            className="rounded-3xl border border-dashed border-gray-200 bg-white py-16 text-center shadow-sm"
+            className="rounded-xl border border-dashed border-gray-200 bg-white py-16 text-center shadow-sm"
           >
             <FaBell className="mx-auto mb-4 text-4xl text-gray-300" />
 
@@ -97,7 +97,7 @@ export default function NotificationsPage() {
             {notifications.map((notification) => (
               <div
                 key={notification.id}
-                className={`relative rounded-2xl border bg-white p-5 shadow-sm transition ${ notification.is_read ? "border-gray-100" : "border-red-100 bg-red-50/30" }`}
+                className={`relative rounded-xl border bg-white p-5 shadow-sm transition ${ notification.is_read ? "border-gray-100" : "border-red-100 bg-red-50/30" }`}
               >
                 {!notification.is_read && (
                   <span

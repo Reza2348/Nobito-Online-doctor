@@ -40,10 +40,10 @@ export default function FeedbackEntityHeader({
   const label = getEntityLabel(type);
 
   return (
-    <div className="mb-7 rounded-3xl border border-sky-100 bg-sky-50/50 p-4">
+    <div className="mb-7 rounded-xl border border-sky-100 bg-sky-50/50 p-4">
       <div className="flex items-center gap-4">
         {/* Photo */}
-        <div className="h-20 w-20 shrink-0 overflow-hidden rounded-2xl bg-white shadow-sm ring-2 ring-white">
+        <div className="h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-white shadow-sm ring-2 ring-white">
           {entity.photo_url ? (
             <img
               src={entity.photo_url}

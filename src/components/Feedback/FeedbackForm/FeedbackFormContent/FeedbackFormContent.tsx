@@ -72,7 +72,7 @@ export default function FeedbackFormContent({
         <button
           type="submit"
           disabled={loading}
-          className="w-full rounded-xl bg-[#347469] px-5 py-3 font-bold text-white transition hover:bg-[#2a5d54] disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full rounded-xl bg-brand px-5 py-3 font-bold text-white transition hover:bg-[#2a5d54] disabled:cursor-not-allowed disabled:opacity-50"
         >
           {" "}
           {loading ? "در حال ثبت..." : "ثبت نظر"}{" "}

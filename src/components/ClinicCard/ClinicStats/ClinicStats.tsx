@@ -47,12 +47,10 @@ export default function ClinicStats({
           flex
           flex-col
           items-center
-          rounded-2xl
+          rounded-xl
           border
           border-amber-100
-          bg-linear-to-br
-          from-amber-50
-          to-orange-50
+          bg-surface
           px-4
           py-2.5
           shadow-sm
@@ -109,7 +107,7 @@ export default function ClinicStats({
             flex
             flex-col
             items-center
-            rounded-2xl
+            rounded-xl
             border
             border-emerald-100
             bg-emerald-50
@@ -161,7 +159,7 @@ export default function ClinicStats({
             flex
             flex-col
             items-center
-            rounded-2xl
+            rounded-xl
             border
             border-slate-100
             bg-slate-50

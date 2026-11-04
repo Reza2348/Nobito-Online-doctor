@@ -37,7 +37,7 @@ export function UploadArea({
 
   const uploadClassName = [
     "group relative flex min-h-36 cursor-pointer flex-col",
-    "items-center justify-center rounded-2xl border-2 border-dashed",
+    "items-center justify-center rounded-xl border-2 border-dashed",
     "px-5 py-6 text-center transition-all duration-300",
     disabled
       ? "cursor-not-allowed border-gray-200 bg-gray-50 opacity-60"
@@ -48,7 +48,7 @@ export function UploadArea({
 
   return (
     <label htmlFor={inputId} className={uploadClassName}>
-      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-100 text-blue-600 shadow-sm transition-all group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white">
+      <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-xl bg-blue-100 text-blue-600 shadow-sm transition-all group-hover:bg-blue-600 group-hover:text-white">
         <FiUploadCloud size={23} />
       </div>
 

@@ -45,7 +45,7 @@ export default function ProviderSidebar({
   return (
     <aside
       dir="rtl"
-      className="w-full overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.06)]"
+      className="w-full overflow-hidden rounded-xl border border-slate-100 bg-white shadow-[0_12px_40px_rgba(15,23,42,0.06)]"
     >
       <div className="border-b border-slate-50 px-5 pb-5 pt-5 sm:px-6 sm:pt-6">
         <h2 className="text-lg font-black tracking-tight text-slate-900">

@@ -18,7 +18,7 @@ const SidebarItem = ({ item, onClick }: any) => {
 
         ${
           item.active
-            ? "bg-[#f0faf9] text-[#2d7d74] font-bold"
+            ? "bg-[#f0faf9] text-brand font-bold"
             : "text-gray-500 hover:bg-gray-50"
         }
       `}

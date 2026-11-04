@@ -7,7 +7,7 @@ type Props = {
 
 export default function PopularArticleItem({ article }: Props) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-2 shadow-sm transition hover:shadow-md">
+    <div className="flex items-center gap-3 rounded-xl border border-gray-200 bg-white p-2 shadow-sm transition hover:shadow-sm">
       <div className="min-w-0 flex-1">
         <h3 className="line-clamp-2 text-sm font-semibold text-black">
           {article.title}

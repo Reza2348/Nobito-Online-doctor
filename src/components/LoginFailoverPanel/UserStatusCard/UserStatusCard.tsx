@@ -12,7 +12,7 @@ export default function UserStatusCard({ user }: Props) {
   const userId = user?.id ?? user?._id;
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+    <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
       <h2 className="text-lg font-bold text-gray-900">وضعیت کاربر</h2>
 
       <div className="mt-4 space-y-3">

@@ -71,7 +71,7 @@ export default function FeedbackForm({
   return (
     <section
       dir="rtl"
-      className="w-full rounded-3xl border border-gray-100 bg-white p-6 shadow-sm"
+      className="w-full rounded-xl border border-gray-100 bg-white p-6 shadow-sm"
     >
       <FeedbackEntityHeader entity={entity} type={type} />
 

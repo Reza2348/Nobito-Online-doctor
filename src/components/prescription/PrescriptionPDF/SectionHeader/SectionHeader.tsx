@@ -19,7 +19,7 @@ export default function SectionHeader({
         <Icon className="text-xs" />
       </div>
 
-      <h2 className="m-0 text-sm font-extrabold text-blue-800">{title}</h2>
+      <h2 className="m-0 text-sm font-bold text-blue-800">{title}</h2>
     </div>
   );
 }

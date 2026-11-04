@@ -27,9 +27,9 @@ export default function FeedbackEntityError({
   return (
     <section
       dir="rtl"
-      className="w-full rounded-3xl border border-red-100 bg-white p-6 shadow-sm"
+      className="w-full rounded-xl border border-red-100 bg-white p-6 shadow-sm"
     >
-      <div className="rounded-2xl bg-red-50 px-4 py-5 text-center">
+      <div className="rounded-xl bg-red-50 px-4 py-5 text-center">
         <p className="font-bold text-red-600">
           {message || getDefaultMessage(type)}
         </p>

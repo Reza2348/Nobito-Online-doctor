@@ -13,13 +13,13 @@ type Props = {
 const SidebarHeader: React.FC<Props> = ({ userData }) => {
   return (
     <div className="relative flex flex-col items-center">
-      <div className="w-full h-28 bg-[#2d7d74] relative shrink-0">
+      <div className="w-full h-28 bg-brand relative shrink-0">
         <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
       </div>
 
       <div className="absolute top-12">
-        <div className="w-24 h-24 bg-white rounded-full border-[6px] border-white shadow-lg flex items-center justify-center">
-          <HiOutlineUserAdd className="text-[#2d7d74] text-5xl opacity-80" />
+        <div className="w-24 h-24 bg-white rounded-full border-[6px] border-white shadow-sm flex items-center justify-center">
+          <HiOutlineUserAdd className="text-brand text-5xl opacity-80" />
         </div>
       </div>
 

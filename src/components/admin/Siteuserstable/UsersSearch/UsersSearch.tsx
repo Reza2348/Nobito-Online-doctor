@@ -18,7 +18,7 @@ export default function UsersSearch({ value, onChange }: UsersSearchProps) {
         placeholder="جستجوی نام یا ایمیل..."
         className="
           w-full
-          rounded-2xl
+          rounded-xl
           border border-gray-200
           bg-gray-50
           py-2.5

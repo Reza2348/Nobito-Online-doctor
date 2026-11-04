@@ -43,14 +43,12 @@ const ProviderHeader: React.FC<ProviderHeaderProps> = ({ data, theme }) => {
     <section
       dir="rtl"
       aria-label={`اطلاعات ${name}`}
-      className="relative overflow-hidden rounded-3xl border border-slate-100 bg-white shadow-[0_12px_45px_rgba(15,23,42,0.07)]"
+      className="relative overflow-hidden rounded-xl border border-slate-100 bg-white shadow-[0_12px_45px_rgba(15,23,42,0.07)]"
     >
       <div
         aria-hidden="true"
         className="pointer-events-none absolute inset-x-0 top-0 h-32 overflow-hidden"
       >
-        <div className="absolute -right-10 -top-20 h-44 w-44 rounded-full bg-sky-100/60 blur-3xl" />
-        <div className="absolute -left-10 -top-20 h-40 w-40 rounded-full bg-cyan-100/50 blur-3xl" />
       </div>
 
       <div className="relative p-5 sm:p-7 lg:p-8">
@@ -58,7 +56,7 @@ const ProviderHeader: React.FC<ProviderHeaderProps> = ({ data, theme }) => {
           {/* PHOTO */}
           <div className="relative shrink-0">
             <div
-              className={`relative h-28 w-28 overflow-hidden rounded-full border-[5px] border-white bg-slate-100 shadow-lg ring-4 sm:h-32 sm:w-32 lg:h-36 lg:w-36 ${c.avatarRing}`}
+              className={`relative h-28 w-28 overflow-hidden rounded-full border-[5px] border-white bg-slate-100 shadow-sm ring-4 sm:h-32 sm:w-32 lg:h-36 lg:w-36 ${c.avatarRing}`}
             >
               <Image
                 src={photoUrl}
@@ -66,14 +64,14 @@ const ProviderHeader: React.FC<ProviderHeaderProps> = ({ data, theme }) => {
                 fill
                 priority
                 sizes="(max-width: 640px) 112px, 144px"
-                className="object-cover transition-transform duration-500 hover:scale-105"
+                className="object-cover transition-transform duration-500"
               />
             </div>
 
             <div
               title={theme.badgeLabel}
               aria-label={theme.badgeLabel}
-              className="absolute bottom-1 right-1 flex h-9 w-9 items-center justify-center rounded-full border-[3px] border-white bg-emerald-500 text-white shadow-md"
+              className="absolute bottom-1 right-1 flex h-9 w-9 items-center justify-center rounded-full border-[3px] border-white bg-emerald-500 text-white shadow-sm"
             >
               <FaRegCheckCircle size={16} />
             </div>
@@ -110,7 +108,7 @@ const ProviderHeader: React.FC<ProviderHeaderProps> = ({ data, theme }) => {
             <div className="mt-5 grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:gap-3">
               {/* RATING */}
               <div
-                className={`flex min-h-14.5 items-center justify-center gap-2 rounded-2xl border px-3 py-2 sm:justify-start ${c.ratingCardBg}`}
+                className={`flex min-h-14.5 items-center justify-center gap-2 rounded-xl border px-3 py-2 sm:justify-start ${c.ratingCardBg}`}
               >
                 <div className="flex gap-0.5">
                   {[1, 2, 3, 4, 5].map((star) =>
@@ -137,7 +135,7 @@ const ProviderHeader: React.FC<ProviderHeaderProps> = ({ data, theme }) => {
 
               {/* PATIENTS */}
               <div
-                className={`flex min-h-14.5items-center justify-center gap-2 rounded-2xl border px-3 py-2 sm:justify-start ${c.patientsCardBg}`}
+                className={`flex min-h-14.5items-center justify-center gap-2 rounded-xl border px-3 py-2 sm:justify-start ${c.patientsCardBg}`}
               >
                 <div
                   className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-slate-100 ${c.patientsIconText}`}
@@ -156,7 +154,7 @@ const ProviderHeader: React.FC<ProviderHeaderProps> = ({ data, theme }) => {
 
               {/* SATISFACTION */}
               <div
-                className={`col-span-2 flex min-h-14.5 items-center justify-center gap-2 rounded-2xl border px-4 py-2 sm:col-span-1 sm:justify-start ${c.satisfactionCardBg}`}
+                className={`col-span-2 flex min-h-14.5 items-center justify-center gap-2 rounded-xl border px-4 py-2 sm:col-span-1 sm:justify-start ${c.satisfactionCardBg}`}
               >
                 <div
                   className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl bg-white shadow-sm ring-1 ring-slate-100 ${c.satisfactionIconText}`}

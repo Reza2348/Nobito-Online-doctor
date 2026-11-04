@@ -31,7 +31,7 @@ export default function PrescriptionHeader({
       <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
         <div>
           <div className="mb-3 flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-teal-50 text-teal-600">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-teal-50 text-teal-600">
               <svg
                 className="h-6 w-6"
                 fill="none"

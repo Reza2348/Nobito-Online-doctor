@@ -24,7 +24,7 @@ const CampaignFilters = ({
             className={[
               "rounded-xl px-4 py-2.5 text-sm font-bold transition-all",
               isActive
-                ? "bg-emerald-600 text-white shadow-lg shadow-emerald-600/20"
+                ? "bg-emerald-600 text-white shadow-sm shadow-emerald-600/20"
                 : "border border-slate-200 bg-white text-slate-600 hover:border-emerald-200 hover:text-emerald-600",
             ].join(" ")}
           >

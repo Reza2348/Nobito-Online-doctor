@@ -73,14 +73,14 @@ export default function ClinicCard({
           group
           relative
           overflow-hidden
-          rounded-3xl
+          rounded-xl
           border
           border-slate-100
           bg-white
           shadow-[0_2px_10px_rgba(15,23,42,0.05)]
           transition-all
           duration-300
-          hover:shadow-[0_10px_30px_rgba(15,23,42,0.10)]
+         
         "
       >
         {/* Top gradient */}
@@ -88,10 +88,7 @@ export default function ClinicCard({
           className="
             h-1.5
             w-full
-            bg-linear-to-l
-            from-purple-600
-            via-fuchsia-500
-            to-pink-500
+            bg-brand
           "
         />
 

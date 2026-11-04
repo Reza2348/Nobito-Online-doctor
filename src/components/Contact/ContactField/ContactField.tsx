@@ -16,7 +16,7 @@ export default function ContactField({
         className="
           h-14
           w-full
-          rounded-2xl
+          rounded-xl
           border
           border-gray-200
           px-5
@@ -24,7 +24,7 @@ export default function ContactField({
           outline-none
           transition
           focus:ring-2
-          focus:ring-[#1F7168]
+          focus:ring-brand
         "
       />
 

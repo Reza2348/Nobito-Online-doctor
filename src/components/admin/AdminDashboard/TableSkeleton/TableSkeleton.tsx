@@ -23,7 +23,7 @@ export default function TableSkeleton() {
       </div>
 
       {/* Table Skeleton */}
-      <div className="overflow-hidden rounded-3xl bg-white shadow-lg">
+      <div className="overflow-hidden rounded-xl bg-white shadow-sm">
         {/* Table Header */}
         <div className="grid grid-cols-4 gap-4 border-b border-gray-100 p-5">
           <div className="h-5 rounded-lg bg-gray-200" />

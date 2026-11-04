@@ -37,6 +37,12 @@ export default function SlotList({
         </p>
       </div>
 
+      {slots.length === 0 && (
+        <p className="rounded-xl bg-slate-50 px-4 py-3 text-center text-xs text-slate-500">
+          برای این روز زمان خالی وجود ندارد؛ روز دیگری را انتخاب کنید.
+        </p>
+      )}
+
       <div className="space-y-2">
         {slots.map((slot) => {
           const active = slot.id === selectedSlotId;
@@ -46,7 +52,7 @@ export default function SlotList({
               key={slot.id}
               type="button"
               onClick={() => onSelect(slot.id)}
-              className={`flex w-full items-center justify-between rounded-2xl border px-4 py-3 text-right transition-all ${
+              className={`flex w-full items-center justify-between rounded-xl border px-4 py-3 text-right transition-all ${
                 active
                   ? "border-sky-500 bg-sky-50/60"
                   : "border-slate-100 hover:border-slate-200"

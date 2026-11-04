@@ -16,7 +16,7 @@ export default function ConsultTypeTabs({
 
   return (
     <div className="px-5 pt-5 sm:px-6">
-      <div className="relative grid grid-cols-4 rounded-2xl bg-slate-50 p-1">
+      <div className="relative grid grid-cols-4 rounded-xl bg-slate-50 p-1">
         <div
           className="absolute inset-y-1 rounded-xl bg-white shadow-[0_1px_6px_rgba(15,23,42,0.12)] transition-transform duration-300 ease-out"
           style={{

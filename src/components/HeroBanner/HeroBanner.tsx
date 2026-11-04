@@ -21,7 +21,7 @@ const HeroBanner: FC = () => {
       style={{
         background:
           "linear-gradient(135deg, #2d7a6a 0%, #1e5f52 40%, #3a8a72 70%, #2d7a6a 100%)",
-        fontFamily: "'Vazirmatn', 'Tahoma', sans-serif",
+        fontFamily: "inherit",
       }}
     >
       <div

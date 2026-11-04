@@ -11,7 +11,7 @@ const MedicalCharter: React.FC = () => {
     <section dir="rtl" className="bg-white py-16 px-6 lg:px-20">
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-12">
-          <h2 className="text-3xl lg:text-4xl font-extrabold text-gray-900 mb-4">
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
             میثاق‌نامه اخلاق حرفه‌ای
           </h2>
           <p className="text-gray-500 max-w-2xl mx-auto leading-8">
@@ -22,7 +22,7 @@ const MedicalCharter: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-gray-50 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+          <div className="bg-gray-50 rounded-xl p-6 shadow-sm hover:shadow-sm transition">
             <div className="flex items-center gap-3 mb-4">
               <FaShieldAlt className="text-teal-600 text-2xl" />
               <h3 className="font-bold text-lg text-gray-900">
@@ -35,7 +35,7 @@ const MedicalCharter: React.FC = () => {
             </p>
           </div>
 
-          <div className="bg-gray-50 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+          <div className="bg-gray-50 rounded-xl p-6 shadow-sm hover:shadow-sm transition">
             <div className="flex items-center gap-3 mb-4">
               <FaHeartbeat className="text-teal-600 text-2xl" />
               <h3 className="font-bold text-lg text-gray-900">
@@ -48,7 +48,7 @@ const MedicalCharter: React.FC = () => {
             </p>
           </div>
 
-          <div className="bg-gray-50 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+          <div className="bg-gray-50 rounded-xl p-6 shadow-sm hover:shadow-sm transition">
             <div className="flex items-center gap-3 mb-4">
               <FaUserMd className="text-teal-600 text-2xl" />
               <h3 className="font-bold text-lg text-gray-900">
@@ -61,7 +61,7 @@ const MedicalCharter: React.FC = () => {
             </p>
           </div>
 
-          <div className="bg-gray-50 rounded-2xl p-6 shadow-sm hover:shadow-md transition">
+          <div className="bg-gray-50 rounded-xl p-6 shadow-sm hover:shadow-sm transition">
             <div className="flex items-center gap-3 mb-4">
               <FaFileMedical className="text-teal-600 text-2xl" />
               <h3 className="font-bold text-lg text-gray-900">

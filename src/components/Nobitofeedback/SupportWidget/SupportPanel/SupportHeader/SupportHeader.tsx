@@ -8,7 +8,7 @@ type Props = {
 
 export default function SupportHeader({ view, onBack, onClose }: Props) {
   return (
-    <header className="bg-[#1F7168] text-white px-5 py-4">
+    <header className="bg-brand text-white px-5 py-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           {view !== "faq" && (
@@ -26,7 +26,7 @@ export default function SupportHeader({ view, onBack, onClose }: Props) {
             </button>
           )}
 
-          <div className="w-10 h-10 rounded-2xl bg-white/15 flex items-center justify-center">
+          <div className="w-10 h-10 rounded-xl bg-white/15 flex items-center justify-center">
             <FiMessageCircle size={21} />
           </div>
 

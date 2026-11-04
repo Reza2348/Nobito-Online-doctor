@@ -1,24 +1,38 @@
 @import "tailwindcss";
 
+/*
+ * توکن‌های طراحی نوبیتو
+ * رنگ‌ها فقط از اینجا تعریف می‌شوند؛ در کامپوننت‌ها از bg-brand ،text-ink و... استفاده کنید.
+ */
+@theme {
+  --color-brand: #1f7168;
+  --color-brand-strong: #165a52;
+  --color-brand-soft: #e8f1ef;
+  --color-accent: #c2553a;
+  --color-surface: #f6f5f1;
+  --color-ink: #1d2523;
+  --color-muted: #5f6b68;
+  --color-line: #e2e0d8;
+
+  --radius-card: 0.75rem;
+}
+
 :root {
   --background: #ffffff;
+  --foreground: #1d2523;
+  --link-color: #3a4542;
+  --link-hover: #1f7168;
+  --link-active: #1f7168;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --link-color: oklch(39.114% 0.00338 286.054);
-  --link-hover: oklch(7.972% 0.01658 233.535);
-  --link-active: oklch(52% 0.23 145);
+body {
+  background: var(--background);
+  color: var(--foreground);
 }
-
-
 
 a.link {
   color: var(--link-color);
-  transition: color 0.3s;
+  transition: color 0.2s;
 }
 
 a.link:hover {
@@ -27,18 +41,17 @@ a.link:hover {
 
 a.active {
   color: var(--link-active);
-  transition: color 0.3s;
+  font-weight: 700;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
+:focus-visible {
+  outline: 2px solid var(--color-brand);
+  outline-offset: 2px;
+}
 
-    --foreground: #ededed;
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
   }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Vazirmatn, Tahoma;
 }

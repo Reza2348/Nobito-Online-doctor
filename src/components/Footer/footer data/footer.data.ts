@@ -15,7 +15,7 @@ export const FOOTER_NAV: FooterSection[] = [
     links: [
       { name: "خدمات پزشکی در منزل", href: "/ServiceHome" },
       { name: "مشاوره غیرحضوری", href: "/Offlineconsultation" },
-      { name: "مراکز درمانی", href: "/TreatmentCenters" },
+      { name: "مراکز درمانی", href: "/clinics" },
       { name: "نوبت‌دهی", href: "/AppointmentCard" },
     ],
   },
@@ -24,7 +24,7 @@ export const FOOTER_NAV: FooterSection[] = [
     links: [
       { name: "درمانگر داوطلب", href: "/VolunteerTherapist" },
       { name: "بیشتر بدانید", href: "/LearnMoreCards" },
-      { name: "کمک مالی", href: "/DonationsCards" },
+      { name: "کمک مالی", href: "/Charity" },
     ],
   },
   {

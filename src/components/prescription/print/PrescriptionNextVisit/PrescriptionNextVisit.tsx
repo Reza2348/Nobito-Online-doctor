@@ -41,9 +41,7 @@ export default function PrescriptionNextVisit({
           rounded-lg
           border
           border-cyan-100
-          bg-linear-to-l
-          from-blue-50
-          to-cyan-50
+          bg-surface
           px-3
           py-2
           text-[11px]

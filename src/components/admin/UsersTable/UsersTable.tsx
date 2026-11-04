@@ -30,15 +30,13 @@ export default function UsersTable() {
           className="
           w-12
           h-12
-          rounded-2xl
-          bg-linear-to-br
-          from-teal-500
-          to-emerald-400
+          rounded-xl
+          bg-brand
           flex
           items-center
           justify-center
           text-white
-          shadow-lg
+          shadow-sm
           "
         >
           <MdPeople size={28} />
@@ -56,11 +54,11 @@ export default function UsersTable() {
       <div
         className="
         bg-white/80
-        backdrop-blur-xl
+       
         border
         border-gray-100
-        rounded-3xl
-        shadow-lg
+        rounded-xl
+        shadow-sm
         overflow-hidden
         "
       >

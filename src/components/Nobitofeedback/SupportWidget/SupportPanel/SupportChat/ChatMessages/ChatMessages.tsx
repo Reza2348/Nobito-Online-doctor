@@ -34,7 +34,7 @@ export default function ChatMessages({ messages, loading }: Props) {
                 <div
                   className="
                     flex h-9 w-9 shrink-0 items-center justify-center
-                    rounded-full bg-[#E8F5F2] text-lg shadow-sm
+                    rounded-full bg-brand-soft text-lg shadow-sm
                   "
                 >
                   👤
@@ -42,8 +42,8 @@ export default function ChatMessages({ messages, loading }: Props) {
 
                 <div
                   className="
-                    rounded-2xl rounded-br-md
-                    bg-[#1F7168]
+                    rounded-xl rounded-br-md
+                    bg-brand
                     px-4 py-3
                     text-sm leading-6
                     whitespace-pre-line
@@ -58,7 +58,7 @@ export default function ChatMessages({ messages, loading }: Props) {
                 <div
                   className="
                     flex h-9 w-9 shrink-0 items-center justify-center
-                    rounded-full bg-[#E8F5F2] text-lg shadow-sm
+                    rounded-full bg-brand-soft text-lg shadow-sm
                   "
                 >
                   🤖
@@ -66,7 +66,7 @@ export default function ChatMessages({ messages, loading }: Props) {
 
                 <div
                   className="
-                    rounded-2xl rounded-bl-md
+                    rounded-xl rounded-bl-md
                     bg-gray-100
                     px-4 py-3
                     text-sm leading-6
@@ -88,7 +88,7 @@ export default function ChatMessages({ messages, loading }: Props) {
             <div
               className="
                 flex h-9 w-9 shrink-0 items-center justify-center
-                rounded-full bg-[#E8F5F2] text-lg shadow-sm
+                rounded-full bg-brand-soft text-lg shadow-sm
               "
             >
               🤖
@@ -96,7 +96,7 @@ export default function ChatMessages({ messages, loading }: Props) {
 
             <div
               className="
-                rounded-2xl rounded-bl-md
+                rounded-xl rounded-bl-md
                 bg-gray-100
                 px-4 py-3
               "

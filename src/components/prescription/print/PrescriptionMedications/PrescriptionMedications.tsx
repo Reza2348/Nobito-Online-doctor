@@ -28,7 +28,7 @@ export default function PrescriptionMedications({
       <div className="w-full overflow-hidden rounded-lg border border-blue-100">
         <table className="w-full table-fixed border-collapse text-right text-[11px] leading-5">
           <thead>
-            <tr className="bg-linear-to-l from-blue-600 to-cyan-500 text-white">
+            <tr className="bg-brand text-white">
               <th className="w-[7%] border border-blue-500 px-1.5 py-2 font-bold">
                 <div className="flex items-center justify-center gap-1">
                   <FaListOl className="shrink-0 text-[10px]" />

@@ -26,7 +26,7 @@ export default function AdminMobileSidebar({
         type="button"
         aria-label="بستن منو"
         onClick={onClose}
-        className="absolute inset-0 cursor-default bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 cursor-default bg-black/40"
       />
 
       {/* Sidebar */}
@@ -38,7 +38,7 @@ export default function AdminMobileSidebar({
           w-72
           max-w-[80%]
           overflow-y-auto
-          shadow-2xl
+          shadow-sm
         "
       >
         <AdminSidebar

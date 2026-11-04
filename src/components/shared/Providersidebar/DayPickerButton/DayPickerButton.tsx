@@ -34,7 +34,7 @@ export default function DayPickerButton({
         <button
           type="button"
           onClick={openCalendar}
-          className="flex w-full items-center gap-3 rounded-2xl border border-slate-100 bg-slate-50/60 px-4 py-3 text-right transition-colors hover:border-sky-300"
+          className="flex w-full items-center gap-3 rounded-xl border border-slate-100 bg-slate-50/60 px-4 py-3 text-right transition-colors hover:border-sky-300"
         >
           <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-sky-50 text-sky-600">
             <FiCalendar size={17} />

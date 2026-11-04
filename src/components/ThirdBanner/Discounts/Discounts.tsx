@@ -36,16 +36,16 @@ const Discounts = async () => {
             min-h-107.5
             flex-col
             overflow-hidden
-            rounded-[28px]
+            rounded-xl
             border
             border-gray-100
             bg-white
             shadow-[0_8px_30px_rgba(0,0,0,0.05)]
             transition-all
             duration-500
-            hover:-translate-y-2
+           
             hover:border-emerald-200
-            hover:shadow-[0_20px_50px_rgba(0,0,0,0.11)]
+           
           "
         >
           {/* IMAGE */}
@@ -64,7 +64,7 @@ const Discounts = async () => {
                 transition-transform
                 duration-700
                 ease-out
-                group-hover:scale-105
+               
               "
             />
 
@@ -98,8 +98,8 @@ const Discounts = async () => {
                 text-xs
                 font-black
                 text-white
-                shadow-lg
-                backdrop-blur-md
+                shadow-sm
+               
               "
             >
               <FiTag size={13} />
@@ -120,7 +120,7 @@ const Discounts = async () => {
                 font-bold
                 text-gray-700
                 shadow-sm
-                backdrop-blur-md
+               
               "
             >
               پیشنهاد ویژه
@@ -258,17 +258,15 @@ const Discounts = async () => {
                 items-center
                 justify-center
                 gap-2
-                rounded-2xl
-                bg-linear-to-r
-                from-teal-600
-                to-emerald-500
+                rounded-xl
+                bg-brand
                 py-3
                 text-sm
                 font-bold
                 text-white
                 transition-all
                 duration-300
-                group-hover:shadow-lg
+                group-hover:shadow-sm
               "
             >
               مشاهده تخفیف
@@ -277,7 +275,7 @@ const Discounts = async () => {
                 className="
                   transition-transform
                   duration-300
-                  group-hover:-translate-x-1
+                 
                 "
               />
             </div>

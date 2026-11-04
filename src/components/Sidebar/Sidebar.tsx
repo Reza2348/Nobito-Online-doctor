@@ -129,7 +129,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         className={`
           fixed top-0 right-0 h-full z-40
           mt-2 mr-4 ml-4 pb-7
-          rounded-2xl w-70 bg-white shadow-xl
+          rounded-xl w-70 bg-white shadow-sm
           flex flex-col overflow-y-auto
           transition-transform duration-300
           ${sidebarOpen ? "translate-x-0" : "translate-x-full"}

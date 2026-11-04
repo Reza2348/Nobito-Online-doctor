@@ -19,7 +19,7 @@ export default function MedicationTable({ medications }: MedicationTableProps) {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-slate-200">
+      <div className="overflow-hidden rounded-xl border border-slate-200">
         <div className="hidden bg-slate-50 px-5 py-4 text-sm font-semibold text-slate-600 md:grid md:grid-cols-4 md:gap-4">
           <div>دارو</div>
           <div>دوز</div>

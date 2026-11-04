@@ -39,9 +39,9 @@ const PrivacyPolicy = () => {
         {privacyItems.map((item) => (
           <div
             key={item.id}
-            className="group bg-white p-8 rounded-3xl shadow-md hover:shadow-xl transition hover:-translate-y-2"
+            className="group bg-white p-8 rounded-xl shadow-sm hover:shadow-sm transition"
           >
-            <div className="w-16 h-16 flex items-center justify-center rounded-full bg-emerald-100 text-emerald-600 text-2xl mb-4 transition group-hover:scale-110">
+            <div className="w-16 h-16 flex items-center justify-center rounded-full bg-emerald-100 text-emerald-600 text-2xl mb-4 transition">
               {item.icon}
             </div>
             <h3 className="font-bold text-lg mb-2 text-black group-hover:text-emerald-600 transition">

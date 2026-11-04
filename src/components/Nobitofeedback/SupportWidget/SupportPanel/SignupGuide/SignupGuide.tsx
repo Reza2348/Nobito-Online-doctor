@@ -70,7 +70,7 @@ export default function SignupGuide({ onClose }: Props) {
     <div className="flex flex-1 flex-col min-h-0">
       {/* ویدئوی آموزش ثبت‌نام */}
       <div className="flex-1 min-h-0 overflow-y-auto p-4">
-        <div className="overflow-hidden rounded-3xl bg-black shadow-sm">
+        <div className="overflow-hidden rounded-xl bg-black shadow-sm">
           <div className="relative aspect-video w-full">
             <video
               className="h-full w-full object-cover"
@@ -84,7 +84,7 @@ export default function SignupGuide({ onClose }: Props) {
               />
               مرورگر شما از پخش ویدئو پشتیبانی نمی‌کند.
             </video>
-            <div className="mt-4 rounded-2xl bg-[#1F7168]/5 px-4 py-3">
+            <div className="mt-4 rounded-xl bg-brand/5 px-4 py-3">
               <h3 className="text-sm font-bold text-gray-800">
                 راهنمای ثبت‌نام در نوبیتو
               </h3>
@@ -104,7 +104,7 @@ export default function SignupGuide({ onClose }: Props) {
                 bg-black/50
                 px-3 py-1.5
                 text-xs text-white
-                backdrop-blur-sm
+               
               "
             >
               <FiPlay size={12} />

@@ -1,11 +1,13 @@
 import crypto from "crypto";
 
-export function generateOtp(length = 8): string {
-  if (length !== 8) {
-    throw new Error("OTP must be exactly 8 digits");
+import { OTP_LENGTH } from "@/lib/otp";
+
+export function generateOtp(length: number = OTP_LENGTH): string {
+  if (!Number.isInteger(length) || length < 6 || length > 8) {
+    throw new Error("OTP length must be between 6 and 8 digits");
   }
 
-  const number = crypto.randomInt(0, 100_000_000);
+  const number = crypto.randomInt(0, 10 ** length);
 
-  return number.toString().padStart(8, "0");
+  return number.toString().padStart(length, "0");
 }

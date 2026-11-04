@@ -19,7 +19,7 @@ export default function CommentItem({ comment }: Props) {
         bg-white
         shadow-[0_12px_35px_rgba(0,0,0,.06)]
         transition-all
-        hover:-translate-y-1
+       
         "
     >
       {/* TOP */}
@@ -42,7 +42,7 @@ export default function CommentItem({ comment }: Props) {
               className="
                 h-16
                 w-16
-                rounded-3xl
+                rounded-xl
                 object-cover
                 ring-4
                 ring-teal-50

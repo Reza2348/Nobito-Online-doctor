@@ -14,7 +14,7 @@ export default function SavingIndicator({ saving }: Props) {
         flex
         items-center
         gap-2.5
-        rounded-2xl
+        rounded-xl
         border
         border-blue-100
         bg-blue-50

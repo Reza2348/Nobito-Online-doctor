@@ -110,10 +110,10 @@ export const OtpCard: O.FC<OtpCardProps> = ({
         max-w-112.5
         flex-col
         items-center
-        rounded-2xl
+        rounded-xl
         bg-white
         p-4
-        shadow-lg
+        shadow-sm
         sm:p-8
       "
     >

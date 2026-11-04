@@ -98,7 +98,7 @@ export default function ClinicsTable({ clinics = [], onDelete }: Props) {
         refreshing={loading}
       />
 
-      <div className="rounded-3xl border bg-white p-6 shadow-lg">
+      <div className="rounded-xl border bg-white p-6 shadow-sm">
         {clinicList.length === 0 ? (
           <EntityTableState {...stateProps} type="empty" />
         ) : (

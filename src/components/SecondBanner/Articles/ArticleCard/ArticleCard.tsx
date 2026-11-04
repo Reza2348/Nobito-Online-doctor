@@ -7,7 +7,7 @@ type Props = {
 
 export default function ArticleCard({ article }: Props) {
   return (
-    <article className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition hover:shadow-md">
+    <article className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition hover:shadow-sm">
       {/* Content */}
       <div className="flex flex-col sm:flex-row-reverse sm:gap-5 sm:p-5">
         {/* Image */}
@@ -55,7 +55,7 @@ export default function ArticleCard({ article }: Props) {
         {/* Button */}
         <button
           type="button"
-          className="flex w-full items-center justify-center gap-2 rounded-md border border-[#1F7168] px-4 py-2 text-sm font-medium text-[#1F7168] transition hover:bg-[#1F7168] hover:text-white sm:w-auto"
+          className="flex w-full items-center justify-center gap-2 rounded-md border border-brand px-4 py-2 text-sm font-medium text-brand transition hover:bg-brand hover:text-white sm:w-auto"
         >
           ادامه مطلب
           <FiArrowLeft />

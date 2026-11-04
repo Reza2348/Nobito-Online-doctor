@@ -26,10 +26,8 @@ export default function SectionTitle({
           shrink-0
           items-center
           justify-center
-          rounded-3xl
-          bg-linear-to-br
-          from-emerald-50
-          to-teal-100
+          rounded-xl
+          bg-surface
           text-emerald-600
           shadow-sm
         "
@@ -85,7 +83,7 @@ export default function SectionTitle({
           className="
             transition-transform
             duration-300
-            group-hover:-translate-x-1
+           
           "
         />
       </button>

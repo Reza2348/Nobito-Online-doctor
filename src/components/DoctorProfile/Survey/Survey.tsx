@@ -177,9 +177,7 @@ const Survey: React.FC<SurveyProps> = ({
                   className="
                     h-full
                     rounded-full
-                    bg-gradient-to-r
-                    from-teal-500
-                    to-emerald-400
+                    bg-brand
                     transition-all
                     duration-700
                     "

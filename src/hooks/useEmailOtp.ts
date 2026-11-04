@@ -4,7 +4,9 @@ import * as O from "@/Imports/OtpImports/OtpImports";
 import { axiosClient, getAxiosErrorMessage } from "@/lib/axiosClient";
 import { supabase } from "@/lib/supabaseClient";
 
-export const OTP_LENGTH = 8;
+import { OTP_LENGTH } from "@/lib/otp";
+
+export { OTP_LENGTH };
 
 export function useEmailOtp() {
   const [otp, setOtp] = O.useState<string[]>(Array(OTP_LENGTH).fill(""));
@@ -46,7 +48,38 @@ export function useEmailOtp() {
 
     try {
       // =========================================
-      // Verify OTP در Backend
+      // موبایل: تأیید در همین اپلیکیشن؛ کوکی نشست از سرور ست می‌شود
+      // =========================================
+
+      if (!email.includes("@")) {
+        const response = await fetch("/api/auth/verify-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ identifier: email, token: otpValue }),
+        });
+
+        const data = (await response.json().catch(() => null)) as {
+          message?: string;
+        } | null;
+
+        if (!response.ok) {
+          throw new Error(data?.message ?? "خطا در تأیید کد");
+        }
+
+        sessionStorage.removeItem("norbin_otp_email");
+
+        O.toast.success("ورود موفق! در حال انتقال...");
+
+        setTimeout(() => {
+          router.replace("/");
+          router.refresh();
+        }, 500);
+
+        return;
+      }
+
+      // =========================================
+      // Verify OTP در Backend (ایمیل)
       // =========================================
 
       const { data: result } = await axiosClient.post("/api/auth/verify-otp", {

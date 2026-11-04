@@ -20,7 +20,7 @@ export default function DoctorHeader({ doctor }: Props) {
           relative shrink-0
           h-19.5 w-19.5
           overflow-hidden
-          rounded-3xl
+          rounded-xl
           bg-slate-100
           ring-1 ring-slate-200
           shadow-sm
@@ -36,7 +36,7 @@ export default function DoctorHeader({ doctor }: Props) {
               object-cover
               transition-transform
               duration-500
-              group-hover:scale-105
+             
             "
           />
         ) : (
@@ -44,9 +44,7 @@ export default function DoctorHeader({ doctor }: Props) {
             className="
               flex h-full w-full
               items-center justify-center
-             bg-linear-to-br
-              from-slate-100
-              to-slate-200
+             bg-surface
               text-slate-400
             "
           >
@@ -93,7 +91,7 @@ export default function DoctorHeader({ doctor }: Props) {
               bg-emerald-50
               px-2.5 py-1
               text-[10px]
-              font-extrabold
+              font-bold
               text-emerald-700
             "
           >

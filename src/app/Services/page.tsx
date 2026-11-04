@@ -1,7 +1,6 @@
-import React from "react";
+import { redirect } from "next/navigation";
 
-const Page = () => {
-  return <div>vmnsmvmsdbmsfd bmsfd vm s</div>;
-};
-
-export default Page;
+/** صفحهٔ خدمات در `/ServiceHome` است؛ این مسیر فقط به آن هدایت می‌کند. */
+export default function ServicesPage() {
+  redirect("/ServiceHome");
+}

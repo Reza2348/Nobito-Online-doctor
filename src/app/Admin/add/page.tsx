@@ -56,7 +56,7 @@ export default function AddPage() {
 
         {/* Selected Form */}
         {selectedType && (
-          <div className="mt-8 rounded-2xl bg-white p-6 shadow-sm">
+          <div className="mt-8 rounded-xl bg-white p-6 shadow-sm">
             {/* Doctor */}
             {selectedType === "doctor" && <DoctorForm />}
 

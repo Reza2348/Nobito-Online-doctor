@@ -23,7 +23,7 @@ export default function FeedbackDoctorPage() {
         dir="rtl"
         className="flex min-h-screen items-center justify-center bg-slate-50 p-6"
       >
-        <div className="rounded-2xl bg-white p-6 text-center shadow-sm">
+        <div className="rounded-xl bg-white p-6 text-center shadow-sm">
           <p className="font-bold text-red-600">شناسه پزشک مشخص نشده است.</p>
         </div>
       </main>
@@ -46,7 +46,7 @@ export default function FeedbackDoctorPage() {
         dir="rtl"
         className="flex min-h-screen items-center justify-center bg-slate-50 p-6"
       >
-        <div className="rounded-2xl bg-white p-6 text-center shadow-sm">
+        <div className="rounded-xl bg-white p-6 text-center shadow-sm">
           <p className="font-bold text-red-600">شناسه پزشک نامعتبر است.</p>
         </div>
       </main>

@@ -39,11 +39,11 @@ export default function SearchBox({
       dir="rtl"
       className="
         w-full
-        rounded-2xl
+        rounded-xl
         border border-gray-100
         bg-white
         p-2
-        shadow-lg shadow-black/5
+        shadow-sm shadow-black/5
         md:p-3
       "
     >

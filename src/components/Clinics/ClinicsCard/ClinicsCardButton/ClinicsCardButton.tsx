@@ -14,13 +14,13 @@ const ClinicsCardButton = ({
   return (
     <Link
       href={href}
-      className="group flex w-full items-center justify-center gap-2 rounded-2xl bg-linear-to-r from-teal-600 to-emerald-500 py-3 text-sm font-bold text-white transition-all duration-300 hover:shadow-lg"
+      className="group flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-3 text-sm font-bold text-white transition-all duration-300 hover:shadow-sm"
     >
       {children}
 
       <FiArrowLeft
         size={18}
-        className="transition-transform duration-300 group-hover:-translate-x-1"
+        className="transition-transform duration-300"
       />
     </Link>
   );

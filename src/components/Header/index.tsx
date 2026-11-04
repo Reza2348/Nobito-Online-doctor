@@ -13,13 +13,13 @@ const Header: H.React.FC = () => {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-white/85 backdrop-blur-xl">
-      <nav className="border-b border-gray-100 shadow-[0_4px_20px_rgba(0,0,0,.04)]">
+    <header className="sticky top-0 z-50 w-full bg-white">
+      <nav className="border-b border-gray-100 ">
         <div className="mx-auto flex h-18 md:h-22 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
           {/* LOGO */}
           <H.Link
             href="/"
-            className="shrink-0 transition-transform duration-300 hover:scale-105"
+            className="shrink-0 transition-transform duration-300"
           >
             <H.Image
               src="/Default.svg"
@@ -55,7 +55,7 @@ const Header: H.React.FC = () => {
       {/* SUB HEADER */}
       <div className="hidden lg:block">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3">
-          <div className="rounded-2xl bg-linear-to-r from-emerald-50 to-teal-50 px-5 py-2 border border-emerald-100">
+          <div className="rounded-xl bg-surface px-5 py-2 border border-emerald-100">
             <H.SubHeader />
           </div>
         </div>

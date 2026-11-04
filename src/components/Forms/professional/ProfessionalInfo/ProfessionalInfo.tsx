@@ -20,7 +20,7 @@ export default function ProfessionalInfo({
   return (
     <section
       dir="rtl"
-      className="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+      className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm"
     >
       {/* Header */}
       <div className="mb-6">

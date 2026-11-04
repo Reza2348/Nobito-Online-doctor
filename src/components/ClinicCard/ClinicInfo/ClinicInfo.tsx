@@ -56,7 +56,7 @@ export default function ClinicInfo({
           className="
             truncate
             text-[15px]
-            font-extrabold
+            font-bold
             tracking-tight
             text-slate-800
             transition-colors

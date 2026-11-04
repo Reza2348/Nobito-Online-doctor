@@ -31,7 +31,7 @@ const ClinicsRating: React.FC<ClinicsRatingProps> = ({ rating }) => {
       <span
         className="
         text-sm
-        font-extrabold
+        font-bold
         text-yellow-700
         "
       >

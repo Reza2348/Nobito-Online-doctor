@@ -18,7 +18,7 @@ const MobileMenuOverlay: H.React.FC<Props> = ({ open, onClose }) => {
         z-40
         md:hidden
         bg-slate-950/45
-        backdrop-blur-[3px]
+       
         transition-opacity
         duration-300
         ease-out

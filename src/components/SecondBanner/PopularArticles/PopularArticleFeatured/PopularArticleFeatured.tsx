@@ -7,7 +7,7 @@ type Props = {
 
 export default function PopularArticleFeatured({ article }: Props) {
   return (
-    <div className="rounded-xl bg-[#1F7168] p-4 text-white shadow">
+    <div className="rounded-xl bg-brand p-4 text-white shadow">
       <h3 className="mb-2 line-clamp-2 text-base font-bold">{article.title}</h3>
 
       <p className="mb-3 line-clamp-2 text-sm text-white/90">

@@ -9,7 +9,7 @@ export default function FooterMobileNav({ onSubmit }: Props) {
     <footer
       dir="rtl"
       aria-label="پاورقی سایت"
-      className=" mx-4 my-6 overflow-hidden rounded-3xl border border-slate-200 bg-white text-slate-900 shadow-sm md:hidden "
+      className=" mx-4 my-6 overflow-hidden rounded-xl border border-slate-200 bg-white text-slate-900 shadow-sm md:hidden "
     >
       {" "}
       {/* ======================================== FOOTER NAVIGATION ======================================== */}{" "}

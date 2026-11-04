@@ -43,7 +43,7 @@ export default function BookingFooter({
         type="button"
         onClick={onBook}
         disabled={submitting}
-        className={`inline-flex min-w-32 items-center justify-center gap-2 rounded-2xl border bg-white px-5 py-3 text-sm font-bold transition-all duration-300 hover:text-white hover:shadow-lg hover:shadow-sky-100 disabled:cursor-not-allowed disabled:opacity-60 ${bookButtonBorderClass}`}
+        className={`inline-flex min-w-32 items-center justify-center gap-2 rounded-xl border bg-white px-5 py-3 text-sm font-bold transition-all duration-300 hover:text-white hover:shadow-sm hover:shadow-sky-100 disabled:cursor-not-allowed disabled:opacity-60 ${bookButtonBorderClass}`}
       >
         {submitting ? (
           <span className="h-4 w-4 animate-spin rounded-full border-2 border-sky-200 border-t-sky-600" />

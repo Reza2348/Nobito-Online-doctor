@@ -23,7 +23,7 @@ export default function ClinicsImageSection({
         src={imageSrc}
         alt={alt || "Clinic"}
         fill
-        className="object-cover transition-transform duration-500 group-hover:scale-105"
+        className="object-cover transition-transform duration-500"
       />
 
       <div className="absolute inset-0 bg-linear-to-t from-black/30 via-transparent to-transparent" />

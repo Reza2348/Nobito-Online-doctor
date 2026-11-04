@@ -22,9 +22,9 @@ export default function AddTypeCard({
     <button
       type="button"
       onClick={onClick}
-      className={`w-full rounded-2xl border-2 bg-white p-6 text-right transition-all duration-200 hover:-translate-y-1 hover:shadow-lg ${
+      className={`w-full rounded-xl border-2 bg-white p-6 text-right transition-all duration-200 hover:shadow-sm ${
         selected
-          ? "border-blue-600 shadow-md"
+          ? "border-blue-600 shadow-sm"
           : "border-gray-200 hover:border-blue-300"
       }`}
     >

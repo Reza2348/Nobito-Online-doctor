@@ -6,77 +6,12 @@ import { Redis } from "@upstash/redis";
 
 import { createSupabaseRouteClient } from "@/lib/Server";
 import { generateOtp } from "@/lib/generateOtp";
-import { saveOtp } from "@/lib/otpStore";
-
-// --------------------------------------------------
-// Validation
-// --------------------------------------------------
-
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-// شماره موبایل ایران:
-//
-// 09123456789
-// 9123456789
-// 989123456789
-// +989123456789
-
-const irPhoneRegex = /^(?:0|98|\+98)?9\d{9}$/;
+import { deleteOtp, saveOtp } from "@/lib/otpStore";
+import { parseIdentifier } from "@/lib/phone";
+import { getClientIp } from "@/lib/rateLimit";
+import { isSmsConfigured, sendOtpSms } from "@/lib/sms";
 
 const OTP_SESSION_MAX_AGE_SECONDS = 60 * 10;
-
-// --------------------------------------------------
-// Client IP
-// --------------------------------------------------
-
-function getClientIp(request: NextRequest): string {
-  const forwardedFor = request.headers.get("x-forwarded-for");
-
-  if (forwardedFor) {
-    return forwardedFor.split(",")[0].trim();
-  }
-
-  const realIp = request.headers.get("x-real-ip");
-
-  if (realIp) {
-    return realIp.trim();
-  }
-
-  return "unknown";
-}
-
-// --------------------------------------------------
-// Normalize phone
-// --------------------------------------------------
-
-function normalizePhone(phone: string): string {
-  const value = phone.replace(/\s/g, "");
-
-  // 09123456789
-  // -> +989123456789
-  if (value.startsWith("09")) {
-    return `+98${value.slice(1)}`;
-  }
-
-  // 9123456789
-  // -> +989123456789
-  if (/^9\d{9}$/.test(value)) {
-    return `+98${value}`;
-  }
-
-  // 989123456789
-  // -> +989123456789
-  if (value.startsWith("98")) {
-    return `+${value}`;
-  }
-
-  // +989123456789
-  if (value.startsWith("+98")) {
-    return value;
-  }
-
-  return value;
-}
 
 // --------------------------------------------------
 // Retry After
@@ -196,13 +131,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const compactIdentifier = rawIdentifier.replace(/\s/g, "");
+    const parsed = parseIdentifier(rawIdentifier);
 
-    const isEmail = emailRegex.test(compactIdentifier.toLowerCase());
-
-    const isPhone = irPhoneRegex.test(compactIdentifier);
-
-    if (!isEmail && !isPhone) {
+    if (!parsed) {
       return NextResponse.json(
         {
           error: "لطفا ایمیل یا شماره موبایل معتبر وارد کنید.",
@@ -213,13 +144,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // ------------------------------------------------
-    // Normalize Identifier
-    // ------------------------------------------------
+    const isEmail = parsed.kind === "email";
+    const isPhone = parsed.kind === "phone";
+    const normalizedIdentifier = parsed.value;
 
-    const normalizedIdentifier = isEmail
-      ? compactIdentifier.toLowerCase()
-      : normalizePhone(compactIdentifier);
+    // سرویس پیامک باید قبل از مصرف سهمیهٔ rate limit آماده باشد
+    if (isPhone && !isSmsConfigured()) {
+      console.error("[send-otp] SMS provider is not configured.");
+
+      return NextResponse.json(
+        { error: "ارسال پیامک موقتا در دسترس نیست. لطفا با ایمیل وارد شوید." },
+        { status: 503 },
+      );
+    }
 
     // ------------------------------------------------
     // Rate Limit - IP
@@ -312,14 +249,24 @@ export async function POST(request: NextRequest) {
 
     if (isPhone) {
       // تولید کد ۸ رقمی
-      const otp = generateOtp(8);
+      const otp = generateOtp();
 
       // ذخیره OTP در Redis
       await saveOtp(normalizedIdentifier, otp);
 
-      // فعلاً SMS ارسال نمی‌کنیم
-      // کد در ترمینال نمایش داده می‌شود
-      console.log(`[Nobito OTP] ${normalizedIdentifier} => ${otp}`);
+      const sms = await sendOtpSms(normalizedIdentifier, otp);
+
+      if (!sms.ok) {
+        // کدی که به دست کاربر نرسیده نباید معتبر بماند
+        await deleteOtp(normalizedIdentifier);
+
+        console.error("[send-otp] SMS delivery failed:", sms.error);
+
+        return NextResponse.json(
+          { error: "ارسال پیامک ناموفق بود. لطفا دوباره تلاش کنید." },
+          { status: 502 },
+        );
+      }
     }
 
     // ------------------------------------------------

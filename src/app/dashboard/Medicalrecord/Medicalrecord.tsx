@@ -228,7 +228,7 @@ export default function Medicalrecord() {
         {/* Header */}
         <div className="mb-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-50 text-xl text-blue-600">
+            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-xl text-blue-600">
               <FaFileMedicalAlt />
             </div>
 
@@ -243,7 +243,7 @@ export default function Medicalrecord() {
         </div>
 
         {/* Tabs */}
-        <div className="mb-6 flex flex-wrap gap-2 rounded-2xl border border-gray-100 bg-white p-2 shadow-sm">
+        <div className="mb-6 flex flex-wrap gap-2 rounded-xl border border-gray-100 bg-white p-2 shadow-sm">
           {tabs.map((tab) => (
             <button
               key={tab.key}
@@ -283,7 +283,7 @@ export default function Medicalrecord() {
           {records.map((record: MedicalRecord) => (
             <div
               key={record.id}
-              className="overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:shadow-md"
+              className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-sm transition hover:shadow-sm"
             >
               <div className="p-5">
                 <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
@@ -402,7 +402,7 @@ export default function Medicalrecord() {
 
           {/* Empty state */}
           {!isLoading && !isError && records.length === 0 && (
-            <div className="rounded-2xl border border-dashed border-gray-200 bg-white py-16 text-center shadow-sm">
+            <div className="rounded-xl border border-dashed border-gray-200 bg-white py-16 text-center shadow-sm">
               <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-gray-50">
                 <FaFileMedicalAlt className="text-3xl text-gray-300" />
               </div>

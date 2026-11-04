@@ -20,7 +20,7 @@ export function LoginSubmitButton({ loading = false }: LoginSubmitButtonProps) {
         rounded-xl
         py-4
         font-bold
-        bg-[#1F7168]
+        bg-brand
         text-white
         transition-all
         duration-200
@@ -35,7 +35,7 @@ export function LoginSubmitButton({ loading = false }: LoginSubmitButtonProps) {
             : `
               bg-brand
               hover:bg-brand-dark
-              hover:shadow-lg
+              hover:shadow-sm
               hover:shadow-brand/25
             `
         }
@@ -55,7 +55,7 @@ export function LoginSubmitButton({ loading = false }: LoginSubmitButtonProps) {
               className="
                 transition-transform
                 duration-200
-                group-hover:-translate-x-1
+               
               "
             />
           </>

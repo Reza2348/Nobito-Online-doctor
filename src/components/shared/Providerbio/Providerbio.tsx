@@ -25,19 +25,18 @@ const ProviderBio: React.FC<ProviderBioProps> = ({ data, theme }) => {
   return (
     <section
       dir="rtl"
-      className="relative overflow-hidden rounded-3xl border border-gray-100 bg-white p-6 shadow-[0_10px_40px_rgba(0,0,0,0.04)] transition-all duration-300 hover:shadow-[0_15px_50px_rgba(0,0,0,0.07)] sm:p-8"
+      className="relative overflow-hidden rounded-xl border border-gray-100 bg-white p-6 shadow-[0_10px_40px_rgba(0,0,0,0.04)] transition-all duration-300 sm:p-8"
     >
-      <div className="pointer-events-none absolute -left-16 -top-16 h-40 w-40 rounded-full bg-blue-50/70 blur-3xl" />
 
       {/* Header */}
       <div className="relative mb-6 flex items-center gap-4">
         <div
-          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl ${c.bioIconBox}`}
+          className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl ${c.bioIconBox}`}
         >
           <FaUserMd className="text-xl" />
         </div>
         <div>
-          <h2 className="text-lg font-extrabold tracking-tight text-gray-900">
+          <h2 className="text-lg font-bold tracking-tight text-gray-900">
             {theme.bioTitle}
           </h2>
           <p className="mt-1 text-xs font-medium text-gray-400">
@@ -55,9 +54,9 @@ const ProviderBio: React.FC<ProviderBioProps> = ({ data, theme }) => {
 
       {/* Specialty */}
       {data.specialty && (
-        <div className="relative mt-7 flex items-center gap-4 rounded-3xl border-t border-gray-100 pt-6">
+        <div className="relative mt-7 flex items-center gap-4 rounded-xl border-t border-gray-100 pt-6">
           <div
-            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl ${c.specialtyBoxBg}`}
+            className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${c.specialtyBoxBg}`}
           >
             <FaStethoscope size={18} className={c.specialtyBoxIcon} />
           </div>

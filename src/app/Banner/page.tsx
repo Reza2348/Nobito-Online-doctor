@@ -54,7 +54,7 @@ export default function InsuranceBanner() {
       className="relative w-full bg-white mt-64 sm:mt-28 mb-10 sm:mb-16"
     >
       {/* Mobile */}
-      <div className="flex flex-col items-center bg-[#1F7168] sm:hidden px-6 pt-6 pb-0">
+      <div className="flex flex-col items-center bg-brand sm:hidden px-6 pt-6 pb-0">
         <div className="text-center mb-6">
           <p className="text-xl font-bold text-[#FFE4BC]">
             بیمه های طرف قرارداد
@@ -78,7 +78,7 @@ export default function InsuranceBanner() {
       </div>
 
       {/* Desktop */}
-      <div className="bg-[#1F7168] h-28 hidden sm:flex items-center justify-between px-8">
+      <div className="bg-brand h-28 hidden sm:flex items-center justify-between px-8">
         <div className="relative h-full flex items-end shrink-0">
           <Image
             src="/wepik-export-20231213034029dMG2 1.svg"

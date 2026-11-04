@@ -35,7 +35,7 @@ const Userexperience = () => {
           w-12
           items-center
           justify-center
-          rounded-2xl
+          rounded-xl
           bg-teal-50
           text-teal-600
           "
@@ -71,7 +71,7 @@ const Userexperience = () => {
 
       <div
         className="
-        rounded-3xl
+        rounded-xl
         bg-gray-50
         p-5
         leading-8
@@ -100,21 +100,19 @@ const Userexperience = () => {
           flex
           items-center
           gap-3
-          rounded-2xl
-          bg-gradient-to-r
-          from-teal-600
-          to-emerald-500
+          rounded-xl
+          bg-brand
           px-6
           py-3
           text-sm
           font-bold
           text-white
-          shadow-lg
+          shadow-sm
           shadow-teal-100
           transition-all
           duration-300
-          hover:-translate-y-1
-          hover:shadow-xl
+         
+          hover:shadow-sm
           "
         >
           ثبت بازخورد
@@ -122,7 +120,7 @@ const Userexperience = () => {
             className="
             transition-transform
             duration-300
-            group-hover:-translate-x-1
+           
             "
             size={16}
           />

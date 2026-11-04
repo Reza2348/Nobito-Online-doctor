@@ -52,7 +52,7 @@ export function CityDropdown({
                 absolute inset-0
                 h-full w-full
                 border-0 bg-black/40 p-0
-                backdrop-blur-[2px]
+               
                 animate-backdrop-in
               "
             />
@@ -106,7 +106,7 @@ export function CityDropdown({
                     active:scale-95
                     focus-visible:outline-none
                     focus-visible:ring-2
-                    focus-visible:ring-[#0F766E]/30
+                    focus-visible:ring-brand/30
                   "
                 >
                   <IoCloseOutline size={23} aria-hidden="true" />
@@ -141,7 +141,7 @@ export function CityDropdown({
                         transition
                         ${
                           city === ""
-                            ? "bg-teal-50 font-bold text-[#0F766E]"
+                            ? "bg-teal-50 font-bold text-brand"
                             : "text-gray-700 hover:bg-gray-50"
                         }
                       `}
@@ -154,7 +154,7 @@ export function CityDropdown({
                           className="
                             h-2.5 w-2.5
                             rounded-full
-                            bg-[#0F766E]
+                            bg-brand
                           "
                         />
                       )}
@@ -180,10 +180,10 @@ export function CityDropdown({
                             focus-visible:outline-none
                             focus-visible:ring-2
                             focus-visible:ring-inset
-                            focus-visible:ring-[#0F766E]/30
+                            focus-visible:ring-brand/30
                             ${
                               selected
-                                ? "bg-teal-50 font-bold text-[#0F766E]"
+                                ? "bg-teal-50 font-bold text-brand"
                                 : "text-gray-700 hover:bg-gray-50"
                             }
                           `}
@@ -196,7 +196,7 @@ export function CityDropdown({
                               className="
                                 h-2.5 w-2.5
                                 shrink-0 rounded-full
-                                bg-[#0F766E]
+                                bg-brand
                               "
                             />
                           )}
@@ -225,15 +225,15 @@ export function CityDropdown({
           flex h-12 w-full shrink-0
           items-center gap-2
           rounded-xl
-          border border-[#0F766E]/20
+          border border-brand/20
           bg-white px-3
-          text-[#0F766E]
+          text-brand
           transition
-          hover:bg-[#0F766E]/5
+          hover:bg-brand/5
           active:scale-[0.98]
           focus-visible:outline-none
           focus-visible:ring-2
-          focus-visible:ring-[#0F766E]/30
+          focus-visible:ring-brand/30
           md:w-48
         "
       >

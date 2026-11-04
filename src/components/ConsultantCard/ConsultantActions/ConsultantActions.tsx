@@ -40,7 +40,7 @@ export default function ConsultantActions({
           items-center
           justify-center
           gap-2
-          rounded-2xl
+          rounded-xl
           bg-blue-50
           px-3
           py-2.5
@@ -50,7 +50,7 @@ export default function ConsultantActions({
           transition-all
           hover:bg-blue-600
           hover:text-white
-          hover:shadow-lg
+          hover:shadow-sm
           disabled:cursor-not-allowed
           disabled:opacity-50
           sm:px-4
@@ -76,7 +76,7 @@ export default function ConsultantActions({
           items-center
           justify-center
           gap-2
-          rounded-2xl
+          rounded-xl
           bg-red-50
           px-3
           py-2.5
@@ -86,7 +86,7 @@ export default function ConsultantActions({
           transition-all
           hover:bg-red-600
           hover:text-white
-          hover:shadow-lg
+          hover:shadow-sm
           disabled:cursor-not-allowed
           disabled:opacity-50
           sm:px-4

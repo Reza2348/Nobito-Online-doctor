@@ -1,18 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
 
 import { getAdmin } from "@/lib/getAdmin";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const adminEmail = process.env.ADMIN_EMAIL!;
+import { getSupabaseAdmin } from "@/lib/supabaseAdmin";
 
-const supabaseAdmin = createClient(supabaseUrl, serviceRoleKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false,
-  },
-});
+// خواندن env هنگام درخواست است، نه هنگام import (تا build بدون env نشکند)
+const getAdminEmail = () => process.env.ADMIN_EMAIL;
 
 // GET: دریافت لیست کاربران
 export async function GET() {
@@ -30,6 +23,8 @@ export async function GET() {
       );
     }
 
+    const adminEmail = getAdminEmail();
+
     if (!adminEmail) {
       return NextResponse.json(
         { error: "ADMIN_EMAIL تنظیم نشده است." },
@@ -40,7 +35,7 @@ export async function GET() {
     const {
       data: { users },
       error,
-    } = await supabaseAdmin.auth.admin.listUsers({
+    } = await getSupabaseAdmin().auth.admin.listUsers({
       page: 1,
       perPage: 1000,
     });
@@ -120,14 +115,14 @@ export async function PATCH(request: NextRequest) {
     const {
       data: { user },
       error: getUserError,
-    } = await supabaseAdmin.auth.admin.getUserById(id);
+    } = await getSupabaseAdmin().auth.admin.getUserById(id);
 
     if (getUserError || !user) {
       return NextResponse.json({ error: "کاربر پیدا نشد." }, { status: 404 });
     }
 
     // جلوگیری از تغییر اطلاعات ادمین
-    if (user.email === adminEmail) {
+    if (user.email === getAdminEmail()) {
       return NextResponse.json(
         { error: "امکان ویرایش ادمین وجود ندارد." },
         { status: 403 },
@@ -136,7 +131,7 @@ export async function PATCH(request: NextRequest) {
 
     // آپدیت Auth User
     const { data: updatedUserData, error: updateAuthError } =
-      await supabaseAdmin.auth.admin.updateUserById(id, {
+      await getSupabaseAdmin().auth.admin.updateUserById(id, {
         email,
         user_metadata: {
           ...user.user_metadata,
@@ -156,7 +151,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     // اگر جدول profiles داری، اطلاعات آن را هم آپدیت می‌کنیم
-    const { error: profileError } = await supabaseAdmin
+    const { error: profileError } = await getSupabaseAdmin()
       .from("profiles")
       .update({
         full_name,

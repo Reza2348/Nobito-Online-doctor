@@ -26,7 +26,7 @@ export default function LoginCard() {
   } = useLogin();
 
   return (
-    <section className="w-full max-w-md rounded-3xl bg-white p-6 shadow-2xl sm:p-8">
+    <section className="w-full max-w-md rounded-xl bg-white p-6 shadow-sm sm:p-8">
       {/* Header */}
       <LoginHeader />
 
@@ -65,7 +65,7 @@ export default function LoginCard() {
         type="button"
         onClick={handleLogin}
         disabled={loading}
-        className="mt-2 w-full rounded-2xl bg-linear-to-r from-emerald-600 to-teal-500 py-3.5 font-bold text-white shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+        className="mt-2 w-full rounded-xl bg-brand py-3.5 font-bold text-white shadow-sm transition-all duration-300 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
       >
         {loading ? "در حال ورود..." : "ورود به پنل"}
       </button>

@@ -17,10 +17,10 @@ export default function FAQ() {
   return (
     <section
       dir="rtl"
-      className="relative overflow-hidden py-16 md:py-24 bg-gradient-to-br from-green-50 via-white to-blue-50"
+      className="relative overflow-hidden py-16 md:py-24 bg-surface"
     >
       <div
-        className="absolute top-0 right-0 w-[450px] h-[450px] bg-emerald-200/30 blur-3xl rounded-full"
+        className="absolute top-0 right-0 w-[450px] h-[450px] bg-emerald-200/30 rounded-full"
       />
 
       <div
@@ -61,7 +61,7 @@ export default function FAQ() {
             return (
               <div
                 key={faq.question}
-                className={`group rounded-[28px] border backdrop-blur-xl transition-all duration-300 ${ isOpen ? "bg-white shadow-xl border-emerald-200" : "bg-white/70 border-gray-100 hover:border-emerald-300 hover:shadow-lg" }`}
+                className={`group rounded-xl border transition-all duration-300 ${ isOpen ? "bg-white shadow-sm border-emerald-200" : "bg-white/70 border-gray-100 hover:border-emerald-300 hover:shadow-sm" }`}
               >
                 <button
                   type="button"
@@ -103,7 +103,7 @@ export default function FAQ() {
         {/* TRUST BOX */}
 
         <div
-          className="mt-14 rounded-[32px] bg-gray-950 p-8 text-center text-white shadow-2xl"
+          className="mt-14 rounded-xl bg-gray-950 p-8 text-center text-white shadow-sm"
         >
           <h2
             className="text-xl md:text-2xl font-bold"

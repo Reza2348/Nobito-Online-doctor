@@ -80,7 +80,7 @@ const LogoutModal: React.FC<Props> = ({ open, onClose, onConfirm }) => {
         aria-modal="true"
         aria-labelledby="logout-modal-title"
         aria-describedby="logout-modal-desc"
-        className="relative w-[90%] max-w-md bg-white rounded-2xl shadow-2xl p-5"
+        className="relative w-[90%] max-w-md bg-white rounded-xl shadow-sm p-5"
         dir="rtl"
       >
         <div className="flex items-center justify-between">

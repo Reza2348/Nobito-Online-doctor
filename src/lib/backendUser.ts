@@ -13,7 +13,7 @@ export const BACKEND_URL = (
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000"
 ).replace(/\/+$/, "");
 
-export type VerifiedUser = { id: string; email: string };
+export type VerifiedUser = { id: string; email: string; phone?: string };
 
 /**
  * هویت کاربر را فقط از کوکی‌های سروری تأیید می‌کند (نشست محلی یا Supabase).
@@ -27,7 +27,7 @@ export async function getVerifiedUser(): Promise<VerifiedUser | null> {
   );
 
   if (local) {
-    return { id: local.id, email: local.email };
+    return { id: local.id, email: local.email, phone: local.phone };
   }
 
   try {
@@ -52,7 +52,7 @@ export async function signBackendToken(user: VerifiedUser): Promise<string> {
     throw new Error("USER_SESSION_SECRET تنظیم نشده است.");
   }
 
-  return new SignJWT({ email: user.email })
+  return new SignJWT({ email: user.email, phone: user.phone ?? "" })
     .setProtectedHeader({ alg: "HS256" })
     .setSubject(user.id)
     .setIssuer(ISSUER)

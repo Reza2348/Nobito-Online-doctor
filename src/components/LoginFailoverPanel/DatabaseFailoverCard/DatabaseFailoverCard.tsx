@@ -50,7 +50,7 @@ export default function DatabaseFailoverCard({
   const supabaseButton = "border-black bg-black text-white hover:bg-gray-800";
 
   return (
-    <section className="rounded-2xl border  bg-white p-5 shadow-sm sm:p-6">
+    <section className="rounded-xl border  bg-white p-5 shadow-sm sm:p-6">
       <h2 className="text-lg font-bold text-gray-900">مدیریت دیتابیس</h2>
 
       <p className="mt-2 text-sm leading-6 text-gray-600">

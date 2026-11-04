@@ -11,7 +11,7 @@ const DoctorAddress: React.FC<Props> = ({ address }) => {
       flex
       items-center
       gap-3
-      rounded-2xl
+      rounded-xl
       bg-gray-50
       px-4
       py-3

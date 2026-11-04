@@ -40,12 +40,12 @@ export default function SiteUsersTable({ initialUsers }: SiteUsersTableProps) {
   return (
     <div
       className="
-        rounded-3xl
+        rounded-xl
         border border-gray-100
         bg-white/80
         p-6
-        shadow-lg
-        backdrop-blur-xl
+        shadow-sm
+       
         sm:p-8
       "
     >

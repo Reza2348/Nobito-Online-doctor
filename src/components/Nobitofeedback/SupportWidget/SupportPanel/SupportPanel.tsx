@@ -63,7 +63,7 @@ export default function SupportPanel({ onClose }: Props) {
   return (
     <>
       <div
-        className="fixed inset-0 z-65 bg-black/20 backdrop-blur-[2px] md:hidden"
+        className="fixed inset-0 z-65 bg-black/20 md:hidden"
         onClick={onClose}
       />
 
@@ -75,7 +75,7 @@ export default function SupportPanel({ onClose }: Props) {
           max-w-97.5
           h-[min(650px,calc(100vh-120px))]
           bg-white
-          rounded-3xl
+          rounded-xl
           shadow-[0_20px_70px_rgba(0,0,0,0.18)]
           border border-gray-100
           overflow-hidden

@@ -24,7 +24,7 @@ export default function DiagnosisSection({ diagnosis }: DiagnosisSectionProps) {
       <div
         className="
           flex items-start gap-2 rounded-lg border
-          border-cyan-100 bg-linear-to-r from-blue-50 to-cyan-50
+          border-cyan-100 bg-surface
           px-3 py-2 text-sm text-gray-700
         "
       >

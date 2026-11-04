@@ -36,7 +36,7 @@ function StatCard({
       className={`
         relative
         overflow-hidden
-        rounded-[22px]
+        rounded-xl
         border
         p-5
         ${containerClassName}
@@ -76,7 +76,7 @@ function StatCard({
             flex h-12 w-12
             shrink-0
             items-center justify-center
-            rounded-2xl
+            rounded-xl
             ${iconClassName}
           `}
         >
@@ -112,10 +112,7 @@ export default function DoctorStats({ doctor }: Props) {
         iconClassName="bg-amber-100 text-amber-500"
         containerClassName="
           border-amber-100
-          bg-gradient-to-br
-          from-amber-50
-          via-white
-          to-white
+          bg-surface
         "
       >
         {rating !== null && (
@@ -140,10 +137,7 @@ export default function DoctorStats({ doctor }: Props) {
         iconClassName="bg-blue-100 text-blue-600"
         containerClassName="
           border-blue-100
-          bg-gradient-to-br
-          from-blue-50
-          via-white
-          to-white
+          bg-surface
         "
       />
 
@@ -160,10 +154,7 @@ export default function DoctorStats({ doctor }: Props) {
         iconClassName="bg-teal-100 text-teal-600"
         containerClassName="
           border-teal-100
-          bg-gradient-to-br
-          from-teal-50
-          via-white
-          to-white
+          bg-surface
         "
       >
         {patientsSatisfied !== null && patientsSatisfied > 0 && (
@@ -181,9 +172,7 @@ export default function DoctorStats({ doctor }: Props) {
                   h-full
                   w-full
                   rounded-full
-                 bg-linear-to-l
-                  from-teal-500
-                  to-cyan-400
+                 bg-brand
                 "
             />
           </div>

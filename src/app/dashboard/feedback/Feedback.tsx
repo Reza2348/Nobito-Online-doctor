@@ -33,7 +33,7 @@ export default function Feedback() {
   return (
     <div dir="rtl" className="min-h-screen  p-6">
       <div className="mx-auto max-w-2xl">
-        <div className="rounded-2xl bg-white p-6 shadow-sm">
+        <div className="rounded-xl bg-white p-6 shadow-sm">
           <h1 className="text-2xl font-bold text-gray-800">ارسال بازخورد</h1>
 
           <p className="mt-2 text-sm text-gray-500">

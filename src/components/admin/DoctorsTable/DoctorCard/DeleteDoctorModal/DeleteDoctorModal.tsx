@@ -36,7 +36,7 @@ export default function DeleteDoctorModal({
         flex items-center justify-center
         bg-slate-950/50
         p-4
-        backdrop-blur-md
+       
       "
       onClick={() => !saving && onClose()}
     >
@@ -62,10 +62,7 @@ export default function DeleteDoctorModal({
           className="
             h-1.5
             w-full
-            bg-linear-to-l
-            from-red-600
-            via-rose-500
-            to-orange-400
+            bg-brand
           "
         />
 
@@ -96,10 +93,7 @@ export default function DeleteDoctorModal({
         {/* Header */}
         <div
           className="
-            bg-linear-to-br
-            from-red-50
-            via-white
-            to-orange-50
+            bg-surface
             px-7
             pb-7
             pt-9
@@ -111,7 +105,7 @@ export default function DeleteDoctorModal({
                 relative
                 flex h-19.5 w-19.5
                 items-center justify-center
-                rounded-[26px]
+                rounded-xl
                 bg-red-100
                 text-red-600
               "
@@ -120,7 +114,7 @@ export default function DeleteDoctorModal({
                 className="
                   absolute
                   -inset-2
-                  rounded-[30px]
+                  rounded-xl
                   border
                   border-red-100
                 "
@@ -162,7 +156,7 @@ export default function DeleteDoctorModal({
               flex
               items-center
               gap-3
-              rounded-2xl
+              rounded-xl
               border
               border-slate-100
               bg-slate-50
@@ -257,7 +251,7 @@ export default function DeleteDoctorModal({
             onClick={onClose}
             className="
               h-12
-              rounded-2xl
+              rounded-xl
               border
               border-slate-200
               bg-white
@@ -286,12 +280,12 @@ export default function DeleteDoctorModal({
               items-center
               justify-center
               gap-2
-              rounded-2xl
+              rounded-xl
               bg-red-600
               text-sm
               font-bold
               text-white
-              shadow-lg
+              shadow-sm
               shadow-red-600/20
               transition
               hover:bg-red-700

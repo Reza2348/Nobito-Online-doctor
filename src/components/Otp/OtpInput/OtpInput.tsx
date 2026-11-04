@@ -2,7 +2,7 @@
 
 import * as O from "@/Imports/OtpImports/OtpImports";
 
-const OTP_LENGTH = 8;
+import { OTP_LENGTH } from "@/lib/otp";
 
 export interface OtpInputProps {
   otp: string[];

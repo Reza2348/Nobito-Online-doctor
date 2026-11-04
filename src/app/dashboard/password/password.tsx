@@ -97,7 +97,7 @@ export default function Password() {
       className="w-full min-h-screen px-4 md:px-12 py-6 md:py-12 font-[tahoma]"
       dir="rtl"
     >
-      <div className="w-full bg-white rounded-[30px] shadow-sm border border-gray-100 overflow-hidden">
+      <div className="w-full bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         {/* Header */}
         <div className="flex justify-between items-center px-6 md:px-8 py-6 border-b border-[#C0C0C0]">
           <h2 className="text-xl font-bold text-gray-700">رمز عبور</h2>
@@ -115,7 +115,7 @@ export default function Password() {
           <div className="flex flex-col gap-2">
             <label
               htmlFor="password"
-              className="text-sm text-[#919191] font-bold text-right"
+              className="text-sm text-muted font-bold text-right"
             >
               رمز عبور جدید
               <span className="text-red-400 mr-1">*</span>
@@ -156,7 +156,7 @@ export default function Password() {
                 setPassword(value);
                 checkStrength(value);
               }}
-              className="w-full text-black bg-[#F2F2F2] border-2 border-transparent focus:border-[#347469] focus:bg-white rounded-xl py-3 px-4 outline-none transition-all"
+              className="w-full text-black bg-surface border-2 border-transparent focus:border-brand focus:bg-white rounded-xl py-3 px-4 outline-none transition-all"
             />
 
             {errors.password && (
@@ -183,7 +183,7 @@ export default function Password() {
           </div>
 
           {/* Password rules */}
-          <div className="space-y-1 text-[#919191] text-sm">
+          <div className="space-y-1 text-muted text-sm">
             <p>• حداقل 8 کاراکتر</p>
             <p>• شامل حروف بزرگ و کوچک</p>
             <p>• شامل عدد</p>
@@ -194,7 +194,7 @@ export default function Password() {
           <div className="flex flex-col gap-2">
             <label
               htmlFor="confirmPassword"
-              className="text-sm text-[#919191] font-bold text-right"
+              className="text-sm text-muted font-bold text-right"
             >
               تکرار رمز عبور
               <span className="text-red-400 mr-1">*</span>
@@ -210,7 +210,7 @@ export default function Password() {
                 validate: (value) =>
                   value === password || "رمزهای عبور یکسان نیستند.",
               })}
-              className="w-full text-black bg-[#F2F2F2] border-2 border-transparent focus:border-[#347469] focus:bg-white rounded-xl py-3 px-4 outline-none transition-all"
+              className="w-full text-black bg-surface border-2 border-transparent focus:border-brand focus:bg-white rounded-xl py-3 px-4 outline-none transition-all"
             />
 
             {errors.confirmPassword && (
@@ -245,7 +245,7 @@ export default function Password() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="bg-[#347469] hover:bg-[#2a5d54] disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold w-full md:w-40 py-2 rounded-md shadow-md transition-all active:scale-95"
+              className="bg-brand hover:bg-[#2a5d54] disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold w-full md:w-40 py-2 rounded-md shadow-sm transition-all active:scale-95"
             >
               {isSubmitting ? "در حال تغییر..." : "تغییر رمز عبور"}
             </button>

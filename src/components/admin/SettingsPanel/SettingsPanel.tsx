@@ -18,15 +18,13 @@ export default function SettingsPanel() {
           className="
           w-12
           h-12
-          rounded-2xl
-         bg-linear-to-br
-          from-gray-700
-          to-gray-500
+          rounded-xl
+         bg-brand
           flex
           items-center
           justify-center
           text-white
-          shadow-lg
+          shadow-sm
           "
         >
           <MdSettings size={28} />
@@ -55,11 +53,11 @@ export default function SettingsPanel() {
         className="
         max-w-3xl
         bg-white/80
-        backdrop-blur-xl
+       
         border
         border-gray-100
-        rounded-3xl
-        shadow-lg
+        rounded-xl
+        shadow-sm
         p-8
         "
       >
@@ -77,7 +75,7 @@ export default function SettingsPanel() {
             className="
             w-12
             h-12
-            rounded-2xl
+            rounded-xl
             bg-teal-100
             text-teal-600
             flex
@@ -125,7 +123,7 @@ export default function SettingsPanel() {
             <input
               className="
               w-full
-              rounded-2xl
+              rounded-xl
               border
               border-gray-200
               bg-gray-50
@@ -173,7 +171,7 @@ export default function SettingsPanel() {
               type="password"
               className="
               w-full
-              rounded-2xl
+              rounded-xl
               border
               border-gray-200
               bg-gray-50
@@ -201,16 +199,14 @@ export default function SettingsPanel() {
           justify-center
           gap-2
           w-full
-         bg-linear-to-r
-          from-teal-600
-          to-emerald-500
+         bg-brand
           text-white
           py-3.5
-          rounded-2xl
+          rounded-xl
           font-semibold
-          shadow-lg
+          shadow-sm
           shadow-teal-500/20
-          hover:scale-[1.02]
+         
           transition
           "
         >

@@ -36,7 +36,7 @@ export default function Newsletter({ mobile = false, onSubmit }: Props) {
             type="email"
             required
             placeholder="ایمیل خود را اینجا وارد کنید"
-            className="flex-1 bg-white border border-gray-200 rounded-xl px-4 py-3 text-[13px] text-right outline-none focus:border-[#1F7168] transition-colors"
+            className="flex-1 bg-white border border-gray-200 rounded-xl px-4 py-3 text-[13px] text-right outline-none focus:border-brand transition-colors"
           />
         </div>
 

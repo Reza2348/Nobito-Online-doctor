@@ -30,7 +30,7 @@ export default function DoctorFields({ fields, doctorId }: Props) {
             items-center
             gap-2
             text-xs
-            font-extrabold
+            font-bold
             text-slate-700
           "
         >

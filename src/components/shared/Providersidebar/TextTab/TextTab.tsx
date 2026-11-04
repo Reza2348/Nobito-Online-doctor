@@ -11,8 +11,8 @@ export default function TextTab({ chatHref }: TextTabProps) {
   const router = useRouter();
 
   return (
-    <div className="rounded-2xl border border-slate-100 bg-slate-50/60 p-4 text-center">
-      <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-2xl bg-sky-50 text-sky-600">
+    <div className="rounded-xl border border-slate-100 bg-slate-50/60 p-4 text-center">
+      <div className="mx-auto flex h-11 w-11 items-center justify-center rounded-xl bg-sky-50 text-sky-600">
         <FiMessageCircle size={20} />
       </div>
 
@@ -27,7 +27,7 @@ export default function TextTab({ chatHref }: TextTabProps) {
       <button
         type="button"
         onClick={() => router.push(chatHref)}
-        className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-sky-600 px-5 py-3 text-sm font-bold text-white transition-all hover:bg-sky-700"
+        className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-sky-600 px-5 py-3 text-sm font-bold text-white transition-all hover:bg-sky-700"
       >
         <FiMessageCircle size={15} />
         شروع گفتگو

@@ -32,7 +32,7 @@ export default function DoctorActions({
           h-11
           items-center
           gap-2
-          rounded-2xl
+          rounded-xl
           border
           border-slate-200
           bg-white
@@ -65,7 +65,7 @@ export default function DoctorActions({
           h-11
           items-center
           gap-2
-          rounded-2xl
+          rounded-xl
           border
           border-slate-200
           bg-white

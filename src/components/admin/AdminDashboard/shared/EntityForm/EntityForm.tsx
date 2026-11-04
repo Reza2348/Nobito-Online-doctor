@@ -109,9 +109,9 @@ export default function EntityForm<T extends EntityData = EntityData>({
           w-full max-w-2xl
           flex-col
           overflow-hidden
-          rounded-3xl
+          rounded-xl
           bg-white
-          shadow-2xl
+          shadow-sm
         "
       >
         {/* HEADER */}

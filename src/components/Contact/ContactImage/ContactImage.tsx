@@ -12,24 +12,15 @@ export default function ContactImage() {
         md:w-1/2
       "
     >
-      <div
-        className="
-          absolute
-          inset-5
-          rounded-full
-          bg-green-300/30
-          blur-3xl
-        "
-      />
 
       <div
         className="
           relative
           overflow-hidden
-          rounded-[45px]
+          rounded-xl
           border
           border-white
-          shadow-2xl
+          shadow-sm
         "
       >
         <Image
@@ -46,12 +37,12 @@ export default function ContactImage() {
           absolute
           bottom-6
           right-6
-          rounded-2xl
+          rounded-xl
           bg-white/90
           px-5
           py-4
-          shadow-xl
-          backdrop-blur-xl
+          shadow-sm
+         
         "
       >
         <p className="font-bold text-gray-900">پشتیبانی مطمئن</p>

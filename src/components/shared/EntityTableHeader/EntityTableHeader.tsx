@@ -5,7 +5,7 @@ type Accent = "blue" | "purple" | "teal";
 
 const ACCENT_CLASSES: Record<Accent, { iconBox: string; hover: string }> = {
   blue: {
-    iconBox: "bg-linear-to-br from-blue-500 to-cyan-400 text-white shadow-lg",
+    iconBox: "bg-brand text-white shadow-sm",
     hover: "hover:bg-blue-100 hover:text-blue-700",
   },
   purple: {
@@ -45,7 +45,7 @@ export default function EntityTableHeader({
     <div className="mb-6 flex items-center justify-between gap-4">
       <div className="flex items-center gap-3">
         <div
-          className={`flex h-12 w-12 items-center justify-center rounded-2xl ${classes.iconBox}`}
+          className={`flex h-12 w-12 items-center justify-center rounded-xl ${classes.iconBox}`}
         >
           {icon}
         </div>

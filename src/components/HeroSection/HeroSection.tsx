@@ -1,90 +1,61 @@
-import Image from "next/image";
-import { FiUser, FiHeart, FiClipboard } from "react-icons/fi";
+import Link from "next/link";
+import { FiCalendar, FiClipboard, FiSmartphone } from "react-icons/fi";
+
+const points = [
+  {
+    Icon: FiCalendar,
+    title: "ساعت خالی را همان‌جا می‌بینید",
+    text: "زمان‌های رزروشده از قبل خط می‌خورند؛ نوبتی که انتخاب می‌کنید برای خودتان می‌ماند و دوباره رزرو نمی‌شود.",
+  },
+  {
+    Icon: FiSmartphone,
+    title: "ورود با شمارهٔ موبایل",
+    text: "برای گرفتن نوبت فقط کد پیامکی کافی است؛ نیازی به رمز عبور و فرم طولانی ثبت‌نام نیست.",
+  },
+  {
+    Icon: FiClipboard,
+    title: "نسخه و سابقه کنار هم",
+    text: "نسخه‌های الکترونیک و نوبت‌های قبلی در پروفایل شما می‌مانند و هر وقت لازم شد در دسترس‌اند.",
+  },
+];
 
 export const HeroSection = () => {
   return (
-    <div
-      className="flex flex-col bg-[#f5f5f5] rounded-2xl shadow-md transition-shadow overflow-hidden w-full lg:max-w-350 mx-auto mb-4"
-      dir="rtl"
-    >
-      <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-8 px-6 lg:px-16 py-8 lg:py-12">
-        <div className="shrink-0 w-full lg:w-auto order-1 lg:order-2" dir="ltr">
-          <Image
-            src="https://yvafbrsbeisaqtdsdowr.supabase.co/storage/v1/object/public/publics/Pic%20(5).svg"
-            alt="بیمه دکترتو"
-            width={280}
-            height={220}
-            className="rounded-xl object-cover w-full lg:w-70 lg:h-55"
-            priority
-          />
-        </div>
-        <div className="flex flex-col gap-4 flex-1 text-right order-2 lg:order-1">
-          <h1 className="text-2xl lg:text-3xl font-bold text-[#2b2b2b] leading-tight">
-            بیمه دکترتو در روزهای سخت
-            <span className="block text-center lg:inline lg:text-right">
-              همراه شماست
-            </span>
-          </h1>
-          <p className="text-gray-400 text-sm leading-7">
-            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و با
-            استفاده از طراحان گرافیک است،
+    <section dir="rtl" className="mx-auto max-w-7xl px-4 py-14">
+      <div className="grid gap-10 lg:grid-cols-[1fr_2fr] lg:gap-16">
+        <div>
+          <h2 className="text-2xl font-bold leading-10 text-ink lg:text-3xl">
+            نوبت گرفتن باید
             <br />
-            چاپگرها و متون بلکه روزنامه و مجله در ستون و سطرآنچنان که لازم است،
-            <br />
-            و برای شرایط فعلی تکنولوژی مورد نیاز، و کاربردهای متنوع با هدف بهبود
-            ابزارهای کاربردی می باشد،
-            <br />
-            کتابهای زیادی در شصت و سه درصد گذشته حال و آینده، شناخت فراوان جامعه
-            و متخصصان را می طلبد،
-          </p>
-          <div className="flex justify-end mt-2">
-            <button className="border border-gray-400 w-full lg:w-auto text-gray-600 px-6 py-2 rounded-md text-sm hover:bg-gray-200 transition-colors bg-white">
-              مطالعه بیشتر
-            </button>
-          </div>
-        </div>
-      </div>
+            ساده و قابل‌اتکا باشد
+          </h2>
 
-      <div className="border-t border-gray-200 mx-6 lg:mx-16" />
-      <div className="flex flex-col lg:flex-row justify-center lg:justify-between gap-6 lg:gap-12 px-6 lg:px-16 py-8 lg:py-10">
-        {/* کارت ۱ */}
-        <div className="flex flex-col items-center lg:items-start text-center lg:text-right gap-3 lg:max-w-55">
-          <div className="w-14 h-14 bg-[#2e8b7a] rounded-xl flex items-center justify-center">
-            <FiUser className="w-7 h-7 text-white" />
-          </div>
-          <h3 className="font-bold text-[#2b2b2b] text-sm">
-            بیمه دکترتو در روزهای سخت همراه
-          </h3>
-          <p className="text-gray-400 text-xs leading-6">
-            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و
-            بااستفاده از طراحان گرافیک است.
+          <p className="mt-4 text-sm leading-8 text-muted">
+            نوبیتو را برای این ساخته‌ایم که از جست‌وجوی پزشک تا ویزیت، بدون
+            تماس تلفنی و انتظار طولانی انجام شود.
           </p>
+
+          <Link
+            href="/AppointmentCard"
+            className="mt-6 inline-block rounded-lg bg-brand px-5 py-2.5 text-sm font-bold text-white hover:bg-brand-strong"
+          >
+            شروع نوبت‌گیری
+          </Link>
         </div>
-        <div className="flex flex-col items-center lg:items-start text-center lg:text-right gap-3 lg:max-w-55">
-          <div className="w-14 h-14 bg-[#2e8b7a] rounded-xl flex items-center justify-center">
-            <FiHeart className="w-7 h-7 text-white" />
-          </div>
-          <h3 className="font-bold text-[#2b2b2b] text-sm">
-            بیمه دکترتو در روزهای سخت همراه
-          </h3>
-          <p className="text-gray-400 text-xs leading-6">
-            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و
-            بااستفاده از طراحان گرافیک است.
-          </p>
-        </div>
-        <div className="flex flex-col items-center lg:items-start text-center lg:text-right gap-3 lg:max-w-55">
-          <div className="w-14 h-14 bg-[#2e8b7a] rounded-xl flex items-center justify-center">
-            <FiClipboard className="w-7 h-7 text-white" />
-          </div>
-          <h3 className="font-bold text-[#2b2b2b] text-sm">
-            بیمه دکترتو در روزهای سخت همراه
-          </h3>
-          <p className="text-gray-400 text-xs leading-6">
-            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ، و
-            بااستفاده از طراحان گرافیک است.
-          </p>
-        </div>
+
+        <ol className="divide-y divide-line border-y border-line">
+          {points.map(({ Icon, title, text }) => (
+            <li key={title} className="flex gap-4 py-6">
+              <Icon className="mt-1 h-6 w-6 shrink-0 text-brand" aria-hidden />
+
+              <div>
+                <h3 className="font-bold text-ink">{title}</h3>
+                <p className="mt-1 text-sm leading-7 text-muted">{text}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </div>
-    </div>
+    </section>
   );
 };

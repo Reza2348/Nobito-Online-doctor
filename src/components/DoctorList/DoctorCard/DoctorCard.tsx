@@ -30,16 +30,16 @@ const DoctorCard: React.FC<Props> = ({ doctor }) => {
       flex-col
       overflow-hidden
       cursor-pointer
-      rounded-3xl
+      rounded-xl
       border
       border-gray-100
       bg-white
       shadow-[0_8px_30px_rgba(0,0,0,.06)]
       transition-all
       duration-500
-      hover:-translate-y-2
+     
       hover:border-teal-200
-      hover:shadow-[0_20px_50px_rgba(0,0,0,.12)] 
+      
        
       "
     >
@@ -120,7 +120,7 @@ const DoctorCard: React.FC<Props> = ({ doctor }) => {
           min-h-7.5
           line-clamp-1
           text-lg
-          font-extrabold
+          font-bold
           text-gray-900
           "
         >
@@ -232,16 +232,14 @@ const DoctorCard: React.FC<Props> = ({ doctor }) => {
   items-center
   justify-center
   gap-2
-  rounded-2xl
- bg-linear-to-r
-  from-teal-600
-  to-emerald-500
+  rounded-xl
+ bg-brand
   py-3
   font-bold
   text-white
   transition-all
   duration-300
-  hover:shadow-lg
+  hover:shadow-sm
   "
         >
           مشاهده پروفایل
@@ -249,7 +247,7 @@ const DoctorCard: React.FC<Props> = ({ doctor }) => {
             className="
             transition-transform
             duration-300
-            group-hover:-translate-x-1
+           
             "
           />
         </button>

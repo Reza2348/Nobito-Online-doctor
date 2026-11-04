@@ -14,15 +14,12 @@ export default function Footer() {
   };
 
   return (
-    <footer className="relative mt-24 overflow-hidden bg-linear-to-b from-white via-emerald-50/30 to-gray-50 text-gray-600 py-10 md:py-14">
-      {/* TOP GLOW */}
-      <div className="absolute -top-32 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-emerald-200/30 blur-3xl" />
-
+    <footer className="relative mt-24 overflow-hidden bg-surface text-gray-600 py-10 md:py-14">
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* FOOTER CARD */}
-        <div className="rounded-[36px] border border-white/60 bg-white/80 backdrop-blur-xl shadow-[0_20px_60px_rgba(0,0,0,.08)] p-6 md:p-10">
+        <div className="rounded-xl border border-line bg-white p-6 md:p-10">
           {/* BRAND */}
-          <div className="mb-10 rounded-3xl bg-linear-to-r from-emerald-50 to-teal-50 border border-emerald-100 px-5 py-4">
+          <div className="mb-10 rounded-xl bg-surface border border-emerald-100 px-5 py-4">
             <F.FooterTop />
           </div>
 
@@ -38,13 +35,13 @@ export default function Footer() {
           </div>
 
           {/* CONTACT */}
-          <div className="mt-10 rounded-3xl border border-gray-100 bg-gray-50/70 p-5 md:p-6">
+          <div className="mt-10 rounded-xl border border-line empty:hidden">
             <F.FooterContact />
           </div>
         </div>
 
         {/* COPYRIGHT */}
-        <div className="mt-8 rounded-3xl bg-linear-to-r from-emerald-600 to-teal-500 px-5 py-5 text-white shadow-lg">
+        <div className="mt-8 rounded-xl bg-brand px-5 py-5 text-white shadow-sm">
           <F.FooterBottom />
         </div>
       </div>

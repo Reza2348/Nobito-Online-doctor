@@ -22,7 +22,7 @@ const TAB_KINDS: Record<Exclude<Tab, "all">, MessageKind[]> = {
 
 const KIND_ICON: Record<MessageKind, React.ReactNode> = {
   announcement: (
-    <FaBullhorn className="w-9 h-9 md:w-11 md:h-11 p-2 bg-[#1F7168] text-white rounded-full" />
+    <FaBullhorn className="w-9 h-9 md:w-11 md:h-11 p-2 bg-brand text-white rounded-full" />
   ),
   notify: (
     <FaBell className="w-9 h-9 md:w-11 md:h-11 p-2 bg-[#FFB342] text-[#292D32] rounded-full" />
@@ -56,7 +56,7 @@ export default function Message() {
 
   return (
     <div className="w-full min-h-screen  px-4 md:px-12 py-6 md:py-12 font-[Tahoma]">
-      <div className="bg-white rounded-[20px] md:rounded-[30px] shadow-sm border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-xl md:rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         {/* هدر */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-3 px-4 md:px-8 py-4 md:py-6 border-b border-[#E4E4E4]">
           <h2 className="text-lg md:text-xl font-bold text-gray-700">
@@ -67,7 +67,7 @@ export default function Message() {
             type="button"
             onClick={() => markRead.mutate(undefined)}
             disabled={unreadCount === 0 || markRead.isPending}
-            className="flex items-center gap-2 text-sm text-[#1F7168] disabled:cursor-not-allowed disabled:opacity-50"
+            className="flex items-center gap-2 text-sm text-brand disabled:cursor-not-allowed disabled:opacity-50"
           >
             <FaBell className="w-4 h-4" />
             تغییر پیغام‌ها به خوانده شده
@@ -80,7 +80,7 @@ export default function Message() {
             <button
               key={t}
               type="button"
-              className={`flex items-center gap-2 px-3 md:px-4 py-2 text-xs md:text-sm rounded-full border whitespace-nowrap transition-all ${ tab === t ? "text-[#1F7168] border-[#1F7168]" : "text-[#919191] border-[#E4E4E4]" }`}
+              className={`flex items-center gap-2 px-3 md:px-4 py-2 text-xs md:text-sm rounded-full border whitespace-nowrap transition-all ${ tab === t ? "text-brand border-brand" : "text-muted border-[#E4E4E4]" }`}
               onClick={() => setTab(t)}
             >
               {t === "all" && "همه پیام‌ها"}
@@ -149,12 +149,12 @@ export default function Message() {
 
                 {/* محتوا */}
                 <div className="flex-1">
-                  <h3 className="text-[#414141] font-semibold text-sm md:text-base leading-6">
+                  <h3 className="text-ink font-semibold text-sm md:text-base leading-6">
                     {msg.title}
                   </h3>
 
                   <p
-                    className={`text-[#919191] text-xs md:text-sm mt-1 leading-5 ${ isOpen ? "" : "line-clamp-2" }`}
+                    className={`text-muted text-xs md:text-sm mt-1 leading-5 ${ isOpen ? "" : "line-clamp-2" }`}
                   >
                     {msg.body}
                   </p>
@@ -172,7 +172,7 @@ export default function Message() {
                       />
                     </button>
 
-                    <span className="text-[#919191] text-[11px] md:text-xs">
+                    <span className="text-muted text-[11px] md:text-xs">
                       {msg.date}
                     </span>
                   </div>

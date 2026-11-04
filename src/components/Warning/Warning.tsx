@@ -19,9 +19,7 @@ const Warning = () => {
       rounded-4xl
       border
       border-teal-100
-      bg-gradient-to-br
-      from-teal-50
-      to-emerald-50
+      bg-surface
       p-6
       shadow-[0_12px_35px_rgba(0,0,0,.06)]
       "
@@ -43,7 +41,7 @@ const Warning = () => {
           w-11
           items-center
           justify-center
-          rounded-2xl
+          rounded-xl
           bg-white
           text-teal-600
           shadow-sm
@@ -89,12 +87,12 @@ const Warning = () => {
               flex
               items-start
               gap-3
-              rounded-2xl
+              rounded-xl
               bg-white
               p-4
               shadow-sm
               transition-all
-              hover:-translate-y-1
+             
               "
           >
             <span

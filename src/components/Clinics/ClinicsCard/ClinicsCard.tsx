@@ -44,16 +44,16 @@ export default function ClinicsCard({ clinic }: ClinicsCardProps) {
         cursor-pointer
         flex-col
         overflow-hidden
-        rounded-3xl
+        rounded-xl
         border
         border-gray-100
         bg-white
         shadow-[0_8px_30px_rgba(0,0,0,0.06)]
         transition-all
         duration-500
-        hover:-translate-y-2
+       
         hover:border-teal-200
-        hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)]
+       
       "
     >
       {/* IMAGE */}
@@ -66,7 +66,7 @@ export default function ClinicsCard({ clinic }: ClinicsCardProps) {
       {/* CONTENT */}
       <div className="flex flex-1 flex-col px-5 py-5">
         {/* NAME */}
-        <h3 className="min-h-7.5 line-clamp-1 text-lg font-extrabold text-gray-900">
+        <h3 className="min-h-7.5 line-clamp-1 text-lg font-bold text-gray-900">
           {clinic.name}
         </h3>
 

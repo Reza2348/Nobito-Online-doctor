@@ -64,7 +64,7 @@ export default function DoctorsTable({ doctors = [], onDelete }: Props) {
   }
 
   return (
-    <div dir="rtl" className="rounded-3xl bg-white p-6 shadow">
+    <div dir="rtl" className="rounded-xl bg-white p-6 shadow">
       <EntityTableHeader
         {...headerProps}
         onRefresh={actions.load}

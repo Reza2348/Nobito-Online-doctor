@@ -278,10 +278,10 @@ export default function HealthCategories({
                 flex-col
                 items-center
                 gap-3
-                rounded-2xl
+                rounded-xl
                 outline-none
                 focus-visible:ring-2
-                focus-visible:ring-[#1F7168]/35
+                focus-visible:ring-brand/35
                 focus-visible:ring-offset-4
                 sm:w-32
               "
@@ -307,16 +307,16 @@ export default function HealthCategories({
                   ${
                     isActive
                       ? `
-                        border-[#1F7168]
+                        border-brand
                         shadow-[0_0_0_4px_rgba(31,113,104,0.08)]
                         -translate-y-0.5
                       `
                       : `
                         border-transparent
                         shadow-[0_4px_16px_rgba(0,0,0,0.025)]
-                        group-hover:-translate-y-1
+                       
                         group-hover:border-[#DCE9E6]
-                        group-hover:shadow-[0_8px_24px_rgba(31,113,104,0.08)]
+                       
                       `
                   }
                 `}
@@ -333,7 +333,7 @@ export default function HealthCategories({
                     opacity-70
                     transition-transform
                     duration-300
-                    group-hover:scale-125
+                   
                   "
                 />
 
@@ -349,7 +349,7 @@ export default function HealthCategories({
                     opacity-70
                     transition-transform
                     duration-300
-                    group-hover:rotate-90
+                   
                   "
                 />
 
@@ -361,7 +361,7 @@ export default function HealthCategories({
                     transition-transform
                     duration-300
                     ease-out
-                    group-hover:scale-105
+                   
                     sm:h-14
                     sm:w-14
                   "
@@ -382,12 +382,12 @@ export default function HealthCategories({
 
                   ${
                     isActive
-                      ? "font-bold text-[#1F7168]"
+                      ? "font-bold text-brand"
                       : "font-medium text-gray-500 group-hover:text-gray-700"
                   }
                 `}
                 style={{
-                  fontFamily: "'Vazirmatn', 'Tahoma', sans-serif",
+                  fontFamily: "inherit",
                 }}
               >
                 {category.label}
@@ -402,7 +402,7 @@ export default function HealthCategories({
                     h-0.5
                     -translate-x-1/2
                     rounded-full
-                    bg-[#1F7168]
+                    bg-brand
                     transition-all
                     duration-300
 

@@ -21,7 +21,7 @@ export default function SystemStatsCard({ status }: Props) {
   ];
 
   return (
-    <section className="rounded-2xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
+    <section className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
       <h2 className="text-lg font-bold text-gray-900">آمار سیستم</h2>
 
       <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-3">

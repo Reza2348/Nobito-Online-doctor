@@ -15,7 +15,7 @@ export default function FeedbackClinicsPage() {
         dir="rtl"
         className="flex min-h-screen items-center justify-center bg-slate-50 p-6"
       >
-        <div className="w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-sm">
+        <div className="w-full max-w-md rounded-xl bg-white p-6 text-center shadow-sm">
           <p className="font-bold text-red-600">شناسه کلینیک مشخص نشده است.</p>
         </div>
       </main>
@@ -30,7 +30,7 @@ export default function FeedbackClinicsPage() {
         dir="rtl"
         className="flex min-h-screen items-center justify-center bg-slate-50 p-6"
       >
-        <div className="w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-sm">
+        <div className="w-full max-w-md rounded-xl bg-white p-6 text-center shadow-sm">
           <p className="font-bold text-red-600">شناسه کلینیک نامعتبر است.</p>
         </div>
       </main>

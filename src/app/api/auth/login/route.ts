@@ -1,9 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import bcrypt from "bcryptjs";
-import { accounts } from "@/constants/accounts";
+import { getAccounts } from "@/constants/accounts";
 import type { Role } from "@/Types/types";
 import { createToken } from "@/lib/jwt";
+import {
+  checkRateLimit,
+  createRateLimiter,
+  getClientIp,
+} from "@/lib/rateLimit";
+
+// ۵ تلاش در ۱۵ دقیقه برای هر IP و ۵ تلاش برای هر نام کاربری
+const ipLimiter = createRateLimiter("auth:admin-login:ip", 5, "15 m");
+const userLimiter = createRateLimiter("auth:admin-login:user", 5, "15 m");
+
+// برای مقایسهٔ هم‌زمان وقتی حساب وجود ندارد (جلوگیری از timing leak)
+const DUMMY_HASH =
+  "$2b$10$RtmfO9gs3e6eBWoTLlaO/evCqjhnayMtQ7kf3oXMvAcZbmpvy0jMu";
 
 const INVALID_CREDENTIALS = {
   message: "نام کاربری یا رمز عبور اشتباه است.",
@@ -11,6 +24,12 @@ const INVALID_CREDENTIALS = {
 
 export async function POST(request: NextRequest) {
   try {
+    const ipCheck = await checkRateLimit(ipLimiter, getClientIp(request));
+
+    if (!ipCheck.allowed) {
+      return ipCheck.response;
+    }
+
     const body = await request.json();
 
     const username = String(body.username ?? "").trim();
@@ -36,30 +55,37 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // پیدا کردن حساب
-    const account = accounts[role];
-
-    // حساب وجود ندارد یا passwordHash تنظیم نشده
-    if (!account || !account.passwordHash) {
-      return NextResponse.json(INVALID_CREDENTIALS, {
-        status: 401,
-      });
-    }
-
-    // بررسی نام کاربری
-    if (username !== account.username) {
-      return NextResponse.json(INVALID_CREDENTIALS, {
-        status: 401,
-      });
-    }
-
-    // بررسی رمز عبور با bcrypt
-    const passwordMatches = await bcrypt.compare(
-      password,
-      account.passwordHash,
+    const userCheck = await checkRateLimit(
+      userLimiter,
+      `${role}:${username.toLowerCase()}`,
     );
 
-    if (!passwordMatches) {
+    if (!userCheck.allowed) {
+      return userCheck.response;
+    }
+
+    // پیدا کردن حساب
+    const account = getAccounts()[role];
+
+    if (!account || !account.passwordHash) {
+      console.error(
+        `[login] هش رمز برای نقش «${role}» تنظیم نشده است (متغیر *_PASSWORD_HASH).`,
+      );
+    }
+
+    // همیشه یک مقایسهٔ bcrypt انجام می‌شود تا زمان پاسخ لو ندهد
+    // که نام کاربری یا نقش درست بوده است.
+    const passwordMatches = await bcrypt.compare(
+      password,
+      account?.passwordHash || DUMMY_HASH,
+    );
+
+    const credentialsValid =
+      Boolean(account?.passwordHash) &&
+      username === account.username &&
+      passwordMatches;
+
+    if (!credentialsValid) {
       return NextResponse.json(INVALID_CREDENTIALS, {
         status: 401,
       });
